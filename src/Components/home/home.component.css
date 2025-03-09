@@ -1,0 +1,9 @@
+.grid div:hover {
+    transform: scale(1.02);
+    transition: transform 0.2s ease-in-out;
+  }
+  /* Masquer la barre de défilement */
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  
