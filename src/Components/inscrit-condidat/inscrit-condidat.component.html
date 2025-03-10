@@ -1,0 +1,128 @@
+<div class="flex justify-center items-center min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-3xl w-full bg-white rounded-lg shadow-md p-8">
+      <form >
+        <div class="space-y-8">
+          <div class="border-b border-gray-200 pb-8">
+            <div class="w-full bg-gray-200 rounded-full h-2 mb-6">
+                <div class="bg-orange-500 h-2 rounded-full" style="width: 40%"></div> <!-- Adjust width based on current progress -->
+            </div>
+            <p class="text-center text-2xl font-serif text-gray-800 mb-6">Créer un compte</p>
+            <div class="flex space-x-4 justify-center">
+                <a routerLink="/inscritC" class="border border-black text-black px-6 py-2 rounded-lg transition duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-black">
+                    Organisateur
+                </a>
+                <a routerLink="/inscritP"  class="bg-custom-orangeBold/80 text-white px-6 py-2 rounded-lg transition duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-orange-400">
+                    Prestataire
+                </a>
+            </div>
+            
+            <br>
+            <h2 class="text-3xl font-bold text-gray-700  text-center font-serif">Inscription<span class="text-orange-500"> Organisateur</span></h2>
+
+            <p class="mt-1 text-sm text-gray-600 text-center">Remplissez ce formulaire pour créer votre compte organisateur.</p>
+  
+            <div class="mt-8 grid grid-cols-1 gap-x-6 gap-y-6 sm:grid-cols-6">
+              <div class="sm:col-span-3">
+                <label class="block text-sm font-medium text-gray-700">Nom</label>
+                <input type="text" formControlName="nom" class="input-field" placeholder="Votre nom" />
+              </div>
+  
+              <div class="sm:col-span-3">
+                <label class="block text-sm font-medium text-gray-700">Prénom</label>
+                <input type="text" formControlName="prenom" class="input-field" placeholder="Votre prénom" />
+              </div>
+  
+              <div class="sm:col-span-6">
+                <label class="block text-sm font-medium text-gray-700">Email</label>
+                <input type="email" formControlName="email" class="input-field" placeholder="votre@email.com" />
+              </div>
+  
+              <div class="sm:col-span-3">
+                <label class="block text-sm font-medium text-gray-700">Mot de passe</label>
+                <input type="password" formControlName="password" class="input-field" placeholder="********" />
+              </div>
+  
+              <div class="sm:col-span-3">
+                <label class="block text-sm font-medium text-gray-700">Confirmer le mot de passe</label>
+                <input type="password" formControlName="confirmPassword" class="input-field" placeholder="********" />
+              </div>
+  
+              <div class="sm:col-span-3">
+                <label class="block text-sm font-medium text-gray-700">Numéro de téléphone</label>
+                <input type="tel" formControlName="numTel" class="input-field" placeholder="12345678" />
+              </div>
+  
+              <div class="sm:col-span-3">
+                <label class="block text-sm font-medium text-gray-700">Numéro CIN</label>
+                <input type="number" formControlName="numCin" class="input-field" placeholder="12345678" />
+              </div>
+  
+              <div class="sm:col-span-3">
+                <label class="block text-sm font-medium text-gray-700">Ville</label>
+                <select formControlName="ville" class="input-field">
+                  <option value="">Sélectionnez une ville</option>
+                  <option value="Tunis">Tunis</option>
+              <option value="Sfax">Sfax</option>
+              <option value="Sousse">Sousse</option>
+              <option value="Kairouan">Kairouan</option>
+              <option value="Bizerte">Bizerte</option>
+              <option value="Gabès">Gabès</option>
+              <option value="Ariana">Ariana</option>
+              <option value="Gafsa">Gafsa</option>
+              <option value="Monastir">Monastir</option>
+              <option value="Nabeul">Nabeul</option>
+              <option value="Tataouine">Tataouine</option>
+              <option value="Béja">Béja</option>
+              <option value="Jendouba">Jendouba</option>
+              <option value="Médenine">Médenine</option>
+              <option value="Mahdia">Mahdia</option>
+              <option value="Kasserine">Kasserine</option>
+              <option value="Kebili">Kebili</option>
+              <option value="Siliana">Siliana</option>
+              <option value="Le Kef">Le Kef</option>
+              <option value="Tozeur">Tozeur</option>
+              <option value="Zaghouan">Zaghouan</option>
+              <option value="Manouba">Manouba</option>
+              <option value="Ben Arous">Ben Arous</option>
+                </select>
+              </div>
+  
+              <div class="sm:col-span-3">
+                <label class="block text-sm font-medium text-gray-700">Adresse</label>
+                <input type="text" formControlName="adress" class="input-field" placeholder="Votre adresse" />
+              </div>
+  
+              <!-- Photo de profil -->
+              <div class="sm:col-span-6">
+                <label class="block text-sm font-medium text-gray-700">Photo de profil</label>
+                <div class="mt-2 flex items-center gap-x-3">
+                  <img
+                    id="pdProfilePreview"
+                    src="https://th.bing.com/th/id/OIP.lvzPu-WOW4Iv7QyjP-IkrgHaHa?rs=1&pid=ImgDetMain"
+                    alt="Photo de profil par défaut"
+                    class="h-12 w-12 rounded-full object-cover border border-gray-200"
+                  />
+                  <input type="file"  class="text-sm text-gray-700" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+  
+        <div class="mt-8 flex flex-col sm:flex-row items-center justify-between">
+            <p class="text-sm text-custom-brown">
+              Vous avez déjà un compte ?  
+              <a routerLink='/connexion' class="font-semibold text-custom-orangeBold hover:text-custom-orangethrow transition-colors cursor-pointer">
+                Connexion
+              </a>
+            </p>
+            
+            <button type="submit" class="btn-primary">
+              S'inscrire
+            </button>
+          </div>
+          
+      </form>
+    </div>
+  </div>
+  
