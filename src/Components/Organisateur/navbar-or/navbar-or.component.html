@@ -1,0 +1,71 @@
+<nav class="sticky-nav bg-custom-orange/5 backdrop-blur-md shadow-md py-4 px-8 border-b border-custom-gray transition-all">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="flex h-16 items-center justify-between">
+        <div class="flex items-center">
+          <button (click)="toggleMobileMenu()" class="md:hidden p-2 text-gray-700 hover:bg-gray-100 rounded-full">
+            <fa-icon [icon]="faBars" class="h-6 w-6"></fa-icon>
+          </button>
+  
+          <div class="flex-shrink-0 md:flex-shrink md:mx-auto">
+            <img class="h-12 w-auto" src="/assets/FE11.png" alt="Logo">
+          </div>
+  
+          <div class="hidden md:block">
+            <div class="ml-10 flex items-baseline space-x-4">
+              @for (item of navItems; track item.label) {
+                <a [routerLink]="item.url" class="rounded-md px-3 py-2 text-sm font-medium text-custom-black hover:border-b-2 hover:border-white transition-all duration-300 transform hover:-translate-y-1">
+                  {{ item.label }}
+                </a>
+              }
+            </div>
+          </div>
+        </div>
+  
+        <!-- Dropdown and Icons -->
+        <div class="flex items-center">
+          <button class="p-2 text-gray-700 hover:bg-gray-100 rounded-full">
+            <fa-icon [icon]="faSearch" class="h-6 w-6"></fa-icon>
+          </button>
+          <button class="p-2 text-gray-700 hover:bg-gray-100 rounded-full">
+            <fa-icon [icon]="faInbox" class="h-6 w-6"></fa-icon>
+          </button>
+          <div class="relative ml-3">
+            <button (click)="toggleDropdown()" class="flex items-center text-sm rounded-full focus:outline-none">
+              <img class="h-8 w-8 rounded-full" src="https://www.missnumerique.com/blog/wp-content/uploads/reussir-sa-photo-de-profil-michael-dam.jpg" alt="Profile">
+            </button>
+            @if (isDropdownOpen) {
+              <div class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
+                <div class="py-1">
+                  <a routerLink="/profileOR" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                    <fa-icon [icon]="faUser" class="mr-2"></fa-icon>
+                    Profil
+                  </a>
+                  <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                    <fa-icon [icon]="faCog" class="mr-2"></fa-icon>
+                    Paramètres
+                  </a>
+                  <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                    <fa-icon [icon]="faSignOutAlt" class="mr-2"></fa-icon>
+                    Déconnexion
+                  </a>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Menu mobile -->
+    @if (isMobileMenuOpen) {
+      <div class="md:hidden">
+        <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+          @for (item of navItems; track item.label) {
+            <a [routerLink]="item.url" class="block rounded-md px-3 py-2 text-base font-medium text-custom-black hover:bg-gray-100">
+              {{ item.label }}
+            </a>
+          }
+        </div>
+      </div>
+    }
+  </nav>

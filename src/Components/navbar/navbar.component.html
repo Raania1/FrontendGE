@@ -1,79 +1,115 @@
 <!-- Navbar -->
 <nav class="sticky-nav bg-custom-orange/5 backdrop-blur-md shadow-md py-4 px-8 border-b border-custom-gray transition-all"> 
-   <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
     <div class="relative flex h-16 items-center justify-between">
       <!-- Mobile menu button -->
       <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
-        <button type="button" class="relative inline-flex items-center justify-center rounded-md p-2 text-custom-black hover:bg-custom-gray hover:text-custom-orangeBold focus:outline-none focus:ring-2 focus:ring-custom-orangeBold focus:ring-inset" aria-controls="mobile-menu" aria-expanded="false">
+        <button 
+          type="button" 
+          (click)="toggleMobileMenu()" 
+          class="relative inline-flex items-center justify-center rounded-md p-2 text-custom-black bg-custom-gray hover:text-custom-orangeBold focus:outline-none focus:ring-2 focus:ring-custom-orangeBold focus:ring-inset" 
+          aria-controls="mobile-menu" 
+          [attr.aria-expanded]="isMobileMenuOpen">
+          
           <span class="absolute -inset-0.5"></span>
           <span class="sr-only">Open main menu</span>
+          
           <!-- Icon when menu is closed -->
-          <svg class="block size-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
+          @if (!isMobileMenuOpen) {
+          <svg 
+            class="block w-4 h-4 text-white" 
+            fill="none" 
+            viewBox="0 0 24 24" 
+            stroke-width="1.5" 
+            stroke="currentColor" 
+            aria-hidden="true" 
+            data-slot="icon">
             <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
           </svg>
+          }
+          
           <!-- Icon when menu is open -->
-          <svg class="hidden size-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
+          @if (isMobileMenuOpen) {
+          <svg 
+            class="block w-4 h-4 text-white" 
+            fill="none" 
+            viewBox="0 0 24 24" 
+            stroke-width="1.5" 
+            stroke="currentColor" 
+            aria-hidden="true" 
+            data-slot="icon">
             <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
           </svg>
+          }
         </button>
       </div>
 
-      <!-- Logo and links -->
-      <div class="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
-        <div class="flex shrink-0 items-center">
+      <!-- Logo  -->
+      <div class="flex flex-1 items-center justify-between sm:justify-start">
+        <div class="flex shrink-0 items-center sm:ml-0 ml-auto sm:mr-auto">
           <img class="h-16 w-auto" src="../assets/FE11.png" alt="Your Company">
-      </div>
-      
-        <div class="hidden sm:ml-12 sm:block">
+        </div>
+
+        <!-- Links -->
+        <div class="hidden sm:flex flex-1 justify-center">
           <div class="flex space-x-8 uppercase">
             <a routerLink='/' class="rounded-md px-3 py-2 text-sm font-medium text-custom-black hover:border-b-2 hover:border-white transition-all duration-300 transform hover:-translate-y-1" aria-current="page">
               Accueil
             </a>
-            <a routerLink='about' class="rounded-md px-3 py-2 text-sm font-medium text-custom-black hover:border-b-2 hover:border-white transition-all duration-300 transform hover:-translate-y-1">
+            <a routerLink='/about' class="rounded-md px-3 py-2 text-sm font-medium text-custom-black hover:border-b-2 hover:border-white transition-all duration-300 transform hover:-translate-y-1">
               À Propos
             </a>
-            <a routerLink='contact' class="rounded-md px-3 py-2 text-sm font-medium text-custom-black hover:border-b-2 hover:border-white transition-all duration-300 transform hover:-translate-y-1">
+            <a routerLink='/contact' class="rounded-md px-3 py-2 text-sm font-medium text-custom-black hover:border-b-2 hover:border-white transition-all duration-300 transform hover:-translate-y-1">
               Contact
             </a>
           </div>
         </div>
       </div>
 
+
       <!-- Boutons Inscription et Connexion -->
-      <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-        <div class="flex space-x-4">
-          <a routerLink='inscritC' class="rounded-md px-4 py-2 text-sm font-medium text-custom-black bg-custom-gray  hover:text-white transition duration-300 flex items-center space-x-2 uppercase">
+      @if (!isMobileMenuOpen){
+        <div class="absolute inset-y-0 right-0 hidden sm:flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+          <div class="flex space-x-4">
+          <a routerLink='/inscritC' class="rounded-md px-4 py-2 text-sm font-medium text-custom-black bg-custom-gray  hover:text-white transition duration-300 flex items-center space-x-2 uppercase">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
             </svg>
             <span>Inscription</span>
           </a>
-          <a routerLink='connexion' class="rounded-md px-4 py-2 text-sm font-medium text-white bg-custom-orangeBold/80 transition duration-300 uppercase">
+          <a routerLink='/connexion' class="rounded-md px-4 py-2 text-sm font-medium text-white bg-custom-orangeBold/80 transition duration-300 uppercase">
             Connexion
           </a>
         </div>
-      </div>
+      </div>}
     </div>
   </div>
 
   <!-- Mobile menu -->
-  <div class="sm:hidden hidden" id="mobile-menu">
+  @if (isMobileMenuOpen) {
+  <div class="sm:hidden" id="mobile-menu">
     <div class="space-y-1 px-2 pt-2 pb-3">
-      <a routerLink='/' routerLinkActive="router-link-active"  class="block rounded-md px-3 py-2 text-base font-medium text-custom-black hover:bg-custom-gray hover:text-custom-orangeBold transition duration-300" aria-current="page">
+      <a routerLink='/' (click)="closeMobileMenu()" class="block rounded-md px-3 py-2 text-base font-medium text-custom-black hover:bg-custom-gray hover:text-custom-orangeBold transition duration-300" aria-current="page">
         Accueil
       </a>
-      <a routerLink='about' class="block rounded-md px-3 py-2 text-base font-medium text-custom-black hover:bg-custom-gray hover:text-custom-orangeBold transition duration-300">
+      <a routerLink='/about' (click)="closeMobileMenu()" class="block rounded-md px-3 py-2 text-base font-medium text-custom-black hover:bg-custom-gray hover:text-custom-orangeBold transition duration-300">
         À Propos
       </a>
-      <a routerLink='contact' class="block rounded-md px-3 py-2 text-base font-medium text-custom-black hover:bg-custom-gray hover:text-custom-orangeBold transition duration-300">
+      <a routerLink='/contact' (click)="closeMobileMenu()" class="block rounded-md px-3 py-2 text-base font-medium text-custom-black hover:bg-custom-gray hover:text-custom-orangeBold transition duration-300">
         Contact
       </a>
-      <a routerLink='inscritC' class="block rounded-md px-3 py-2 text-base font-medium text-custom-black hover:bg-custom-gray hover:text-custom-orangeBold transition duration-300">
-        Inscription
-      </a>
-      <a routerLink='connexion' class="block rounded-md px-3 py-2 text-base font-medium text-custom-black hover:bg-custom-gray hover:text-custom-orangeBold transition duration-300">
-        Connexion
-      </a>
+      <div class="flex space-x-4">
+        <a routerLink='/inscritC' class="rounded-md px-4 py-2 text-sm font-medium text-custom-black bg-custom-gray  hover:text-white transition duration-300 flex items-center space-x-2 uppercase">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+          </svg>
+          <span>Inscription</span>
+        </a>
+        <a routerLink='/connexion' class="rounded-md px-4 py-2 text-sm font-medium text-white bg-custom-orangeBold/80 transition duration-300 uppercase">
+          Connexion
+        </a>
+      </div>
     </div>
   </div>
+  }
 </nav>

@@ -5,6 +5,8 @@ import { ContactComponent } from '../Components/contact/contact.component';
 import { InscritCondidatComponent } from '../Components/inscrit-condidat/inscrit-condidat.component';
 import { InscritPresComponent } from '../Components/inscrit-pres/inscrit-pres.component';
 import { ConnexionComponent } from '../Components/connexion/connexion.component';
+import { NavbarORComponent } from '../Components/Organisateur/navbar-or/navbar-or.component';
+import { ProfileOrComponent } from '../Components/Organisateur/profile-or/profile-or.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -14,7 +16,12 @@ export const routes: Routes = [
     {path: 'inscritC',component:InscritCondidatComponent},
     {path: 'inscritP',component:InscritPresComponent},
     {path: 'connexion',component:ConnexionComponent},
+    // espace organisateur
+    {path: 'navOR',component:NavbarORComponent},
+    {path: 'profileOR',component:ProfileOrComponent},
 
+    
+    
 
 
 
