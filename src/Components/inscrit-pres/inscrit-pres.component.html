@@ -1,6 +1,6 @@
 <div class="flex justify-center items-center min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
     <div class="max-w-3xl w-full bg-white rounded-lg shadow-md p-8">
-        <form>
+        <form [formGroup]="pressData" (ngSubmit)="onSubmit()">
             <div class="space-y-8">
                 <div class="border-b border-gray-200 pb-8">
                     <div class="w-full bg-gray-200 rounded-full h-2 mb-6">
@@ -26,52 +26,231 @@
                     <div class="mt-8 grid grid-cols-1 gap-x-6 gap-y-6 sm:grid-cols-6">
                         <div class="sm:col-span-3">
                             <label class="block text-sm font-medium text-gray-700">Nom</label>
-                            <input type="text" formControlName="nom" class="input-field" placeholder="Votre nom" />
+                            <input type="text" 
+                            formControlName="nom" 
+                            class="input-field" 
+                            placeholder="Votre nom" 
+                            [ngClass]="{
+                                'border border-red': nom?.touched && nom?.invalid,
+                                'border border-green': nom?.touched && nom?.valid
+                            }"/>
+                            <div class="validation">
+                                @if((nom?.touched && nom?.dirty) || submitted){
+                                  @if(nom?.getError('required')){
+                                    <p class="text-red">Le Nom est obligatoire</p>
+                                  }
+                                  @if(nom?.getError('minlength')){
+                                    <p class="text-red">Le nom doit etre comprent au moins 2 lettres</p>
+                                  }
+                                  @if(nom?.getError('maxlength')){
+                                    <p class="text-red">Le nom doit etre composé au maximum de 15 lettres</p>
+                                  }
+                                  @if(nom?.getError('pattern')){
+                                    <p class="text-red">Le Nom doit pas comprend des chiffres</p>
+                                  }
+                                }
+                            </div>
                         </div>
 
                         <div class="sm:col-span-3">
                             <label class="block text-sm font-medium text-gray-700">Prénom</label>
-                            <input type="text" formControlName="prenom" class="input-field" placeholder="Votre prénom" />
+                            <input type="text" 
+                            formControlName="prenom" 
+                            class="input-field" 
+                            placeholder="Votre prénom" 
+                            [ngClass]="{
+                                'border border-red': prenom?.touched && prenom?.invalid,
+                                'border border-green': prenom?.touched && prenom?.valid
+                              }"/>
+                              <div class="validation">
+                                @if((prenom?.touched && prenom?.dirty) || submitted){
+                                  @if(prenom?.getError('required')){
+                                    <p class="text-red">Le Prénom est obligatoire</p>
+                                  }
+                                  @if(prenom?.getError('minlength')){
+                                    <p class="text-red">Le prenom doit etre comprent au moins 2 lettres</p>
+                                  }
+                                  @if(prenom?.getError('maxlength')){
+                                    <p class="text-red">Le prenom doit etre composé au maximum de 15 lettres</p>
+                                  }
+                                  @if(prenom?.getError('pattern')){
+                                    <p class="text-red">Le Prenom doit pas comprend des chiffres</p>
+                                  }
+                                }
+                              </div>
                         </div>
 
                         <div class="sm:col-span-6">
                             <label class="block text-sm font-medium text-gray-700">Email</label>
-                            <input type="email" formControlName="email" class="input-field" placeholder="votre@email.com" />
+                            <input type="email" 
+                            formControlName="email" 
+                            class="input-field" 
+                            placeholder="votre@email.com" 
+                            [ngClass]="{
+                                'border border-red': email?.touched && email?.invalid,
+                                'border border-green':email?.touched && email?.valid
+                              }"/>
+                              <div class="validation">
+                                @if((email?.touched && email?.dirty) || submitted){
+                                  @if(email?.getError('required')){
+                                    <p class="text-red">L'email est obligatoire</p>
+                                  }
+                                  @if(email?.getError('email')){
+                                    <p class="text-red">Email n'est pas valide</p>
+                                  }
+                                }
+                              </div>
                         </div>
 
                         <div class="sm:col-span-3">
                             <label class="block text-sm font-medium text-gray-700">Mot de passe</label>
-                            <input type="password" formControlName="password" class="input-field" placeholder="********" />
+                            <input type="password" 
+                            formControlName="password" 
+                            class="input-field" 
+                            placeholder="********" 
+                            [ngClass]="{
+                                'border border-red': password?.touched && password?.invalid,
+                                'border border-green': password?.touched && password?.valid
+                              }"/>
+                              <div class="validation">
+                                @if((password?.touched && password?.dirty) || submitted){
+                                  @if(password?.getError('required')){
+                                    <p class="text-red">Le Mot de passe est obligatoire</p>
+                                  }
+                                  @if(password?.getError('minlength')){
+                                    <p class="text-red">au minimum 8 caracteres</p>
+                                  }
+                                  @if(password?.getError('pattern')){
+                                    <p class="text-red">au moins une majuscule, une minuscule, un chiffre, et un caractère spécial</p>
+                                  }
+                                }
+                              </div>
                         </div>
 
                         <div class="sm:col-span-3">
                             <label class="block text-sm font-medium text-gray-700">Confirmer le mot de passe</label>
-                            <input type="password" formControlName="confirmPassword" class="input-field" placeholder="********" />
+                            <input type="password" 
+                            formControlName="confirmPassword" 
+                            class="input-field" 
+                            placeholder="********" 
+                            [ngClass]="{
+                                'border border-red': (confirmPassword?.touched && confirmPassword?.invalid) || pressData.errors?.['passNotMatch'],
+                                'border border-green': confirmPassword?.touched && confirmPassword?.valid && !pressData.errors?.['passNotMatch'] ,
+                              }"/>
+                              <div class="validation">
+                                @if((confirmPassword?.touched && confirmPassword?.dirty) || submitted){
+                                  @if(confirmPassword?.getError('required')){
+                                    <p class="text-red">La confirmation de mot de passe est obligatoire</p>
+                                  }
+                                  @if(pressData.getError('passNotMatch')){
+                                    <p class="text-red">Les mots de passe ne correspondent pas</p>
+                
+                                  }
+                                }
+                              </div>
                         </div>
 
                         <div class="sm:col-span-6">
                             <label class="block text-sm font-medium text-gray-700">Travail</label>
-                            <input type="text" formControlName="travail" class="input-field" placeholder="Votre métier ou spécialité" />
+                            <input type="text" 
+                            formControlName="travail" 
+                            class="input-field" 
+                            placeholder="Votre métier ou spécialité" 
+                            [ngClass]="{
+                                'border border-red': travail?.touched && travail?.invalid,
+                                'border border-green': travail?.touched && travail?.valid
+                              }"/>
+                              <div class="validation">
+                                @if((travail?.touched && travail?.dirty) || submitted){
+                                  @if(travail?.getError('required')){
+                                    <p class="text-red">Le Travaim est obligatoire</p>
+                                  }
+                                  @if(prenom?.getError('minlength')){
+                                    <p class="text-red">Le Travail doit etre comprent au moins 5 lettres</p>
+                                  }
+                                  @if(prenom?.getError('maxlength')){
+                                    <p class="text-red">Le Travail doit etre composé au maximum de 15 lettres</p>
+                                  }
+                                  @if(prenom?.getError('pattern')){
+                                    <p class="text-red">Le Travail doit pas comprend des chiffres</p>
+                                  }
+                                }
+                              </div>
                         </div>
 
                         <div class="sm:col-span-6">
                             <label class="block text-sm font-medium text-gray-700">Description</label>
-                            <textarea formControlName="description" class="input-field h-24" placeholder="Décrivez votre activité..."></textarea>
+                            <textarea 
+                            formControlName="description" 
+                            class="input-field h-24" 
+                            placeholder="Décrivez votre activité..."
+                            [ngClass]="{
+                                'border border-red': prenom?.touched && prenom?.invalid,
+                                'border border-green': prenom?.touched && prenom?.valid
+                              }">
+                        </textarea>
+                          <div class="validation">
+                            @if((description?.touched && description?.dirty) || submitted){
+                              @if(description?.getError('required')){
+                                <p class="text-red">La Description est obligatoire</p>
+                              }
+                              @if(description?.getError('minlength')){
+                                <p class="text-red">La description doit etre comprent au moins 20 caracteres</p>
+                              }
+                            }
+                          </div>
                         </div>
 
                         <div class="sm:col-span-3">
                             <label class="block text-sm font-medium text-gray-700">Numéro de téléphone</label>
-                            <input type="tel" formControlName="numTel" class="input-field" placeholder="12345678" />
+                            <input type="tel" 
+                            formControlName="numTel" 
+                            class="input-field" 
+                            placeholder="12345678" 
+                            [ngClass]="{
+                                'border border-red': numTel?.touched && numTel?.invalid,
+                                'border border-green': numTel?.touched && numTel?.valid
+                              }"/>
+                              <div class="validation">
+                                @if((numTel?.touched && numTel?.dirty) || submitted){
+                                  @if(numTel?.getError('required')){
+                                    <p class="text-red">Le Numéro de téléphone est obligatoire</p>
+                                  }
+                                  @if(numTel?.getError('pattern')){
+                                    <p class="text-red">Le Numéro de téléphone doit etre composé de 8 chiffres</p>
+                                  }
+                                }
+                              </div>
                         </div>
 
                         <div class="sm:col-span-3">
                             <label class="block text-sm font-medium text-gray-700">Numéro CIN</label>
-                            <input type="number" formControlName="numCin" class="input-field" placeholder="12345678" />
+                            <input type="number" 
+                            formControlName="numCin" 
+                            class="input-field" 
+                            placeholder="12345678" 
+                            [ngClass]="{
+                                'border border-red': numCin?.touched && numCin?.invalid,
+                                'border border-green': numCin?.touched && numCin?.valid
+                              }"/>
+                              <div class="validation">
+                                @if((numCin?.touched && numCin?.dirty) || submitted){
+                                  @if(numCin?.getError('required')){
+                                    <p class="text-red">Le Numéro de CIN est obligatoire</p>
+                                  }
+                                  @if(numCin?.getError('pattern')){
+                                    <p class="text-red">Le Numéro de CIN doit etre composé de 8 chiffres</p>
+                                  }
+                                }
+                              </div>
                         </div>
 
                         <div class="sm:col-span-3">
                             <label class="block text-sm font-medium text-gray-700">Ville</label>
-                            <select formControlName="ville" class="input-field">
+                            <select formControlName="ville" class="input-field" [ngClass]="{
+                                'border border-red': ville?.touched && ville?.invalid,
+                                'border border-green': ville?.touched && ville?.valid
+                              }">
                                 <option value="">Sélectionnez une ville</option>
                                 <option value="Tunis">Tunis</option>
                                 <option value="Sfax">Sfax</option>
@@ -97,11 +276,35 @@
                                 <option value="Manouba">Manouba</option>
                                 <option value="Ben Arous">Ben Arous</option>
                             </select>
+                            <div class="validation">
+                                @if((ville?.touched && ville?.dirty) || submitted){
+                                  @if(ville?.getError('required')){
+                                    <p class="text-red">La ville est obligatoire</p>
+                                  }
+                                }
+                              </div>
                         </div>
 
                         <div class="sm:col-span-3">
                             <label class="block text-sm font-medium text-gray-700">Adresse</label>
-                            <input type="text" formControlName="adress" class="input-field" placeholder="Votre adresse" />
+                            <input type="text" 
+                            formControlName="adress" 
+                            class="input-field" 
+                            placeholder="Votre adresse" 
+                            [ngClass]="{
+                                'border border-red': adress?.touched && adress?.invalid,
+                                'border border-green': adress?.touched && adress?.valid
+                              }"/>
+                              <div class="validation">
+                                @if((adress?.touched && adress?.dirty) || submitted){
+                                  @if(adress?.getError('required')){
+                                    <p class="text-red">L'adress est obligatoire</p>
+                                  }
+                                  @if(adress?.getError('pattern')){
+                                    <p class="text-red">L'adresse ne contient pas de caractères spéciaux inappropriés</p>
+                                  }
+                                }
+                              </div>
                         </div>
 
                         <div class="sm:col-span-6">
@@ -109,13 +312,31 @@
                             <div class="mt-2 flex items-center gap-x-3">
                                 <img id="pdProfilePreview" src="https://th.bing.com/th/id/OIP.lvzPu-WOW4Iv7QyjP-IkrgHaHa?rs=1&pid=ImgDetMain"
                                     alt="Photo de profil par défaut" class="h-12 w-12 rounded-full object-cover border border-gray-200" />
-                                <input type="file" class="text-sm text-gray-700" />
+                                <input type="file" 
+                                class="text-sm text-gray-700" 
+                                formControlName="pdProfile"
+                                (change)="onFileChange($event)"
+                                />
+                                <div class="validation">
+                                    @if((pdProfile?.touched && pdProfile?.dirty ) || submitted){
+                                    @if(pdProfile?.getError('required')){
+                                        <p class="text-red">Le Photo de profil est obligatoire</p>
+                                    }
+                                    }
+                                </div>
                             </div>
                         </div>
 
                         <div class="sm:col-span-6">
                             <label class="block text-sm font-medium text-gray-700">Documents de confirmation (Max 5 fichiers - Formats acceptés : PDF, JPG, PNG")</label>
-                            <input type="file" multiple accept=".pdf,.jpg,.png" class="text-sm text-gray-700" />
+                            <input type="file" multiple accept=".pdf,.jpg,.png" class="text-sm text-gray-700" formControlName="fichierConfirmation" (change)="onFilesChange($event)"/>
+                            <div class="validation">
+                                @if((fichierConfirmation?.touched && fichierConfirmation?.dirty) || submitted){
+                                  @if(fichierConfirmation?.getError('required')){
+                                    <p class="text-red">Les documents de confirmation sont obligatoires</p>
+                                  }
+                                }
+                              </div>
                         </div>
                     </div>
                 </div>

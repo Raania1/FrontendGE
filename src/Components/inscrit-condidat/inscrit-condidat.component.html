@@ -1,6 +1,6 @@
 <div class="flex justify-center items-center min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
     <div class="max-w-3xl w-full bg-white rounded-lg shadow-md p-8">
-      <form >
+      <form [formGroup]="organizeData" (ngSubmit)="onSubmit()">
         <div class="space-y-8">
           <div class="border-b border-gray-200 pb-8">
             <div class="w-full bg-gray-200 rounded-full h-2 mb-6">
@@ -21,80 +21,248 @@
 
             <p class="mt-1 text-sm text-gray-600 text-center">Remplissez ce formulaire pour créer votre compte organisateur.</p>
   
-            <div class="mt-8 grid grid-cols-1 gap-x-6 gap-y-6 sm:grid-cols-6">
+            <div  class="mt-8 grid grid-cols-1 gap-x-6 gap-y-6 sm:grid-cols-6">
               <div class="sm:col-span-3">
-                <label class="block text-sm font-medium text-gray-700">Nom</label>
-                <input type="text" formControlName="nom" class="input-field" placeholder="Votre nom" />
+                <label class="block text-sm font-medium text-gray-700" for="nom">Nom</label>
+                <input type="text" 
+                formControlName="nom" 
+                id="nom" 
+                class="input-field" 
+                placeholder="Votre nom" 
+                [ngClass]="{
+                  'border border-red': nom?.touched && nom?.invalid,
+                  'border border-green': nom?.touched && nom?.valid
+                }"/>
+                <div class="validation">
+                  @if((nom?.touched && nom?.dirty) || submitted){
+                    @if(nom?.getError('required')){
+                      <p class="text-red">Le Nom est obligatoire</p>
+                    }
+                    @if(nom?.getError('minlength')){
+                      <p class="text-red">Le nom doit etre comprent au moins 2 lettres</p>
+                    }
+                    @if(nom?.getError('maxlength')){
+                      <p class="text-red">Le nom doit etre composé au maximum de 15 lettres</p>
+                    }
+                    @if(nom?.getError('pattern')){
+                      <p class="text-red">Le Nom doit pas comprend des chiffres</p>
+                    }
+                  }
+                </div>
               </div>
   
               <div class="sm:col-span-3">
-                <label class="block text-sm font-medium text-gray-700">Prénom</label>
-                <input type="text" formControlName="prenom" class="input-field" placeholder="Votre prénom" />
+                <label class="block text-sm font-medium text-gray-700" for="prenom">Prénom</label>
+                <input type="text" 
+                formControlName="prenom"
+                id="prenom"
+                 class="input-field"
+                  placeholder="Votre prénom" 
+                  [ngClass]="{
+                    'border border-red': prenom?.touched && prenom?.invalid,
+                    'border border-green': prenom?.touched && prenom?.valid
+                  }"/>
+                  <div class="validation">
+                    @if((prenom?.touched && prenom?.dirty) || submitted){
+                      @if(prenom?.getError('required')){
+                        <p class="text-red">Le Prénom est obligatoire</p>
+                      }
+                      @if(prenom?.getError('minlength')){
+                        <p class="text-red">Le prenom doit etre comprent au moins 2 lettres</p>
+                      }
+                      @if(prenom?.getError('maxlength')){
+                        <p class="text-red">Le prenom doit etre composé au maximum de 15 lettres</p>
+                      }
+                      @if(prenom?.getError('pattern')){
+                        <p class="text-red">Le Prenom doit pas comprend des chiffres</p>
+                      }
+                    }
+                  </div>
               </div>
   
               <div class="sm:col-span-6">
-                <label class="block text-sm font-medium text-gray-700">Email</label>
-                <input type="email" formControlName="email" class="input-field" placeholder="votre@email.com" />
+                <label class="block text-sm font-medium text-gray-700" for="email">Email</label>
+                <input type="email" 
+                formControlName="email" 
+                id="email"
+                class="input-field" 
+                placeholder="votre@email.com" 
+                [ngClass]="{
+                  'border border-red': email?.touched && email?.invalid,
+                  'border border-green':email?.touched && email?.valid
+                }"/>
+                <div class="validation">
+                  @if((email?.touched && email?.dirty) || submitted){
+                    @if(email?.getError('required')){
+                      <p class="text-red">L'email est obligatoire</p>
+                    }
+                    @if(email?.getError('email')){
+                      <p class="text-red">Email n'est pas valide</p>
+                    }
+                  }
+                </div>
               </div>
   
               <div class="sm:col-span-3">
-                <label class="block text-sm font-medium text-gray-700">Mot de passe</label>
-                <input type="password" formControlName="password" class="input-field" placeholder="********" />
+                <label class="block text-sm font-medium text-gray-700" for="password">Mot de passe</label>
+                <input type="password" 
+                formControlName="password"
+                id="password" 
+                class="input-field" 
+                placeholder="********" 
+                [ngClass]="{
+                  'border border-red': password?.touched && password?.invalid,
+                  'border border-green': password?.touched && password?.valid
+                }"/>
+                <div class="validation">
+                  @if((password?.touched && password?.dirty) || submitted){
+                    @if(password?.getError('required')){
+                      <p class="text-red">Le Mot de passe est obligatoire</p>
+                    }
+                    @if(password?.getError('minlength')){
+                      <p class="text-red">au minimum 8 caracteres</p>
+                    }
+                    @if(password?.getError('pattern')){
+                      <p class="text-red">au moins une majuscule, une minuscule, un chiffre, et un caractère spécial</p>
+                    }
+                  }
+                </div>
               </div>
   
               <div class="sm:col-span-3">
-                <label class="block text-sm font-medium text-gray-700">Confirmer le mot de passe</label>
-                <input type="password" formControlName="confirmPassword" class="input-field" placeholder="********" />
+                <label class="block text-sm font-medium text-gray-700" for="confirmPassword">Confirmer le mot de passe</label>
+                <input type="password" 
+                formControlName="confirmPassword" 
+                class="input-field" 
+                placeholder="********" 
+                [ngClass]="{
+                  'border border-red': (confirmPassword?.touched && confirmPassword?.invalid) || organizeData.errors?.['passNotMatch'],
+                  'border border-green': confirmPassword?.touched && confirmPassword?.valid && !organizeData.errors?.['passNotMatch'] ,
+                }"/>
+                <div class="validation">
+                  @if((confirmPassword?.touched && confirmPassword?.dirty) || submitted){
+                    @if(confirmPassword?.getError('required')){
+                      <p class="text-red">La confirmation de mot de passe est obligatoire</p>
+                    }
+                    @if(organizeData.getError('passNotMatch')){
+                      <p class="text-red">Les mots de passe ne correspondent pas</p>
+  
+                    }
+                  }
+                </div>
               </div>
   
               <div class="sm:col-span-3">
-                <label class="block text-sm font-medium text-gray-700">Numéro de téléphone</label>
-                <input type="tel" formControlName="numTel" class="input-field" placeholder="12345678" />
+                <label class="block text-sm font-medium text-gray-700" for="numTel">Numéro de téléphone</label>
+                <input type="tel" 
+                formControlName="numTel" 
+                id="numTel"
+                class="input-field" 
+                placeholder="12345678" 
+                [ngClass]="{
+                  'border border-red': numTel?.touched && numTel?.invalid,
+                  'border border-green': numTel?.touched && numTel?.valid
+                }"/>
+                <div class="validation">
+                  @if((numTel?.touched && numTel?.dirty) || submitted){
+                    @if(numTel?.getError('required')){
+                      <p class="text-red">Le Numéro de téléphone est obligatoire</p>
+                    }
+                    @if(numTel?.getError('pattern')){
+                      <p class="text-red">Le Numéro de téléphone doit etre composé de 8 chiffres</p>
+                    }
+                  }
+                </div>
               </div>
   
               <div class="sm:col-span-3">
-                <label class="block text-sm font-medium text-gray-700">Numéro CIN</label>
-                <input type="number" formControlName="numCin" class="input-field" placeholder="12345678" />
+                <label class="block text-sm font-medium text-gray-700" for="numCin">Numéro CIN</label>
+                <input type="text" 
+                formControlName="numCin"
+                id="numCin" 
+                class="input-field" 
+                placeholder="12345678"
+                [ngClass]="{
+                  'border border-red': numCin?.touched && numCin?.invalid,
+                  'border border-green': numCin?.touched && numCin?.valid
+                }"/>
+                <div class="validation">
+                  @if((numCin?.touched && numCin?.dirty) || submitted){
+                    @if(numCin?.getError('required')){
+                      <p class="text-red">Le Numéro de CIN est obligatoire</p>
+                    }
+                    @if(numCin?.getError('pattern')){
+                      <p class="text-red">Le Numéro de CIN doit etre composé de 8 chiffres</p>
+                    }
+                  }
+                </div>
               </div>
   
               <div class="sm:col-span-3">
-                <label class="block text-sm font-medium text-gray-700">Ville</label>
-                <select formControlName="ville" class="input-field">
+                <label class="block text-sm font-medium text-gray-700" for="ville">Ville</label>
+                <select formControlName="ville" class="input-field" [ngClass]="{
+                  'border border-red': ville?.touched && ville?.invalid,
+                  'border border-green': ville?.touched && ville?.valid
+                }">
                   <option value="">Sélectionnez une ville</option>
                   <option value="Tunis">Tunis</option>
-              <option value="Sfax">Sfax</option>
-              <option value="Sousse">Sousse</option>
-              <option value="Kairouan">Kairouan</option>
-              <option value="Bizerte">Bizerte</option>
-              <option value="Gabès">Gabès</option>
-              <option value="Ariana">Ariana</option>
-              <option value="Gafsa">Gafsa</option>
-              <option value="Monastir">Monastir</option>
-              <option value="Nabeul">Nabeul</option>
-              <option value="Tataouine">Tataouine</option>
-              <option value="Béja">Béja</option>
-              <option value="Jendouba">Jendouba</option>
-              <option value="Médenine">Médenine</option>
-              <option value="Mahdia">Mahdia</option>
-              <option value="Kasserine">Kasserine</option>
-              <option value="Kebili">Kebili</option>
-              <option value="Siliana">Siliana</option>
-              <option value="Le Kef">Le Kef</option>
-              <option value="Tozeur">Tozeur</option>
-              <option value="Zaghouan">Zaghouan</option>
-              <option value="Manouba">Manouba</option>
-              <option value="Ben Arous">Ben Arous</option>
+                  <option value="Sfax">Sfax</option>
+                  <option value="Sousse">Sousse</option>
+                  <option value="Kairouan">Kairouan</option>
+                  <option value="Bizerte">Bizerte</option>
+                  <option value="Gabès">Gabès</option>
+                  <option value="Ariana">Ariana</option>
+                  <option value="Gafsa">Gafsa</option>
+                  <option value="Monastir">Monastir</option>
+                  <option value="Nabeul">Nabeul</option>
+                  <option value="Tataouine">Tataouine</option>
+                  <option value="Béja">Béja</option>
+                  <option value="Jendouba">Jendouba</option>
+                  <option value="Médenine">Médenine</option>
+                  <option value="Mahdia">Mahdia</option>
+                  <option value="Kasserine">Kasserine</option>
+                  <option value="Kebili">Kebili</option>
+                  <option value="Siliana">Siliana</option>
+                  <option value="Le Kef">Le Kef</option>
+                  <option value="Tozeur">Tozeur</option>
+                  <option value="Zaghouan">Zaghouan</option>
+                  <option value="Manouba">Manouba</option>
+                  <option value="Ben Arous">Ben Arous</option>
                 </select>
+                <div class="validation">
+                  @if((ville?.touched && ville?.dirty) || submitted){
+                    @if(ville?.getError('required')){
+                      <p class="text-red">La ville est obligatoire</p>
+                    }
+                  }
+                </div>
               </div>
   
               <div class="sm:col-span-3">
-                <label class="block text-sm font-medium text-gray-700">Adresse</label>
-                <input type="text" formControlName="adress" class="input-field" placeholder="Votre adresse" />
+                <label class="block text-sm font-medium text-gray-700" for="adress">Adresse</label>
+                <input type="text" 
+                formControlName="adress" 
+                class="input-field" 
+                placeholder="Votre adresse"
+                [ngClass]="{
+                  'border border-red': adress?.touched && adress?.invalid,
+                  'border border-green': adress?.touched && adress?.valid
+                }"/>
+                <div class="validation">
+                  @if((adress?.touched && adress?.dirty) || submitted){
+                    @if(adress?.getError('required')){
+                      <p class="text-red">L'adress est obligatoire</p>
+                    }
+                    @if(adress?.getError('pattern')){
+                      <p class="text-red">L'adresse ne contient pas de caractères spéciaux inappropriés</p>
+                    }
+                  }
+                </div>
               </div>
   
               <!-- Photo de profil -->
               <div class="sm:col-span-6">
-                <label class="block text-sm font-medium text-gray-700">Photo de profil</label>
+                <label class="block text-sm font-medium text-gray-700" for="pdProfile">Photo de profil</label>
                 <div class="mt-2 flex items-center gap-x-3">
                   <img
                     id="pdProfilePreview"
@@ -102,7 +270,18 @@
                     alt="Photo de profil par défaut"
                     class="h-12 w-12 rounded-full object-cover border border-gray-200"
                   />
-                  <input type="file"  class="text-sm text-gray-700" />
+                  <input type="file"  
+                  class="text-sm text-gray-700"
+                  formControlName="pdProfile"
+                  (change)="onFileChange($event)"
+                 />
+                  <div class="validation">
+                    @if((pdProfile?.touched && pdProfile?.dirty ) || submitted){
+                      @if(pdProfile?.getError('required')){
+                        <p class="text-red">Le Photo de profil est obligatoire</p>
+                      }
+                    }
+                  </div>
                 </div>
               </div>
             </div>
@@ -121,7 +300,6 @@
               S'inscrire
             </button>
           </div>
-          
       </form>
     </div>
   </div>

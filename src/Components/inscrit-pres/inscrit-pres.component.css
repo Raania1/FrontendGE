@@ -5,3 +5,14 @@
   .btn-primary {
     @apply rounded-md bg-custom-orangeBold px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-custom-orangethrow focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-500 transition-colors;
   }
+  .text-red {
+    color: red;
+    font-size: 10px;
+  }
+  .border-red {
+    border: 1px solid red;
+  }
+  
+  .border-green {
+    border: 1px solid green;
+  }

@@ -1,0 +1,11 @@
+.text-red {
+    color: red;
+    font-size: 10px;
+  }
+  .border-red {
+    border: 1px solid red;
+  }
+  
+  .border-green {
+    border: 1px solid green;
+  }
