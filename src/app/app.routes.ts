@@ -9,6 +9,7 @@ import { NavbarORComponent } from '../Components/Organisateur/navbar-or/navbar-o
 import { ProfileOrComponent } from '../Components/Organisateur/profile-or/profile-or.component';
 import { SidebarPRComponent } from '../Components/Prestataire/sidebar-pr/sidebar-pr.component';
 import { ProfilePrComponent } from '../Components/Prestataire/profile-pr/profile-pr.component';
+import { ParametrePRComponent } from '../Components/Prestataire/parametre-pr/parametre-pr.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -29,6 +30,8 @@ export const routes: Routes = [
         component: SidebarPRComponent, 
         children: [
           { path: 'profile', component: ProfilePrComponent },
+          { path: 'parametre', component: ParametrePRComponent },
+
         ],
       }
 
