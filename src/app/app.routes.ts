@@ -7,6 +7,8 @@ import { InscritPresComponent } from '../Components/inscrit-pres/inscrit-pres.co
 import { ConnexionComponent } from '../Components/connexion/connexion.component';
 import { NavbarORComponent } from '../Components/Organisateur/navbar-or/navbar-or.component';
 import { ProfileOrComponent } from '../Components/Organisateur/profile-or/profile-or.component';
+import { SidebarPRComponent } from '../Components/Prestataire/sidebar-pr/sidebar-pr.component';
+import { ProfilePrComponent } from '../Components/Prestataire/profile-pr/profile-pr.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -19,6 +21,19 @@ export const routes: Routes = [
     // espace organisateur
     {path: 'navOR',component:NavbarORComponent},
     {path: 'profileOR',component:ProfileOrComponent},
+    // espace prestataire
+    // {path: 'sidePr',component:SidebarPRComponent},
+    // {path: 'profilePr',component:ProfilePrComponent},
+    {
+        path: 'prestataire',
+        component: SidebarPRComponent, 
+        children: [
+          { path: 'profile', component: ProfilePrComponent },
+        ],
+      }
+
+    
+
 
     
     

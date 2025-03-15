@@ -1,0 +1,22 @@
+/* Ajoutez des styles personnalisés si nécessaire */
+.scrollbar-hide::-webkit-scrollbar {
+    display: none; /* Masquer la barre de défilement */
+  }
+  
+  .scrollbar-hide {
+    -ms-overflow-style: none; /* IE et Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+
+  /* Ajoutez des styles personnalisés si nécessaire */
+.overflow-hidden {
+  overflow: hidden;
+}
+
+.object-cover {
+  object-fit: cover;
+}
+
+.bg-gradient-to-t {
+  background-image: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+}
