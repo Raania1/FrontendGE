@@ -43,49 +43,49 @@
       <nav class="mt-5">
         <ul>
           <li
-            class="p-2 hover:bg-custom-gray/10 rounded-lg flex items-center space-x-2 cursor-pointer transition-all duration-300"
+            class="p-2 hover:bg-custom-gray rounded-lg flex items-center space-x-2 cursor-pointer transition-all duration-300" routerLinkActive="bg-custom-gray"
           >
             <fa-icon [icon]="faChartBar" class="h-5 w-5 text-custom-black"></fa-icon>
             <span *ngIf="!isSidebarCollapsed">Tableau de bord</span>
           </li>
           <li
-            class="p-2 hover:bg-custom-gray/10 rounded-lg flex items-center space-x-2 cursor-pointer transition-all duration-300"
+            class="p-2 hover:bg-custom-gray/10 rounded-lg flex items-center space-x-2 cursor-pointer transition-all duration-300" routerLinkActive="bg-custom-gray"
           >
             <fa-icon [icon]="faTools" class="h-5 w-5 text-custom-black"></fa-icon>
             <span *ngIf="!isSidebarCollapsed">Mes services</span>
           </li>
           <li
-            class="p-2 hover:bg-custom-gray/10 rounded-lg flex items-center space-x-2 cursor-pointer transition-all duration-300"
+            class="p-2 hover:bg-custom-gray/10 rounded-lg flex items-center space-x-2 cursor-pointer transition-all duration-300" routerLinkActive="bg-custom-gray"
           >
             <fa-icon [icon]="faCalendarCheck" class="h-5 w-5 text-custom-black"></fa-icon>
             <span *ngIf="!isSidebarCollapsed">Réservations</span>
           </li>
           <li
-            class="p-2 hover:bg-custom-gray/10 rounded-lg flex items-center space-x-2 cursor-pointer transition-all duration-300"
+            class="p-2 hover:bg-custom-gray/10 rounded-lg flex items-center space-x-2 cursor-pointer transition-all duration-300" routerLinkActive="bg-custom-gray"
           >
             <fa-icon [icon]="faCalendarAlt" class="h-5 w-5 text-custom-black"></fa-icon>
             <span *ngIf="!isSidebarCollapsed">Calendrier</span>
           </li>
           <li
-            class="p-2 hover:bg-custom-gray/10 rounded-lg flex items-center space-x-2 cursor-pointer transition-all duration-300"
+            class="p-2 hover:bg-custom-gray/10 rounded-lg flex items-center space-x-2 cursor-pointer transition-all duration-300" routerLinkActive="bg-custom-gray"
           >
             <fa-icon [icon]="faBullhorn" class="h-5 w-5 text-custom-black"></fa-icon>
             <span *ngIf="!isSidebarCollapsed">Publicités</span>
           </li>
           <li
-            class="p-2 hover:bg-custom-gray/10 rounded-lg flex items-center space-x-2 cursor-pointer transition-all duration-300"
+            class="p-2 hover:bg-custom-gray/10 rounded-lg flex items-center space-x-2 cursor-pointer transition-all duration-300" routerLinkActive="bg-custom-gray"
           >
             <fa-icon [icon]="faUser" class="h-5 w-5 text-custom-black"></fa-icon>
             <a  routerLink="/prestataire/profile" *ngIf="!isSidebarCollapsed">Mon profil</a>
           </li>
           <li
-            class="p-2 hover:bg-custom-gray/10 rounded-lg flex items-center space-x-2 cursor-pointer transition-all duration-300"
+            class="p-2 hover:bg-custom-gray/10 rounded-lg flex items-center space-x-2 cursor-pointer transition-all duration-300" routerLinkActive="bg-custom-gray"
           >
             <fa-icon [icon]="faCog" class="h-5 w-5 text-custom-black"></fa-icon>
-            <span routerLink="/prestataire/parametre"  *ngIf="!isSidebarCollapsed">Paramètres</span>
+            <span routerLink="/prestataire/parametre" *ngIf="!isSidebarCollapsed" >Paramètres</span>
           </li>
           <li
-            class="p-2 hover:bg-custom-gray/10 rounded-lg flex items-center space-x-2 cursor-pointer transition-all duration-300"
+            class="p-2 hover:bg-custom-gray/10 rounded-lg flex items-center space-x-2 cursor-pointer transition-all duration-300" routerLinkActive="bg-custom-gray"
           >
             <fa-icon [icon]="faSignOutAlt" class="h-5 w-5 text-custom-black"></fa-icon>
             <span *ngIf="!isSidebarCollapsed">Déconnexion</span>
@@ -95,7 +95,7 @@
     </aside>
   
     <!-- Contenu principal -->
-    <div class="flex-1 p-6 md:ml-64">
+    <div class="flex-1 p-6 bg-white md:ml-64">
         <div class="md:hidden flex items-center justify-between p-4 bg-custom-orange/5 backdrop-blur-md shadow-md border-b border-custom-gray">
           <button
           class="p-2 text-gray-600 hover:text-gray-800"

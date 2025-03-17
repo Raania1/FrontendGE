@@ -1,6 +1,6 @@
 <app-navbar></app-navbar>
-<div class="flex justify-center items-center min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-3xl w-full bg-white rounded-lg shadow-md p-8">
+<div class="flex justify-center items-center min-h-screen  py-12 px-4 sm:px-6 lg:px-8" style="background-image: url('https://media.istockphoto.com/id/804893032/fr/photo/flou-des-affaires-conf%C3%A9rence-et-pr%C3%A9sentation-dans-la-salle-de-conf%C3%A9rence.jpg?s=612x612&w=0&k=20&c=t5bT38VU4_N_wq8YWTxmTX7SnxZQRfRqbqXwGV9OziQ='); background-size: cover; background-repeat: no-repeat; background-position: center;">
+  <div class="max-w-3xl w-full bg-white rounded-lg shadow-md p-8">
         <form [formGroup]="pressData" (ngSubmit)="onSubmit()">
             <div class="space-y-8">
                 <div class="border-b border-gray-200 pb-8">
@@ -131,7 +131,7 @@
                         <div class="sm:col-span-3">
                             <label class="block text-sm font-medium text-gray-700">Confirmer le mot de passe</label>
                             <input type="password" 
-                            formControlName="confirmPassword" 
+                            formControlName="password_confirmation" 
                             class="input-field" 
                             placeholder="********" 
                             [ngClass]="{
@@ -339,6 +339,11 @@
                                 }
                               </div>
                         </div>
+                        @if (errorMessage) {
+                          <div class="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
+                            {{ errorMessage }}
+                          </div>
+                        }
                     </div>
                 </div>
             </div>
@@ -351,9 +356,9 @@
                     </button>
                 </p>
 
-                <a routerLink='/prestataire' type="submit" class="btn-primary">
-                    S'inscrire
-                </a>
+                <button  type="submit" class="btn-primary">
+                    Envoyer 
+                </button>
             </div>
         </form>
     </div>

@@ -1,11 +1,11 @@
 <app-navbar></app-navbar>
-<div class="flex justify-center items-center min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+<div class="flex justify-center items-center min-h-screen  py-12 px-4 sm:px-6 lg:px-8" style="background-image: url('https://media.istockphoto.com/id/804893032/fr/photo/flou-des-affaires-conf%C3%A9rence-et-pr%C3%A9sentation-dans-la-salle-de-conf%C3%A9rence.jpg?s=612x612&w=0&k=20&c=t5bT38VU4_N_wq8YWTxmTX7SnxZQRfRqbqXwGV9OziQ='); background-size: cover; background-repeat: no-repeat; background-position: center;">
     <div class="max-w-3xl w-full bg-white rounded-lg shadow-md p-8">
       <form [formGroup]="organizeData" (ngSubmit)="onSubmit()">
         <div class="space-y-8">
           <div class="border-b border-gray-200 pb-8">
             <div class="w-full bg-gray-200 rounded-full h-2 mb-6">
-                <div class="bg-orange-500 h-2 rounded-full" style="width: 40%"></div> <!-- Adjust width based on current progress -->
+                <div class="bg-orange-500 h-2 rounded-full" style="width: 40%"></div> 
             </div>
             <p class="text-center text-2xl font-serif text-gray-800 mb-6">Créer un compte</p>
             <div class="flex space-x-4 justify-center">
@@ -133,16 +133,16 @@
               <div class="sm:col-span-3">
                 <label class="block text-sm font-medium text-gray-700" for="confirmPassword">Confirmer le mot de passe</label>
                 <input type="password" 
-                formControlName="confirmPassword" 
+                formControlName="password_confirmation" 
                 class="input-field" 
                 placeholder="********" 
                 [ngClass]="{
-                  'border border-red': (confirmPassword?.touched && confirmPassword?.invalid) || organizeData.errors?.['passNotMatch'],
-                  'border border-green': confirmPassword?.touched && confirmPassword?.valid && !organizeData.errors?.['passNotMatch'] ,
+                  'border border-red': (password_confirmation?.touched && password_confirmation?.invalid) || organizeData.errors?.['passNotMatch'],
+                  'border border-green': password_confirmation?.touched && password_confirmation?.valid && !organizeData.errors?.['passNotMatch'] ,
                 }"/>
                 <div class="validation">
-                  @if((confirmPassword?.touched && confirmPassword?.dirty) || submitted){
-                    @if(confirmPassword?.getError('required')){
+                  @if((password_confirmation?.touched && password_confirmation?.dirty) || submitted){
+                    @if(password_confirmation?.getError('required')){
                       <p class="text-red">La confirmation de mot de passe est obligatoire</p>
                     }
                     @if(organizeData.getError('passNotMatch')){
@@ -262,29 +262,42 @@
               </div>
   
               <!-- Photo de profil -->
-              <div class="sm:col-span-6">
-                <label class="block text-sm font-medium text-gray-700" for="pdProfile">Photo de profil</label>
-                <div class="mt-2 flex items-center gap-x-3">
-                  <img
-                    id="pdProfilePreview"
-                    src="https://th.bing.com/th/id/OIP.lvzPu-WOW4Iv7QyjP-IkrgHaHa?rs=1&pid=ImgDetMain"
-                    alt="Photo de profil par défaut"
-                    class="h-12 w-12 rounded-full object-cover border border-gray-200"
-                  />
-                  <input type="file"  
-                  class="text-sm text-gray-700"
-                  formControlName="pdProfile"
-                  (change)="onFileChange($event)"
-                 />
-                  <div class="validation">
-                    @if((pdProfile?.touched && pdProfile?.dirty ) || submitted){
-                      @if(pdProfile?.getError('required')){
-                        <p class="text-red">Le Photo de profil est obligatoire</p>
-                      }
-                    }
-                  </div>
+<div class="sm:col-span-6">
+  <label class="block text-sm font-medium text-gray-700" for="pdProfile">Photo de profil</label>
+  <div class="mt-2 flex items-center gap-x-3">
+    <img
+      *ngIf="selectedProfilePicture; else defaultImage"
+      [src]="selectedProfilePicture ? (selectedProfilePicture ) : ''"
+      alt="Aperçu de la photo"
+      class="h-12 w-12 rounded-full object-cover border border-gray-200"
+    />
+    <ng-template #defaultImage>
+      <img
+        src="https://th.bing.com/th/id/OIP.lvzPu-WOW4Iv7QyjP-IkrgHaHa?rs=1&pid=ImgDetMain"
+        alt="Photo de profil par défaut"
+        class="h-12 w-12 rounded-full object-cover border border-gray-200"
+      />
+    </ng-template>
+    <input type="file"  
+      class="text-sm text-gray-700"
+      (change)="onFileChange($event)"
+      accept="image/*"
+    />
+    <div class="validation">
+      @if((pdProfile?.touched && pdProfile?.dirty ) || submitted){
+        @if(pdProfile?.getError('required')){
+          <p class="text-red">La photo de profil est obligatoire</p>
+        }
+      }
+    </div>
+  </div>
+</div>
+
+              @if (errorMessage) {
+                <div class="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
+                  {{ errorMessage }}
                 </div>
-              </div>
+              }
             </div>
           </div>
         </div>

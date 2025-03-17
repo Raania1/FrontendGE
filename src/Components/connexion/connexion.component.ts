@@ -1,34 +1,66 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { NavbarComponent } from "../navbar/navbar.component";
+import { AuthService } from '../../Services/auth.service';
+import {  HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-connexion',
   standalone: true,
-  imports: [RouterModule, ReactiveFormsModule, CommonModule, NavbarComponent],
+  imports: [RouterModule, ReactiveFormsModule, CommonModule, NavbarComponent,HttpClientModule],
   templateUrl: './connexion.component.html',
   styleUrl: './connexion.component.css'
 })
 export class ConnexionComponent {
-  constructor (private _FormBuilder: FormBuilder) {
+  constructor (private _FormBuilder: FormBuilder,private authService: AuthService,private router: Router) {
       console.log(this.userData)
     }
     userData: FormGroup = this._FormBuilder.group({
       email:['',[Validators.required, Validators.email]],
-      password:['',[Validators.required, Validators.minLength(8), Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/)]],
+      password:['',[Validators.required]],
     })
     submitted = false;
+    errorMessage: String | null = null
     onSubmit() {
       this.submitted = true;
+      ;
       if (this.userData.invalid) {
         this.userData.markAllAsTouched(); 
         return;
       }
-      console.log('Formulaire valide', this.userData.value);
-    }
-    get email (){return this.userData.get('email');}
-    get password (){return this.userData.get('password');}
+
+      this.authService.login(this.userData.value.email, this.userData.value.password).subscribe(
+      (response) => {
+        console.log('Connexion réussie', response);
+        const userRole = response.user.role;
+
+        if (userRole === 'organizer') {
+          this.router.navigate(['/navOR']); 
+        } else if (userRole === 'prestataire') {
+          this.router.navigate(['/prestataire/parametre']); 
+        } else if (userRole === 'admin') {
+          this.router.navigate(['/prestataire/profile']); 
+        } else {
+          console.error('Rôle non reconnu');
+        }
+      },      
+      (error) => {
+        console.error('Erreur de connexion', error);
+
+        if (error.error?.errors?.email === "No user found with this email." || error.error?.errors?.email === "Invalid Credentials.") {
+          this.errorMessage = 'Email ou mot de passe incorrect.'; 
+        } else if (error.error?.errors?.message === "Account not approved yet.") {
+          this.errorMessage = 'Votre compte n\'est pas encore approuvé. Réessayez dès que vous êtes accepté comme prestataire.'; 
+        } else {
+          this.errorMessage = 'Une erreur s\'est produite. Veuillez réessayer.'; 
+        }
+      }
+    );
+  }
+    
+  get email (){return this.userData.get('email');}
+  get password (){return this.userData.get('password');}
   
 }
