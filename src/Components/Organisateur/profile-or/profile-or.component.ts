@@ -1,15 +1,18 @@
 import { Component } from '@angular/core';
 import { NavbarORComponent } from '../navbar-or/navbar-or.component';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
   faInfoCircle,faCalendarAlt,faChartBar,faCog,faTrash 
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { OrganizerService } from '../../../Services/organizer.service';
+import { HttpClientModule } from '@angular/common/http';
 @Component({
   selector: 'app-profile-or',
   standalone: true,
-  imports: [NavbarORComponent,CommonModule,FormsModule,FontAwesomeModule],
+  imports: [NavbarORComponent,CommonModule,FormsModule,FontAwesomeModule,HttpClientModule],
+  providers: [DatePipe],
   templateUrl: './profile-or.component.html',
   styleUrl: './profile-or.component.css'
 })
@@ -21,25 +24,54 @@ export class ProfileOrComponent {
   faCog = faCog; 
   faTrash =faTrash ;
 
-  organisateur = {
-    nom: "Boujneh",
-    prenom: "Rania",
-    email: "boujnehrania3@gmail.com",
-    numTel: "12345678",
-    numCin: "09876543",
-    ville: "Tunis",
-    adress: "123 Rue Soudan",
-    pdProfile: "https://www.missnumerique.com/blog/wp-content/uploads/reussir-sa-photo-de-profil-michael-dam.jpg",
-  };
+  organisateur: any = {};  
+
 
   formData = { ...this.organisateur };
   isEditing = false;
   activeTab = "infos";
+  constructor(private authService: OrganizerService) {}
+
+  ngOnInit(): void {
+    this.fetchOrganizerData();  
+  }
+  fetchOrganizerData() {
+    const user = JSON.parse(localStorage.getItem('user') || '{}');  
+    const id = user.Id;  
+
+    if (id) {
+      this.authService.getOrganizerById(id).subscribe(
+        (response) => {
+          this.organisateur = response.organizer;  
+          this.formData = { ...this.organisateur };  
+        },
+        (error) => {
+          console.error('Erreur lors de la récupération des données:', error);
+        }
+      );
+    } else {
+      console.error('Utilisateur non trouvé dans le localStorage');
+    }
+  }
 
   handleSubmit(event: Event) {
     event.preventDefault();
-    this.organisateur = { ...this.formData };
-    this.isEditing = false;
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    const id = user.Id;
+    if (id) {
+      this.authService.updateOrganizer(id, this.formData).subscribe(
+        (response) => {
+          console.log('Réponse après mise à jour :', response);
+          this.organisateur = response.updatedOrganiser; 
+          this.formData = { ...this.organisateur };  
+          this.isEditing = false;
+        },
+        (error) => {
+          console.log('Erreur détaillée :', error.error?.errors); 
+          console.error('Erreur lors de la mise à jour:', error);
+        }
+      );
+    }
   }
 
   handleCancel() {
@@ -55,15 +87,15 @@ export class ProfileOrComponent {
   triggerFileInput() {
     document.getElementById('fileInput')?.click();
   }
-  
   onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files[0]) {
-      const reader = new FileReader();
-      reader.onload = (e: any) => {
-        this.organisateur.pdProfile = e.target.result;
-      };
-      reader.readAsDataURL(input.files[0]);
+      const file = input.files[0];
+      if (file.type.startsWith('image/')) {
+        this.formData.pdProfile = file;  
+      } else {
+        alert('Veuillez télécharger un fichier image valide.');
+      }
     }
   }
 
@@ -85,16 +117,4 @@ export class ProfileOrComponent {
     }
   }
 
-  //events = [
-    //   {
-    //     id: 1,
-    //     title: "Conférence Tech 2023",
-    //     description: "Une conférence sur les dernières technologies et innovations.",
-    //     date: new Date(2023, 11, 15),
-    //     location: "Centre de Conférences, Tunis",
-    //     image: "/placeholder.svg?height=300&width=500",
-    //     participants: 120,
-    //     status: "completed",
-    //   }
-    // ];
 }

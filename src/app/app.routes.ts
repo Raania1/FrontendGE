@@ -25,6 +25,16 @@ export const routes: Routes = [
     // espace organisateur
     {path: 'navOR',component:NavbarORComponent},
     {path: 'profileOR',component:ProfileOrComponent},
+
+    // {
+    //   path: 'organisateur',
+    //   component: NavbarORComponent,
+    //   children: [
+    //     { path: 'profileOR', component: ProfileOrComponent },
+    //   ],
+    // },
+
+
     // espace prestataire
     // {path: 'sidePr',component:SidebarPRComponent},
     // {path: 'profilePr',component:ProfilePrComponent},

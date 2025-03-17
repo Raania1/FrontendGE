@@ -31,7 +31,8 @@
           </button>
           <div class="relative ml-3">
             <button (click)="toggleDropdown()" class="flex items-center text-sm rounded-full focus:outline-none">
-              <img class="h-8 w-8 rounded-full" src="https://www.missnumerique.com/blog/wp-content/uploads/reussir-sa-photo-de-profil-michael-dam.jpg" alt="Profile">
+              <img class="h-8 w-8 rounded-full" [src]="organisateur.pdProfile"
+              alt="Photo de profil">
             </button>
             @if (isDropdownOpen) {
               <div class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
@@ -44,10 +45,10 @@
                     <fa-icon [icon]="faCog" class="mr-2"></fa-icon>
                     Paramètres
                   </a>
-                  <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                  <button (click)="logout()" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                     <fa-icon [icon]="faSignOutAlt" class="mr-2"></fa-icon>
                     Déconnexion
-                  </a>
+                  </button>
                 </div>
               </div>
             }
