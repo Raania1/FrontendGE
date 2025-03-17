@@ -9,6 +9,8 @@ export class AuthService {
   private apiUrlL = 'http://localhost:8000/user/auth/login'; 
   private apiUrl = 'http://localhost:8000/organizer/auth'; 
   private apiUrl1 = 'http://localhost:8000/prestataire/auth'; 
+  private apiUrlF = 'http://localhost:8000/user/fogetpassword'; 
+  private apiUrlR = 'http://localhost:8000/user/resetPassword'; 
 
 
   constructor(private http: HttpClient) {}
@@ -35,4 +37,13 @@ export class AuthService {
       headers: { 'Accept': 'application/json' } 
     });
   }
+
+  forgetPassword(email: string): Observable<any> {
+    return this.http.post<any>(this.apiUrlF, { email });
+  }
+
+  resetPassword(id: string, token: string, password: string): Observable<any> {
+    return this.http.post(`${this.apiUrlR}/${id}/${token}`, { password });
+  }
+
 }

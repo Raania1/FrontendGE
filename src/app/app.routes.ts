@@ -10,6 +10,7 @@ import { ProfileOrComponent } from '../Components/Organisateur/profile-or/profil
 import { SidebarPRComponent } from '../Components/Prestataire/sidebar-pr/sidebar-pr.component';
 import { ProfilePrComponent } from '../Components/Prestataire/profile-pr/profile-pr.component';
 import { ParametrePRComponent } from '../Components/Prestataire/parametre-pr/parametre-pr.component';
+import { NewPasswordComponent } from '../Components/new-password/new-password.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -19,6 +20,8 @@ export const routes: Routes = [
     {path: 'inscritC',component:InscritCondidatComponent},
     {path: 'inscritP',component:InscritPresComponent},
     {path: 'connexion',component:ConnexionComponent},
+    {path: 'reset-password/:id/:token',component:NewPasswordComponent},
+
     // espace organisateur
     {path: 'navOR',component:NavbarORComponent},
     {path: 'profileOR',component:ProfileOrComponent},

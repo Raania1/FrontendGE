@@ -64,7 +64,7 @@
           </div>
         </div>
         <div class="text-right mt-2">
-          <a routerLink="/reset-password" class="text-sm text-bl hover:text-custom-orangeBold cursor-pointer" style="font-size: 11px;">
+          <a (click)="openResetModal()" class="text-sm text-bl hover:text-custom-orangeBold cursor-pointer" style="font-size: 11px;">
             Mot de passe oublié ?
           </a>
         </div>
@@ -82,4 +82,6 @@
       </div>
     </form>
   </div>
+  <app-email-password *ngIf="showResetModal" (closeModal)="closeResetModal()"></app-email-password>
+
 </div>

@@ -5,15 +5,24 @@ import { Router, RouterModule } from '@angular/router';
 import { NavbarComponent } from "../navbar/navbar.component";
 import { AuthService } from '../../Services/auth.service';
 import {  HttpClientModule } from '@angular/common/http';
+import { EmailPasswordComponent } from "../email-password/email-password.component";
 
 @Component({
   selector: 'app-connexion',
   standalone: true,
-  imports: [RouterModule, ReactiveFormsModule, CommonModule, NavbarComponent,HttpClientModule],
+  imports: [RouterModule, ReactiveFormsModule, CommonModule, NavbarComponent, HttpClientModule, EmailPasswordComponent],
   templateUrl: './connexion.component.html',
   styleUrl: './connexion.component.css'
 })
 export class ConnexionComponent {
+  showResetModal: boolean = false;
+  openResetModal() {
+    this.showResetModal = true;
+  }
+
+  closeResetModal() {
+    this.showResetModal = false;
+  }
   constructor (private _FormBuilder: FormBuilder,private authService: AuthService,private router: Router) {
       console.log(this.userData)
     }
@@ -62,5 +71,6 @@ export class ConnexionComponent {
     
   get email (){return this.userData.get('email');}
   get password (){return this.userData.get('password');}
+
   
 }
