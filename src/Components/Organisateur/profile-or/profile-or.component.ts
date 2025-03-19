@@ -26,7 +26,6 @@ export class ProfileOrComponent {
 
   organisateur: any = {};  
 
-
   formData = { ...this.organisateur };
   isEditing = false;
   activeTab = "infos";

@@ -1,4 +1,4 @@
-<div class="flex justify-between items-center mb-6">
+<br/><div class="flex justify-between items-center mb-6">
     <div class="relative w-1/3">
         <h3 class="text-l font-serif font-bold text-custom-black">Mon Profil</h3>
     </div>
@@ -6,12 +6,16 @@
     <div class="flex items-center space-x-4">
       <fa-icon [icon]="faBell" class="h-6 w-6 cursor-pointer text-custom-gray"></fa-icon>
       <div class="flex items-center space-x-2">
-        <span class="text-sm font-medium text-custom-black">Boujneh Rania</span>
+        <span class="text-sm font-medium text-custom-black">{{prestataire.nom}} {{prestataire.prenom}}</span>
         <div class="relative">
-          <div class="w-8 h-8 bg-custom-gray rounded-full flex items-center justify-center border border-custom-gray shadow-sm hover:bg-custom-orange transition-all duration-300">
-            <fa-icon [icon]="faUser" class="h-5 w-5 text-custom-black"></fa-icon>
+          <div class="relative h-8 w-8 rounded-full border-2 border-white overflow-hidden shadow-md">
+            <img
+              [src]="prestataire.pdProfile"
+              [alt]="prestataire.nom"
+              class="w-full h-full object-cover"
+            />
           </div>
-          <div class="absolute bottom-0 right-0 w-3 h-3 bg-green-400 rounded-full border border-white"></div>
+          <div class="absolute bottom-0 right-0 w-2 h-2 bg-green-400 rounded-full border border-white"></div>
         </div>
       </div>
     </div>
@@ -26,7 +30,7 @@
             <!-- Photo de profil -->
             <div class="relative h-24 w-24 md:h-28 md:w-28 rounded-full border-4 border-white overflow-hidden shadow-lg">
               <img
-                [src]="prestataire.photo"
+                [src]="prestataire.pdProfile"
                 [alt]="prestataire.nom"
                 class="w-full h-full object-cover"
               />
@@ -36,34 +40,30 @@
             <div>
               <!-- Nom et badge vérifié -->
               <div class="flex items-center">
-                <h1 class="text-2xl md:text-3xl font-bold">{{ prestataire.nom }}</h1>
+                <h1 class="text-2xl md:text-3xl font-bold">{{ prestataire.nom }} {{prestataire.prenom}}</h1>&nbsp;&nbsp;
                 <span
-                  *ngIf="prestataire.verified"
+                  
                   class="ml-2 bg-green-500 text-black-900 text-xs font-bold px-2 py-1 rounded-full flex items-center"
                 >
-                  <i class="fas fa-check mr-1"></i> Vérifié
-                </span>
+                  <i class="fas fa-check mr-1"></i> vérifié
+                </span>  
               </div>
-      
-              <!-- Localisation -->
-              <div class="flex items-center mt-1">
-                <i class="fas fa-map-marker-alt text-amber-400 mr-1"></i>
-                <p class="text-gray-700 text-sm">{{ prestataire.location }}</p>
-              </div>
-      
               <!-- Note et membre depuis -->
               <div class="flex items-center mt-2 space-x-4">
                 <!-- Note -->
-                <div class="flex items-center">
+                <!-- <div class="flex items-center">
                   <span *ngFor="let star of renderStars(prestataire.stats.note)" class="text-amber-400">{{ star }}</span>
                   <span class="ml-2 text-gray-900 font-medium">{{ prestataire.stats.note }}</span>
                   <span class="ml-1 text-gray-500">({{ formatReviewCount(prestataire.stats.avis) }})</span>
+                </div> -->
+                <div class="flex items-center text-gray-700 text-sm">
+                  <fa-icon [icon]="faBriefcase" class="fas fa--alt text-amber-400 mr-1"></fa-icon>
+                  <span> {{ prestataire.travail }}</span>
                 </div>
-      
                 <!-- Membre depuis -->
                 <div class="flex items-center text-gray-700 text-sm">
                   <i class="fas fa-calendar-alt text-amber-400 mr-1"></i>
-                  <span>Membre depuis {{ prestataire.stats.membreDepuis }}</span>
+                  <span>Membre depuis {{ prestataire.createdAt | date:'yyyy-MM-dd' }}</span>
                 </div>
               </div>
             </div>
@@ -81,6 +81,7 @@
           }"
           class="py-4 px-6 text-center font-medium transition-colors whitespace-nowrap"
         >
+        <fa-icon [icon]="faInfoCircle" class="w-4 h-4"></fa-icon>
           Informations générales
         </button>
         <!-- Onglet Avis -->
@@ -118,24 +119,33 @@
                 <!-- About Section -->
                 <div class="bg-white rounded-lg">
                   <h2 class="text-xl font-bold text-gray-900">À propos</h2>
+                  
                   <p class="text-gray-700 leading-relaxed">{{ prestataire.description }}</p>
                   <!-- Categories Badges -->
-                  <div class="mt-4 flex flex-wrap gap-2">
+                  <!-- <div class="mt-4 flex flex-wrap gap-2">
                     <span *ngFor="let categorie of prestataire.categories" class="bg-amber-100 text-amber-800 px-3 py-1 rounded-full text-sm font-medium">
                       {{ categorie }}
                     </span>
-                  </div>
+                  </div> -->
                 </div>                
                 <div class="bg-white rounded-lg border border-gray-200 shadow-sm p-5">
                     <h3 class="font-semibold text-gray-900 mb-4">Coordonnées</h3>
                     <div class="space-y-3">
+                      <!-- Ville et Adresse -->
                       <div class="flex items-start">
-                        <span class="text-gray-700">{{ prestataire.adresse }}</span>
+                        <fa-icon [icon]="faMapMarkerAlt" class="text-gray-500 mr-2 mt-1"></fa-icon>
+                        <span class="text-gray-700">{{ prestataire.ville }} - {{ prestataire.adress }}</span>
                       </div>
+                    
+                      <!-- Numéro de téléphone -->
                       <div class="flex items-center">
-                        <span class="text-gray-700">{{ prestataire.telephone }}</span>
+                        <fa-icon [icon]="faPhone" class="text-gray-500 mr-2"></fa-icon>
+                        <span class="text-gray-700">{{ prestataire.numTel }}</span>
                       </div>
+                    
+                      <!-- Email -->
                       <div class="flex items-center">
+                        <fa-icon [icon]="faEnvelope" class="text-gray-500 mr-2"></fa-icon>
                         <span class="text-gray-700">{{ prestataire.email }}</span>
                       </div>
                     </div>
@@ -143,16 +153,16 @@
                     <div class="mt-5 pt-5 border-t border-gray-200">
                       <h4 class="font-medium text-gray-900 mb-3">Réseaux sociaux</h4>
                       <div class="flex space-x-3">
-                        <a [href]="prestataire.reseauxSociaux.facebook" class="bg-gray-100 hover:bg-gray-200 p-2 rounded-full transition-colors">
+                        <a href="/" class="bg-gray-100 hover:bg-gray-200 p-2 rounded-full transition-colors">
                           <i class="fab fa-facebook text-blue-600"></i>
                         </a>
-                        <a [href]="prestataire.reseauxSociaux.instagram" class="bg-gray-100 hover:bg-gray-200 p-2 rounded-full transition-colors">
+                        <a href="/" class="bg-gray-100 hover:bg-gray-200 p-2 rounded-full transition-colors">
                           <i class="fab fa-instagram text-pink-600"></i>
                         </a>
-                        <a [href]="prestataire.reseauxSociaux.youtube" class="bg-gray-100 hover:bg-gray-200 p-2 rounded-full transition-colors">
+                        <a href="/" class="bg-gray-100 hover:bg-gray-200 p-2 rounded-full transition-colors">
                           <i class="fab fa-youtube text-red-600"></i>
                         </a>
-                        <a [href]="prestataire.reseauxSociaux.site" class="bg-gray-100 hover:bg-gray-200 p-2 rounded-full transition-colors">
+                        <a href="/" class="bg-gray-100 hover:bg-gray-200 p-2 rounded-full transition-colors">
                           <i class="fas fa-globe text-gray-600"></i>
                         </a>
                       </div>
@@ -160,10 +170,10 @@
                   </div>
   
                 <!-- Recent Reviews -->
-                <div class="bg-white rounded-lg">
+                <!-- <div class="bg-white rounded-lg">
                   <h2 class="text-xl font-bold text-gray-900">Avis récents</h2>
-                  <div class="space-y-4">
-                    <div *ngFor="let avis of prestataire.avis.slice(0, 2)" class="border border-gray-200 rounded-lg p-4">
+                  <div class="space-y-4"> -->
+                    <!-- <div *ngFor="let avis of prestataire.avis.slice(0, 2)" class="border border-gray-200 rounded-lg p-4">
                       <div class="flex justify-between items-start">
                         <div>
                           <h3 class="font-semibold text-gray-900">{{ avis.nom }}</h3>
@@ -174,31 +184,32 @@
                         <span class="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs">{{ avis.evenement }}</span>
                       </div>
                       <p class="text-gray-700 mt-2 text-sm">{{ avis.commentaire }}</p>
-                    </div>
-                  </div>
-                </div>
+                    </div> -->
+                  <!-- </div>
+                </div> -->
               </div>
   
               <!-- Side Column -->
               <div class="md:col-span-1 space-y-6">  
                 <!-- Statistics -->
                 <div class="bg-white rounded-lg border border-gray-200 shadow-sm p-5">
-                  <h3 class="font-semibold text-gray-900 mb-4">Statistiques</h3>
-                  <div class="grid grid-cols-2 gap-4">
+                  <fa-icon [icon]="faChartBar" class="w-4 h-4"></fa-icon>&nbsp;&nbsp;
+                  <span class="font-semibold text-gray-900 mb-4">Statistiques</span><br>
+                  <br/><div class="grid grid-cols-2 gap-4">
                     <div class="bg-amber-50 rounded-lg p-3 text-center">
-                      <span class="block text-2xl font-bold text-amber-700">{{ prestataire.stats.services }}</span>
+                      <span class="block text-2xl font-bold text-amber-700">5</span>
                       <span class="text-xs text-gray-600">Services</span>
                     </div>
                     <div class="bg-amber-50 rounded-lg p-3 text-center">
-                      <span class="block text-2xl font-bold text-amber-700">{{ prestataire.stats.reservations }}</span>
+                      <span class="block text-2xl font-bold text-amber-700">20</span>
                       <span class="text-xs text-gray-600">Réservations</span>
                     </div>
                     <div class="bg-amber-50 rounded-lg p-3 text-center">
-                      <span class="block text-2xl font-bold text-amber-700">{{ prestataire.stats.note }}</span>
+                      <span class="block text-2xl font-bold text-amber-700">4.8</span>
                       <span class="text-xs text-gray-600">Note moyenne</span>
                     </div>
                     <div class="bg-amber-50 rounded-lg p-3 text-center">
-                      <span class="block text-2xl font-bold text-amber-700">{{ prestataire.stats.avis }}</span>
+                      <span class="block text-2xl font-bold text-amber-700">2</span>
                       <span class="text-xs text-gray-600">Avis clients</span>
                     </div>
                   </div>
@@ -206,13 +217,13 @@
                   <div class="mt-4 pt-4 border-t border-gray-200">
                     <div class="flex items-center justify-between">
                       <span class="text-sm text-gray-600">Membre depuis</span>
-                      <span class="font-medium text-gray-900">{{ prestataire.stats.membreDepuis }}</span>
+                      <span class="font-medium text-gray-900">{{ prestataire.createdAt | date:'yyyy-MM-dd' }}</span>
                     </div>
                   </div>
                 </div>
   
                 <!-- Badges and Certifications -->
-                <div class="bg-white rounded-lg border border-gray-200 shadow-sm p-5">
+                <!-- <div class="bg-white rounded-lg border border-gray-200 shadow-sm p-5">
                   <h3 class="font-semibold text-gray-900 mb-4">Badges et certifications</h3>
                   <div class="flex flex-wrap gap-3">
                     <div class="flex flex-col items-center">
@@ -234,7 +245,7 @@
                       <span class="text-xs text-gray-600 mt-1">4.8+ Étoiles</span>
                     </div>
                   </div>
-                </div>
+                </div> -->
               </div>
             </div>
           </div>
@@ -244,29 +255,29 @@
             <div class="flex items-center justify-between mb-6">
               <h2 class="text-2xl font-bold text-gray-900">Avis clients</h2>
               <div class="flex items-center">
-                <span class="font-semibold">{{ prestataire.stats.note }}</span>
-                <span class="text-gray-500 ml-1">({{ prestataire.stats.avis }} avis)</span>
+                <!-- <span class="font-semibold">{{ prestataire.stats.note }}</span> -->
+                <!-- <span class="text-gray-500 ml-1">({{ prestataire.stats.avis }} avis)</span> -->
               </div>
             </div>
             <div class="space-y-6">
               <div *ngFor="let avis of prestataire.avis" class="bg-white rounded-lg border border-gray-200 p-5 hover:shadow-sm transition-shadow">
                 <div class="flex justify-between items-start">
                   <div>
-                    <h3 class="font-semibold text-gray-900">{{ avis.nom }}</h3>
+                    <!-- <h3 class="font-semibold text-gray-900">{{ avis.nom }}</h3> -->
                     <div class="flex items-center mt-1">
-                      <span class="text-gray-500 text-sm">{{ avis.date }}</span>
+                      <!-- <span class="text-gray-500 text-sm">{{ avis.date }}</span> -->
                     </div>
                   </div>
-                  <span class="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs">{{ avis.evenement }}</span>
+                  <!-- <span class="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs">{{ avis.evenement }}</span> -->
                 </div>
   
                 <div class="mt-3">
-                  <p class="text-gray-700">
+                  <!-- <p class="text-gray-700">
                     {{ expandedReview === avis.id ? avis.commentaire : (avis.commentaire | slice:0:150) + (avis.commentaire.length > 150 ? '...' : '') }}
                   </p>
                   <button *ngIf="avis.commentaire.length > 150" (click)="toggleReview(avis.id)" class="text-amber-600 hover:text-amber-700 text-sm font-medium mt-2">
                     {{ expandedReview === avis.id ? 'Voir moins' : 'Voir plus' }}
-                  </button>
+                  </button> -->
                 </div>
               </div>
             </div>
@@ -277,14 +288,14 @@
             <div class="mb-8">
               <h3 class="text-lg font-semibold text-gray-900 mb-4">Photos</h3>
               <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                <div *ngFor="let photo of prestataire.galerie" class="relative group aspect-square overflow-hidden rounded-lg">
+                <!-- <div *ngFor="let photo of prestataire.galerie" class="relative group aspect-square overflow-hidden rounded-lg">
                   <img [src]="photo" alt="Photo" class="w-full h-full object-cover transition-transform group-hover:scale-105">
                   <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                     <button class="bg-white/90 p-2 rounded-full">
                       <i class="fas fa-heart text-amber-600"></i>
                     </button>
                   </div>
-                </div>
+                </div> -->
               </div>
             </div>
           </div>        

@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { Component, HostListener } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterLink, RouterModule } from '@angular/router';
+import { ActivatedRoute, RouterLink, RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faChartBar, faTools, faBars, faCalendarCheck, faCalendarAlt, faBullhorn, faUser, faCog, faSignOutAlt, faInfoCircle, faChevronRight, faChevronLeft } from '@fortawesome/free-solid-svg-icons';
+import { PrestataireService } from '../../../Services/prestataire.service';
 
 @Component({
   selector: 'app-sidebar-pr',
@@ -30,7 +31,33 @@ export class SidebarPRComponent {
   isSidebarCollapsed: boolean = false;
   isDesktop: boolean = window.innerWidth >= 768; 
 
-  constructor() {}
+  constructor(
+     private prestataireService: PrestataireService,
+     private route: ActivatedRoute
+   ) {}
+   prestataire: any = {};
+   ngOnInit(): void {
+     this.fetchPresData();  
+   }
+   fetchPresData() {
+     const user = JSON.parse(localStorage.getItem('user') || '{}');  
+     const id = user.Id;  
+ 
+     if (id) {
+       this.prestataireService.getPrestataireById(id).subscribe(
+         (response) => {
+           this.prestataire = response.pres;  
+           console.log(this.prestataire)
+         },
+         (error) => {
+           console.error('Erreur lors de la récupération des données:', error);
+         }
+       );
+     } else {
+       console.error('Utilisateur non trouvé dans le localStorage');
+     }
+   }
+
 
   toggleSidebar() {
     if (this.isDesktop) {

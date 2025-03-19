@@ -271,15 +271,32 @@
                         </div>
                         <div>
                           <label for="ville" class="block text-sm/10 font-medium text-gray-900">Ville</label>
-                          <input
-                            type="text"
-                            name="ville"
-                            id="ville"
-                            [(ngModel)]="formData.ville"
-                            (input)="handleChange($event, 'ville')"
-                            style="width: 300px;"
-                            class="block min-w-0 grow py-1.5 pr-3 pl-1 border text-base text-gray-900 placeholder:text-gray-400  sm:text-sm/6"
-                          />
+                          <select [(ngModel)]="formData.ville" name="ville" (input)="handleChange($event, 'ville')" class="input-field">
+                            <option value="">Sélectionnez une ville</option>
+                            <option value="Tunis">Tunis</option>
+                            <option value="Sfax">Sfax</option>
+                            <option value="Sousse">Sousse</option>
+                            <option value="Kairouan">Kairouan</option>
+                            <option value="Bizerte">Bizerte</option>
+                            <option value="Gabès">Gabès</option>
+                            <option value="Ariana">Ariana</option>
+                            <option value="Gafsa">Gafsa</option>
+                            <option value="Monastir">Monastir</option>
+                            <option value="Nabeul">Nabeul</option>
+                            <option value="Tataouine">Tataouine</option>
+                            <option value="Béja">Béja</option>
+                            <option value="Jendouba">Jendouba</option>
+                            <option value="Médenine">Médenine</option>
+                            <option value="Mahdia">Mahdia</option>
+                            <option value="Kasserine">Kasserine</option>
+                            <option value="Kebili">Kebili</option>
+                            <option value="Siliana">Siliana</option>
+                            <option value="Le Kef">Le Kef</option>
+                            <option value="Tozeur">Tozeur</option>
+                            <option value="Zaghouan">Zaghouan</option>
+                            <option value="Manouba">Manouba</option>
+                            <option value="Ben Arous">Ben Arous</option>
+                          </select>
                         </div>
                         <div>
                           <label for="adress" class="block text-sm/10 font-medium text-gray-900">Adresse</label>

@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faBell, faUser } from '@fortawesome/free-solid-svg-icons';
+import { PrestataireService } from '../../../Services/prestataire.service';
 
 @Component({
   selector: 'app-parametre-pr',
@@ -13,20 +15,68 @@ import { faBell, faUser } from '@fortawesome/free-solid-svg-icons';
 export class ParametrePRComponent {
 faBell = faBell;
   faUser = faUser;
-  compte = {
-    nom: "Boujneh",
-    prenom: "Rania",
-    verified: true,
-    location: "Tunisie, Monastir-Moknine",
-    adresse: "Moknine, Rue Sudan 5050",
-    telephone: "27991857",
-    email: "boujnehrania@gmail.com",
-    description: "Groupe de musique traditionnelle de Provence spécialisé dans l'animation de mariages, fêtes privées et événements d'entreprise. Notre répertoire varié saura s'adapter à toutes vos demandes pour faire de votre événement un moment inoubliable.",
-    photo: "https://www.missnumerique.com/blog/wp-content/uploads/reussir-sa-photo-de-profil-michael-dam.jpg",
-  };
 
-  saveChanges() {
-    console.log("Modifications sauvegardées :", this.compte);
-    alert("Les modifications ont été sauvegardées avec succès !");
+    constructor(
+      private prestataireService: PrestataireService,
+      private route: ActivatedRoute
+    ) {}
+    prestataire: any = {};
+    formData = { ...this.prestataire };
+
+  ngOnInit(): void {
+    this.fetchPresData();  
   }
+  fetchPresData() {
+    const user = JSON.parse(localStorage.getItem('user') || '{}');  
+    const id = user.Id;  
+
+    if (id) {
+      this.prestataireService.getPrestataireById(id).subscribe(
+        (response) => {
+          this.prestataire = response.pres;  
+          this.formData = { ...this.prestataire };  
+          console.log(this.prestataire)
+        },
+        (error) => {
+          console.error('Erreur lors de la récupération des données:', error);
+        }
+      );
+    } else {
+      console.error('Utilisateur non trouvé dans le localStorage');
+    }
+  }
+  handleSubmit(event: Event) {
+    event.preventDefault();
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    const id = user.Id;
+    if (id) {
+      this.prestataireService.updatePres(id, this.formData).subscribe(
+        (response) => {
+          alert("Les modifications ont été sauvegardées avec succès !");
+          this.prestataire = response.updatedPrestataire; 
+          this.formData = { ...this.prestataire };  
+        },
+        (error) => {
+          console.log('Erreur détaillée :', error.error?.errors); 
+          console.error('Erreur lors de la mise à jour:', error);
+        }
+      );
+    }
+  }
+  handleChange(event: Event, field: string) {
+    const target = event.target as HTMLInputElement | HTMLTextAreaElement;
+    this.formData = { ...this.formData, [field]: target.value };
+  }
+  onFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+      const file = input.files[0];
+      if (file.type.startsWith('image/')) {
+        this.formData.pdProfile = file;  
+      } else {
+        alert('Veuillez télécharger un fichier image valide.');
+      }
+    }
+  }
+
 }
