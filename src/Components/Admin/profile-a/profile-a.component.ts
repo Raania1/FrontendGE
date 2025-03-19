@@ -1,22 +1,22 @@
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faBell, faTrash, faUser } from '@fortawesome/free-solid-svg-icons';
 import { PrestataireService } from '../../../Services/prestataire.service';
+import { FormsModule } from '@angular/forms';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @Component({
-  selector: 'app-parametre-pr',
+  selector: 'app-profile-a',
   standalone: true,
-  imports: [FontAwesomeModule,FormsModule],
-  templateUrl: './parametre-pr.component.html',
-  styleUrl: './parametre-pr.component.css'
+  imports: [CommonModule,FontAwesomeModule,FormsModule],
+  templateUrl: './profile-a.component.html',
+  styleUrl: './profile-a.component.css'
 })
-export class ParametrePRComponent {
+export class ProfileAComponent {
   faBell = faBell;
   faUser = faUser;
   faTrash =faTrash;
-
     constructor(
       private prestataireService: PrestataireService,
       private route: ActivatedRoute

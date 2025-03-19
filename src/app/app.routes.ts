@@ -11,6 +11,10 @@ import { SidebarPRComponent } from '../Components/Prestataire/sidebar-pr/sidebar
 import { ProfilePrComponent } from '../Components/Prestataire/profile-pr/profile-pr.component';
 import { ParametrePRComponent } from '../Components/Prestataire/parametre-pr/parametre-pr.component';
 import { NewPasswordComponent } from '../Components/new-password/new-password.component';
+import { SidebarAdComponent } from '../Components/Admin/sidebar-ad/sidebar-ad.component';
+import { ProfileAComponent } from '../Components/Admin/profile-a/profile-a.component';
+import { ListOrganisateurComponent } from '../Components/Admin/list-organisateur/list-organisateur.component';
+import { ListPrestataireComponent } from '../Components/Admin/list-prestataire/list-prestataire.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -26,15 +30,6 @@ export const routes: Routes = [
     {path: 'navOR',component:NavbarORComponent},
     {path: 'profileOR',component:ProfileOrComponent},
 
-    // {
-    //   path: 'organisateur',
-    //   component: NavbarORComponent,
-    //   children: [
-    //     { path: 'profileOR', component: ProfileOrComponent },
-    //   ],
-    // },
-
-
     // espace prestataire
     // {path: 'sidePr',component:SidebarPRComponent},
     // {path: 'profilePr',component:ProfilePrComponent},
@@ -44,6 +39,16 @@ export const routes: Routes = [
         children: [
           { path: 'profile', component: ProfilePrComponent },
           { path: 'parametre', component: ParametrePRComponent },
+
+        ],
+      },
+      {
+        path: 'administrateur',
+        component: SidebarAdComponent, 
+        children: [
+          { path: 'profile', component: ProfileAComponent },
+          { path: 'ListOr', component: ListOrganisateurComponent },
+          { path: 'ListPr', component: ListPrestataireComponent },
 
         ],
       }

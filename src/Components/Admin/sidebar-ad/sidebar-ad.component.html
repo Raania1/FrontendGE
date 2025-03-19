@@ -1,1 +1,170 @@
-<p>sidebar-ad works!</p>
+<div class="flex h-screen ">
+    <!-- Overlay pour mobile (désactivé en desktop) -->
+    <div
+      class="fixed inset-0 bg-black/50 z-40 md:hidden"
+      *ngIf="isSidebarOpen"
+      (click)="closeSidebar()"
+    ></div>
+  
+    <!-- Sidebar -->
+    <aside
+      class="bg-custom-orange/5 backdrop-blur-md shadow-lg p-4 text-gray-800 fixed inset-y-0 left-0 z-50 transform transition-transform duration-300 ease-in-out border-r border-gray-200"
+      [ngClass]="{
+        'translate-x-0': isSidebarOpen || isDesktop,
+        '-translate-x-full': !isSidebarOpen && !isDesktop,
+        'w-64': !isSidebarCollapsed,
+        'w-16': isSidebarCollapsed
+      }"
+    >
+      <!-- En-tête avec le logo -->
+      <div class="flex items-center space-x-2">
+        <!-- Logo du site -->
+        <img
+          src="/assets/FE11.png"
+          alt="Logo"
+          width="100" height="100"
+          class="rounded-lg"
+        />
+        <p class="text-sm font-serif" *ngIf="!isSidebarCollapsed"
+          >Espace Administrateur</p
+        >
+      </div>
+      <hr class="my-4 border-gray-200">
+  
+      <!-- Bouton pour réduire/étendre la sidebar -->
+      <button
+        class="mt-4 p-2 hover:bg-gray-100 rounded-lg md:block hidden transition-all duration-300"
+        (click)="toggleSidebar()"
+      >
+        <fa-icon
+          [icon]="isSidebarCollapsed ? faChevronRight : faChevronLeft"
+          class="h-5 w-5 text-gray-700"
+        ></fa-icon>
+      </button>
+  
+      <!-- Navigation -->
+      <nav class="mt-5">
+        <ul class="space-y-2">
+          <!-- Tableau de bord -->
+          <li
+            class="p-2 hover:bg-gray-100 rounded-lg flex items-center space-x-2 cursor-pointer transition-all duration-300" routerLinkActive="bg-custom-gray"
+          >
+            <fa-icon [icon]="faChartBar" class="h-5 w-5 text-gray-500"></fa-icon>
+            <span class="text-sm font-medium" *ngIf="!isSidebarCollapsed">Tableau de bord</span>
+          </li>
+  
+          <!-- Mon profil -->
+          <li
+            class="p-2 hover:bg-gray-100 rounded-lg flex items-center space-x-2 cursor-pointer transition-all duration-300" routerLinkActive="bg-custom-gray"
+          >
+            <fa-icon [icon]="faUser" class="h-5 w-5 text-gray-500"></fa-icon>
+            <a routerLink="/administrateur/profile" class="text-sm font-medium" *ngIf="!isSidebarCollapsed">Mon profil</a>
+          </li>
+  
+          <!-- Section Administration -->
+          <div class="flex items-center mt-6 mb-2">
+            <h3 class="text-xs font-semibold uppercase text-gray-500">Administration</h3>
+          </div>
+  
+          <!-- Liste des Organisateurs -->
+          <li
+            class="p-2 hover:bg-gray-100 rounded-lg flex items-center space-x-2 cursor-pointer transition-all duration-300" routerLinkActive="bg-custom-gray"
+          >
+            <fa-icon [icon]="faUsers" class="h-5 w-5 text-gray-500"></fa-icon>
+            <span routerLink="/administrateur/ListOr" class="text-sm font-medium" *ngIf="!isSidebarCollapsed">Organisateurs</span>
+          </li>
+  
+          <!-- Liste des prestataires -->
+          <li
+            class="p-2 hover:bg-gray-100 rounded-lg flex items-center space-x-2 cursor-pointer transition-all duration-300" routerLinkActive="bg-custom-gray"
+          >
+            <fa-icon [icon]="faUserFriends" class="h-5 w-5 text-gray-500"></fa-icon>
+            <span routerLink="/administrateur/ListPr" class="text-sm font-medium" *ngIf="!isSidebarCollapsed">Prestataires</span>
+          </li>
+  
+          <!-- Les Packs -->
+          <li
+            class="p-2 hover:bg-gray-100 rounded-lg flex items-center space-x-2 cursor-pointer transition-all duration-300" routerLinkActive="bg-custom-gray"
+          >
+            <fa-icon [icon]="faBoxOpen" class="h-5 w-5 text-gray-500"></fa-icon>
+            <span class="text-sm font-medium" *ngIf="!isSidebarCollapsed">Packs</span>
+          </li>
+  
+          <!-- Liste des services -->
+          <li
+            class="p-2 hover:bg-gray-100 rounded-lg flex items-center space-x-2 cursor-pointer transition-all duration-300" routerLinkActive="bg-custom-gray"
+          >
+            <fa-icon [icon]="faListAlt" class="h-5 w-5 text-gray-500"></fa-icon>
+            <span class="text-sm font-medium" *ngIf="!isSidebarCollapsed">Services</span>
+          </li>
+  
+          <!-- Les commentaires -->
+          <li
+            class="p-2 hover:bg-gray-100 rounded-lg flex items-center space-x-2 cursor-pointer transition-all duration-300" routerLinkActive="bg-custom-gray"
+          >
+            <fa-icon [icon]="faComments" class="h-5 w-5 text-gray-500"></fa-icon>
+            <span class="text-sm font-medium" *ngIf="!isSidebarCollapsed">Commentaires</span>
+          </li>
+  
+          <!-- Section Finance -->
+          <div class="flex items-center mt-6 mb-2">
+            <h3 class="text-xs font-semibold uppercase text-gray-500">Finance</h3>
+          </div>
+  
+          <!-- Réservations & Factures -->
+          <li
+            class="p-2 hover:bg-gray-100 rounded-lg flex items-center space-x-2 cursor-pointer transition-all duration-300" routerLinkActive="bg-custom-gray"
+          >
+            <fa-icon [icon]="faFileInvoice" class="h-5 w-5 text-gray-500"></fa-icon>
+            <span class="text-sm font-medium" *ngIf="!isSidebarCollapsed">Factures</span>
+          </li>
+  
+          <!-- Statistiques -->
+          <li
+            class="p-2 hover:bg-gray-100 rounded-lg flex items-center space-x-2 cursor-pointer transition-all duration-300" routerLinkActive="bg-custom-gray"
+          >
+            <fa-icon [icon]="faChartLine" class="h-5 w-5 text-gray-500"></fa-icon>
+            <span class="text-sm font-medium" *ngIf="!isSidebarCollapsed">Statistiques</span>
+          </li>
+  
+          <!-- Publicité sponsorisée -->
+          <li
+            class="p-2 hover:bg-gray-100 rounded-lg flex items-center space-x-2 cursor-pointer transition-all duration-300" routerLinkActive="bg-custom-gray"
+          >
+            <fa-icon [icon]="faBullhorn" class="h-5 w-5 text-gray-500"></fa-icon>
+            <span class="text-sm font-medium" *ngIf="!isSidebarCollapsed">Publicité</span>
+          </li>
+  
+          <!-- Déconnexion -->
+          <li
+            class="p-2 hover:bg-gray-100 rounded-lg flex items-center space-x-2 cursor-pointer transition-all duration-300" routerLinkActive="bg-custom-gray"
+          >
+            <fa-icon [icon]="faSignOutAlt" class="h-5 w-5 text-gray-500"></fa-icon>
+            <span class="text-sm font-medium" *ngIf="!isSidebarCollapsed">Déconnexion</span>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+  
+    <!-- Contenu principal -->
+    <div class="flex-1 p-6 bg-white md:ml-64">
+        <div class="md:hidden flex items-center justify-between p-4 bg-custom-orange/5 backdrop-blur-md shadow-md border-b border-custom-gray">
+          <button
+          class="p-2 text-gray-600 hover:text-gray-800"
+          (click)="toggleSidebar()"
+        >
+          <fa-icon [icon]="faBars" class="h-6 w-6"></fa-icon>
+        </button>
+          <p class="text-s font-serif text-custom-black">Espace Administrateur</p>
+          <a routerLink="/" class="flex items-center space-x-2">
+            <img
+              src="/assets/FE11.png"
+              alt="Logo"
+              width="60" 
+            />
+          </a>          
+        </div>
+          
+        <router-outlet></router-outlet>
+    </div>
+  </div>
