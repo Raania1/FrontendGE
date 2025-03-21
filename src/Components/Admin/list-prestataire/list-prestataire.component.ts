@@ -1,12 +1,14 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faBell, faUser, faTrash, faSearch } from '@fortawesome/free-solid-svg-icons';
+import { faBell, faUser, faTrash, faSearch, faCheck, faTimes, faFilePdf, faUsersSlash } from '@fortawesome/free-solid-svg-icons';
+import { PrestataireService } from '../../../Services/prestataire.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-list-prestataire',
   standalone: true,
-  imports: [CommonModule,FontAwesomeModule],
+  imports: [CommonModule,FontAwesomeModule,FormsModule],
   templateUrl: './list-prestataire.component.html',
   styleUrl: './list-prestataire.component.css'
 })
@@ -15,76 +17,100 @@ faBell = faBell;
     faUser = faUser;
       faTrash =faTrash;
     faSearch = faSearch;
-    showAll: boolean = true; // Par défaut, afficher "Tous les Prestataires"
+    faCheck = faCheck; 
+    faTimes = faTimes;
+    faUsersSlash=faUsersSlash;
+    faFilePdf=faFilePdf;
+    showAll: boolean = true; 
+  constructor(private presService: PrestataireService,) {}
 
-  pres = [
-    {
-      nom: 'Boujneh',
-      prenom:'Rania',
-      travail:"photographe",
-      email: 'lindsay.walton@example.com',
-      numTel: 'Front-end Developer',
-      numCin: 'Optimization',
-      Ville: 'Active',
-      adress: 'Member',
-      aprooved:true,
-      createdAt:'2022-05-22',
-      pdProfile: 'https://randomuser.me/api/portraits/women/44.jpg',
-      nbrS:5,
-      nbrR:8
-    },
-    {
-      nom: 'Boujneh',
-      prenom:'Rania',
-      travail:"photographe",
-      email: 'lindsay.walton@example.com',
-      numTel: 'Front-end Developer',
-      numCin: 'Optimization',
-      Ville: 'Active',
-      adress: 'Member',
-      aprooved:false,
-      createdAt:'2022-05-22',
-      pdProfile: 'https://randomuser.me/api/portraits/women/44.jpg',
-      nbrS:5,
-      nbrR:8
+  pres : any[] = [];
+  presA : any[] = [];
+  ngOnInit(): void {
+    this.fetchPres();
+    this.fetchPresN();
+  }
+  fetchPres() {
+    this.presService.getAllPres().subscribe(
+      (response) => {
+        this.pres = response.pres;
+      },
+      (error) => {
+        console.error('Erreur lors de la récupération des organisateurs:', error);
+      }
+    );
+  }
+  searchTerm: string = '';
+
+  get filteredPrestataires() {
+    if (!this.searchTerm) {
+      return this.pres;
     }
-  ];
-  presA = [
-    {
-      nom: 'Boujneh',
-      prenom:'Rania',
-      travail:"photographe",
-      email: 'lindsay.walton@example.com',
-      numTel: 'Front-end Developer',
-      numCin: 'Optimization',
-      aprooved:false,
-      createdAt:'2022-05-22',
-      pdProfile: 'https://randomuser.me/api/portraits/women/44.jpg',
-      fichierConfirmation :[
-        'https://randomuser.me/api/portraits/women/44.jpg',
-        'https://randomuser.me/api/portraits/women/44.jpg'
-      ]
-    },
-    {
-      nom: 'Boujneh',
-      prenom:'Rania',
-      travail:"photographe",
-      email: 'lindsay.walton@example.com',
-      numTel: 'Front-end Developer',
-      numCin: 'Optimization',
-      aprooved:false,
-      createdAt:'2022-05-22',
-      pdProfile: 'https://randomuser.me/api/portraits/women/44.jpg',
-      fichierConfirmation :[
-        'https://randomuser.me/api/portraits/women/44.jpg'      ]
+
+    return this.pres.filter(p =>
+      p.nom.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+      p.prenom.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+      p.email.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+      p.ville.toLowerCase().includes(this.searchTerm.toLowerCase())
+    );
+  }
+  fetchPresN() {
+    this.presService.getAllPresN().subscribe(
+      (response) => {
+        this.presA = response.prestataires;
+      },
+      (error) => {
+        console.error('Erreur lors de la récupération des organisateurs:', error);
+      }
+    );
+  }
+  searchTermN: string = '';
+  get filteredPrestatairesN() {
+    if (!this.searchTermN) {
+      return this.presA;
     }
-  ];
-    // Afficher "Tous les Prestataires"
+    return this.presA.filter(p =>
+      p.nom.toLowerCase().includes(this.searchTermN.toLowerCase()) ||
+      p.prenom.toLowerCase().includes(this.searchTermN.toLowerCase()) ||
+      p.email.toLowerCase().includes(this.searchTermN.toLowerCase()) ||
+      p.ville.toLowerCase().includes(this.searchTermN.toLowerCase())
+    );
+  }
+
+  deletePres(id: string) {
+    if (confirm('Êtes-vous sûr de vouloir supprimer cet organisateur ?')) {
+      this.presService.deletePresById(id).subscribe(
+        (response) => {
+          alert('Organisateur supprimé avec succès !');
+          this.fetchPres(); 
+        },
+        (error) => {
+          console.error('Erreur:', error);
+        }
+      );
+    }
+  }
+  approoved: boolean = true;
+  onApprove(id:string) {
+    this.presService.approoved(id,this.approoved).subscribe(
+      (response) => {
+        console.log('Prestataire approuvé avec succès :', response);
+        alert('Prestataire approuvé avec succès !');
+      },
+      (error) => {
+        console.error('Erreur lors de l\'approbation du prestataire :', error);
+        alert('Erreur lors de l\'approbation du prestataire.');
+      }
+    );
+  }
+ 
+   getFileName(fileUrl: string): string {
+    return fileUrl.split('/').pop() || 'Fichier PDF';
+  }
     showAllPrestataires() {
       this.showAll = true;
     }
   
-    // Afficher "Prestataires en attente"
     showPendingPrestataires() {
       this.showAll = false;
     }

@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, HostListener } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, RouterLink, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink, RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faChartBar, faTools, faBars, faCalendarCheck, faCalendarAlt, faBullhorn, faUser, faCog, faSignOutAlt, faInfoCircle, faChevronRight, faChevronLeft, faBoxOpen, faChartLine, faComments, faFileInvoice, faListAlt, faUserFriends, faUsers, faBell } from '@fortawesome/free-solid-svg-icons';
 
@@ -13,7 +13,7 @@ import { faChartBar, faTools, faBars, faCalendarCheck, faCalendarAlt, faBullhorn
   styleUrl: './sidebar-ad.component.css'
 })
 export class SidebarAdComponent {
-
+  faBell = faBell;
   faChartBar = faChartBar;
   faUser = faUser;
   faUsers = faUsers;
@@ -31,7 +31,13 @@ export class SidebarAdComponent {
   isSidebarOpen: boolean = false; 
   isSidebarCollapsed: boolean = false;
   isDesktop: boolean = window.innerWidth >= 768; 
+  constructor(private router: Router) {}
 
+  logout() {
+    localStorage.removeItem('user');
+    localStorage.removeItem('token');
+    this.router.navigate(['/']); 
+  }
   toggleSidebar() {
     if (this.isDesktop) {
       this.isSidebarCollapsed = !this.isSidebarCollapsed;

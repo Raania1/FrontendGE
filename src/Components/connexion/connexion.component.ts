@@ -50,7 +50,7 @@ export class ConnexionComponent {
         } else if (userRole === 'prestataire') {
           this.router.navigate(['/prestataire/parametre']); 
         } else if (userRole === 'admin') {
-          this.router.navigate(['/prestataire/profile']); 
+          this.router.navigate(['/administrateur/profile']); 
         } else {
           console.error('Rôle non reconnu');
         }

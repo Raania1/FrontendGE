@@ -5,38 +5,44 @@ import { faBell, faTrash, faUser } from '@fortawesome/free-solid-svg-icons';
 import { PrestataireService } from '../../../Services/prestataire.service';
 import { FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { AdminService } from '../../../Services/admin.service';
+import { HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-profile-a',
   standalone: true,
-  imports: [CommonModule,FontAwesomeModule,FormsModule],
+  imports: [CommonModule,FontAwesomeModule,FormsModule,HttpClientModule],
   templateUrl: './profile-a.component.html',
   styleUrl: './profile-a.component.css'
 })
 export class ProfileAComponent {
-  faBell = faBell;
+  // faBell = faBell;
   faUser = faUser;
   faTrash =faTrash;
     constructor(
-      private prestataireService: PrestataireService,
+      private adminService: AdminService,
       private route: ActivatedRoute
     ) {}
-    prestataire: any = {};
-    formData = { ...this.prestataire };
-
+    admin: any = {};
+    formData = {
+      nom: '',
+      prenom: '',
+      email: ''
+    };
+    
   ngOnInit(): void {
-    this.fetchPresData();  
+    this.fetchAdminData();  
   }
-  fetchPresData() {
+  fetchAdminData() {
     const user = JSON.parse(localStorage.getItem('user') || '{}');  
     const id = user.Id;  
 
     if (id) {
-      this.prestataireService.getPrestataireById(id).subscribe(
+      this.adminService.getAdminById(id).subscribe(
         (response) => {
-          this.prestataire = response.pres;  
-          this.formData = { ...this.prestataire };  
-          console.log(this.prestataire)
+          this.admin = response.admin;  
+          this.formData = { ...this.admin };  
+          console.log(this.admin)
         },
         (error) => {
           console.error('Erreur lors de la récupération des données:', error);
@@ -51,11 +57,13 @@ export class ProfileAComponent {
     const user = JSON.parse(localStorage.getItem('user') || '{}');
     const id = user.Id;
     if (id) {
-      this.prestataireService.updatePres(id, this.formData).subscribe(
+      this.adminService.updateAdmin(id, this.formData).subscribe(
         (response) => {
           alert("Les modifications ont été sauvegardées avec succès !");
-          this.prestataire = response.updatedPrestataire; 
-          this.formData = { ...this.prestataire };  
+          this.admin = response.updatedAdmin; 
+          this.formData = { ...this.admin};  
+          console.log("Les modifications ont été sauvegardées avec succès :" ,this.admin)
+
         },
         (error) => {
           console.log('Erreur détaillée :', error.error?.errors); 
@@ -64,20 +72,7 @@ export class ProfileAComponent {
       );
     }
   }
-  handleChange(event: Event, field: string) {
-    const target = event.target as HTMLInputElement | HTMLTextAreaElement;
-    this.formData = { ...this.formData, [field]: target.value };
-  }
-  onFileSelected(event: Event) {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files[0]) {
-      const file = input.files[0];
-      if (file.type.startsWith('image/')) {
-        this.formData.pdProfile = file;  
-      } else {
-        alert('Veuillez télécharger un fichier image valide.');
-      }
-    }
-  }
+
+ 
 
 }

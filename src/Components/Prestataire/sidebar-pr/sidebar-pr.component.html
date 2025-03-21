@@ -1,12 +1,10 @@
 <div class="flex h-screen ">
-    <!-- Overlay pour mobile (désactivé en desktop) -->
     <div
       class="fixed inset-0 bg-black/50 z-40 md:hidden"
       *ngIf="isSidebarOpen"
       (click)="closeSidebar()"
     ></div>
   
-    <!-- Sidebar -->
     <aside
       class="bg-custom-orange/5 backdrop-blur-md shadow-md p-4 text-custom-black fixed inset-y-0 left-0 z-50 transform transition-transform duration-300 ease-in-out border-r border-custom-gray"
       [ngClass]="{
@@ -16,9 +14,7 @@
         'w-16': isSidebarCollapsed
       }"
     >
-      <!-- En-tête avec le logo -->
       <div class="flex items-center space-x-2">
-        <!-- Logo du site -->
         <img
           src="/assets/FE11.png" 
           alt="Logo"
@@ -39,7 +35,6 @@
         ></fa-icon>
       </button> -->
   
-      <!-- Navigation -->
       <nav class="mt-5">
         <ul>
           <li
@@ -88,13 +83,12 @@
             class="p-2 hover:bg-custom-gray/10 rounded-lg flex items-center space-x-2 cursor-pointer transition-all duration-300" routerLinkActive="bg-custom-gray"
           >
             <fa-icon [icon]="faSignOutAlt" class="h-5 w-5 text-gray-500"></fa-icon>
-            <span *ngIf="!isSidebarCollapsed">Déconnexion</span>
+            <span (click)="logout()" *ngIf="!isSidebarCollapsed">Déconnexion</span>
           </li>
         </ul>
       </nav>
     </aside>
   
-    <!-- Contenu principal -->
     <div class="flex-1 p-6 bg-white md:ml-64">
         <div class="md:hidden flex items-center justify-between p-4 bg-custom-orange/5 backdrop-blur-md shadow-md border-b border-custom-gray">
           <button

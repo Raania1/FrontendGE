@@ -10,6 +10,7 @@ export class OrganizerService {
   private apiUrl = 'http://localhost:8000/organizer/getById/';  
   private apiUrl1 = 'http://localhost:8000/organizer/update/';  
   private apiUrlS = 'http://localhost:8000/organizer/deleteorganizer/';  
+  private apiUrlA = 'http://localhost:8000/organizer/organizers';  
 
   constructor(private http: HttpClient) { }
 
@@ -40,7 +41,13 @@ export class OrganizerService {
     const token = localStorage.getItem('token');  
     const headers = { Authorization: `Bearer ${token}` };
 
-    return this.http.get<any>(`${this.apiUrlS}${id}`, { headers });
+    return this.http.delete<any>(`${this.apiUrlS}${id}`, { headers });
+  }
+  getAllOrganizers(): Observable<any> {
+    const token = localStorage.getItem('token');  
+    const headers = { Authorization: `Bearer ${token}` };
+
+    return this.http.get<any>(`${this.apiUrlA}`, { headers });
   }
 
 

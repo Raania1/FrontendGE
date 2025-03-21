@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, HostListener } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, RouterLink, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink, RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faChartBar, faTools, faBars, faCalendarCheck, faCalendarAlt, faBullhorn, faUser, faCog, faSignOutAlt, faInfoCircle, faChevronRight, faChevronLeft } from '@fortawesome/free-solid-svg-icons';
 import { PrestataireService } from '../../../Services/prestataire.service';
@@ -33,7 +33,7 @@ export class SidebarPRComponent {
 
   constructor(
      private prestataireService: PrestataireService,
-     private route: ActivatedRoute
+     private router: Router
    ) {}
    prestataire: any = {};
    ngOnInit(): void {
@@ -57,6 +57,11 @@ export class SidebarPRComponent {
        console.error('Utilisateur non trouvé dans le localStorage');
      }
    }
+   logout() {
+    localStorage.removeItem('user');
+    localStorage.removeItem('token');
+    this.router.navigate(['/']); 
+  }
 
 
   toggleSidebar() {
