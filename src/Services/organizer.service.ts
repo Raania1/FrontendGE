@@ -49,6 +49,28 @@ export class OrganizerService {
 
     return this.http.get<any>(`${this.apiUrlA}`, { headers });
   }
+  afficherAlertSuccess(message: string, alertId: string): void {
+    this.showAlert(alertId, "alert-success", message, "bi bi-check2-circle", 1500);
+  }
 
+  afficherAlertWarning(message: string, alertId: string): void {
+    this.showAlert(alertId, "alert-warning", message, "bi bi-exclamation-triangle", 1500);
+  }
 
+  afficherAlertFailure(message: string, alertId: string): void {
+    this.showAlert(alertId, "alert-failure", message, "bi bi-x-circle-fill", 3000);
+  }
+
+  private showAlert(alertId: string, alertClass: string, message: string, icon: string, duration: number): void {
+    const alertElement = document.getElementById(alertId);
+    if (alertElement) {
+      alertElement.innerHTML = `<i class="${icon}"></i> &nbsp;&nbsp;${message}`;
+      $(alertElement).fadeIn(300);
+      setTimeout(() => {
+        $(alertElement).fadeOut(400);
+      }, duration);
+    }
+  }
 }
+
+

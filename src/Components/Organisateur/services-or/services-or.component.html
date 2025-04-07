@@ -1,0 +1,376 @@
+<app-navbar-or></app-navbar-or>
+<div class="relative bg-gray-900">
+    <div class="absolute inset-0 overflow-hidden">
+      <img src="https://media.istockphoto.com/id/1443275721/fr/photo/cam%C3%A9ra-de-main-et-ordinateur-de-photographe-sur-le-bureau.jpg?s=612x612&w=0&k=20&c=EcVnZh-44m4DHer-MwT2wvYJ4cHIS2mgt3mRT6nddx4=" 
+           alt="Services professionnels" 
+           class="w-full h-full object-cover opacity-50">
+    </div>
+    <div class="relative max-w-7xl mx-auto py-24 px-4 sm:py-32 sm:px-6 lg:px-8">
+      <h1 class="text-4xl font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl">
+        Découvrez nos services exceptionnels
+      </h1>
+      <p class="mt-6 text-xl text-gray-300 max-w-3xl">
+        Des Prestataires talentueux pour immortaliser chaque instant de votre événement.
+    </p>
+    </div>
+  </div>
+<div *ngIf="loading" class="loading-indicator">
+  Chargement en cours...
+</div>
+
+<div *ngIf="error" class="error-message">
+  {{ error }}
+</div>
+<div *ngIf="!loading && !error">
+
+<div class="container mx-auto px-4 py-8">
+    
+    <!-- Mobile Filters -->
+    <div class="lg:hidden mb-6">
+      <div class="flex gap-2 mb-4">
+        <div class="relative flex-1">
+          <svg class="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+          </svg>
+          <input 
+            type="search" 
+            placeholder="Rechercher un service..." 
+            class="pl-8 w-full border rounded-md px-3 py-2"
+            [formControl]="searchQuery"
+            >
+        </div>
+        <button class="border rounded-md p-2" (click)="isMobile = !isMobile">
+          <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path>
+          </svg>
+        </button>
+      </div>
+  
+      <!-- Active filters display -->
+      @if (hasActiveFilters()) {
+        <div class="flex flex-wrap gap-2 mb-4">
+          @if (filterForm.get('type')?.value) {
+            <span class="bg-gray-100 text-gray-800 text-xs font-medium px-2.5 py-0.5 rounded flex items-center gap-1">
+                {{getTypeLabelForCurrentFilter()}}
+                <svg class="h-3 w-3 cursor-pointer" fill="none" stroke="currentColor" viewBox="0 0 24 24" (click)="removeFilter('type')">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </span>
+          }
+          @if (filterForm.get('hasPromo')?.value) {
+            <span class="bg-gray-100 text-gray-800 text-xs font-medium px-2.5 py-0.5 rounded flex items-center gap-1">
+              Promotions
+              <svg class="h-3 w-3 cursor-pointer" fill="none" stroke="currentColor" viewBox="0 0 24 24" (click)="removeFilter('hasPromo')">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </span>
+          }
+          @if (filterForm.get('minPrice')?.value > 0 || filterForm.get('maxPrice')?.value < 10000) {
+            <span class="bg-gray-100 text-gray-800 text-xs font-medium px-2.5 py-0.5 rounded flex items-center gap-1">
+              {{filterForm.get('minPrice')?.value}}DT - {{filterForm.get('maxPrice')?.value}}DT
+              <svg class="h-3 w-3 cursor-pointer" fill="none" stroke="currentColor" viewBox="0 0 24 24" (click)="removeFilter('minPrice')">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </span>
+          }
+        </div>
+      }
+  
+      <!-- Mobile filters panel -->
+      @if (isMobile) {
+        <div class="bg-white p-4 rounded-lg border mb-4">
+          <div class="flex justify-between items-center mb-4">
+            <h2 class="text-lg font-semibold">Filtres</h2>
+            <button class="text-sm flex items-center gap-1" (click)="resetFilters()">
+              <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+              Réinitialiser
+            </button>
+          </div>
+  
+          <div class="space-y-6">
+            <!-- Type de service -->
+            <div>
+              <h3 class="text-sm font-medium mb-3">Type de service</h3>
+              <div class="grid grid-cols-2 gap-2">
+                @for (type of serviceTypes; track type.id) {
+                  <div class="flex items-center space-x-2">
+                    <input 
+                      type="checkbox" 
+                      [id]="'mobile-type-' + type.id"
+                      [checked]="filterForm.get('type')?.value === type.id"
+                      (change)="filterForm.get('type')?.setValue(filterForm.get('type')?.value === type.id ? '' : type.id)"
+                      class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+                    >
+                    <label [for]="'mobile-type-' + type.id" class="text-sm cursor-pointer">
+                      {{type.label}}
+                    </label>
+                  </div>
+                }
+              </div>
+            </div>
+  
+            <!-- Prix -->
+            <div>
+              <h3 class="text-sm font-medium mb-3">Prix</h3>
+              <div class="space-y-4">
+                <div class="flex justify-between">
+                  <span class="text-sm">{{filterForm.get('minPrice')?.value}}DT</span>
+                  <span class="text-sm">{{filterForm.get('maxPrice')?.value}}DT</span>
+                </div>
+                <input 
+                  type="range" 
+                  min="0" 
+                  max="10000" 
+                  step="100"
+                  class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                  [value]="filterForm.get('minPrice')?.value"
+                  (input)="handleInputChange($event, 'minPrice')"
+                >
+                <input 
+                  type="range" 
+                  min="0" 
+                  max="10000" 
+                  step="100"
+                  class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                  [value]="filterForm.get('maxPrice')?.value"
+                  (input)="handleInputChange($event, 'maxPrice')"
+                >
+              </div>
+            </div>
+
+            <!-- Promotions -->
+            <div class="flex items-center space-x-2">
+              <input 
+                type="checkbox" 
+                id="mobile-promo"
+                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+                [formControl]="$any(filterForm.controls['hasPromo'])"
+
+              >
+              <label for="mobile-promo" class="text-sm cursor-pointer">
+                Afficher uniquement les promotions
+              </label>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  
+    <div class="flex flex-col lg:flex-row gap-8">
+      <!-- Desktop Filters -->
+      <div class="hidden lg:block sticky top-4 bg-white p-6 rounded-lg border w-full lg:w-1/4">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-lg font-serif">Filtres</h2>
+          <button class="text-sm flex items-center gap-1" (click)="resetFilters()">
+            <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+            Réinitialiser
+          </button>
+        </div>
+  
+        <div class="space-y-6">
+          <!-- Search -->
+          <div>
+            <label for="search" class="text-sm font-bold font-serif mb-2 block">Recherche</label>
+            <div class="relative">
+              <svg class="absolute left-2.5 top-3.5 h-4 w-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+              </svg>
+              <input 
+                id="search" 
+                type="search" 
+                placeholder="Rechercher un service..." 
+                class="pl-8 w-full border rounded-md px-3 py-2"
+                [formControl]="$any(filterForm.controls['searchQuery'])"
+              >
+            </div>
+          </div>
+  
+          <!-- Type de service -->
+          <div>
+            <h3 class="text-sm font-bold font-serif mb-2">Type de service</h3>
+            <div class="space-y-2">
+              @for (type of serviceTypes; track type.id) {
+                <div class="flex items-center space-x-2">
+                  <input 
+                    type="checkbox" 
+                    [id]="'type-' + type.id"
+                    [checked]="filterForm.get('type')?.value === type.id"
+                    (change)="filterForm.get('type')?.setValue(filterForm.get('type')?.value === type.id ? '' : type.id)"
+                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+                  >
+                  <label [for]="'type-' + type.id" class="text-sm cursor-pointer">
+                    {{type.label}}
+                  </label>
+                </div>
+              }
+            </div>
+          </div>
+  
+          <!-- Prix -->
+          <div>
+            <h3 class="text-sm font-bold font-serif mb-2">Prix</h3>
+            <div class="space-y-4">
+              <div class="flex justify-between">
+                <span class="text-sm">{{filterForm.get('minPrice')?.value}}DT</span>
+                <span class="text-sm">{{filterForm.get('maxPrice')?.value}}DT</span>
+              </div>
+              <input 
+                type="range" 
+                min="0" 
+                max="10000" 
+                step="100"
+                class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                [value]="filterForm.get('minPrice')?.value"
+                (input)="handleInputChange($event, 'minPrice')"
+              >
+              <input 
+                type="range" 
+                min="0" 
+                max="10000" 
+                step="100"
+                class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                [value]="filterForm.get('maxPrice')?.value"
+                (input)="handleInputChange($event, 'maxPrice')"
+              >
+            </div>
+          </div>
+  
+          <!-- Promotions -->
+          <div class="flex items-center space-x-2">
+            <input 
+              type="checkbox" 
+              id="promo"
+              class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+              [formControl]="$any(filterForm.controls['hasPromo'])"
+            >
+            <label for="promo" class="text-sm cursor-pointer">
+              Afficher uniquement les promotions
+            </label>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Services List -->
+      <div class="w-full lg:w-3/4">
+        @if (loading) {
+          <div class="flex justify-center items-center h-64">
+            <svg class="h-8 w-8 animate-spin text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+            </svg>
+          </div>
+        } @else if (error) {
+          <div class="text-center py-12 bg-gray-100 rounded-lg">
+            <h3 class="text-xl font-medium mb-2">Erreur</h3>
+            <p class="text-gray-500">{{error}}</p>
+          </div>
+        } @else if (filteredServices.length === 0) {
+          <div class="text-center py-12 bg-gray-100 rounded-lg">
+            <h3 class="text-xl font-medium mb-2">Aucun service trouvé</h3>
+            <p class="text-gray-500">Veuillez modifier vos filtres pour voir plus de résultats.</p>
+          </div>
+        } @else {
+          <div>
+            <div class="flex justify-between items-center mb-6">
+              <p class="text-gray-500 font-serif font-medium ">{{pagination.total}} services trouvés</p>
+              <select 
+              class="border rounded-md px-3 py-2 bg-white"
+              [formControl]="$any(filterForm.controls['sortBy'])"
+              (change)="handleSortChange($any($event.target).value)"
+            >
+              <option value="newest">Plus récents</option>
+              <option value="price-asc">Prix: croissant</option>
+              <option value="price-desc">Prix: décroissant</option>
+              <option value="promo-desc">Meilleures promotions</option>
+            </select>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                @for (service of filteredServices; track service.id) {
+                    <div class="overflow-hidden transition-all hover:shadow-md rounded-lg border">
+                    <div class="relative h-48 w-full">
+                        <img [src]="getServiceImage(service)" [alt]="service.nom" class="object-cover w-full h-full">
+                        @if (service.promo > 0) {
+                          <span class="absolute top-2 right-2 bg-rose-500 hover:bg-rose-600 text-white text-xs font-medium px-2.5 py-0.5 rounded">
+                            -{{service.promo}}%
+                          </span>
+                        }
+                        <span class="absolute top-2 left-2 bg-white text-gray-800 text-xs font-medium px-2.5 py-0.5 rounded border">
+                          {{getTypeLabel(service.type)}}
+                        </span>
+                      </div>
+                  <div class="p-4">
+                    <h3 class="text-lg font-semibold line-clamp-1 mb-1 "  style="text-transform: capitalize;">{{service.nom}}</h3>
+                    <p class="text-sm text-gray-500 line-clamp-2 mb-3">{{service.description}}</p>
+                    <div class="flex items-center justify-between">
+                      <div>
+                        @if (getDiscountedPrice(service)) {
+                          <div class="flex items-center gap-2">
+                            <span class="text-lg font-bold  text-amber-600">{{getDiscountedPriceDisplay(service)}}</span>
+                            <span class="text-sm text-gray-500 line-through">{{getServicePrice(service)}}</span>
+                          </div>
+                        } @else {
+                          <span class="text-lg font-bold font-bold text-amber-600">{{getServicePrice(service)}}</span>
+                        }
+                      </div>
+                    </div>
+                  </div>
+                  <div class="p-4 pt-0 flex justify-end">
+                    <a [routerLink]="['/seviceDetail', service.id]" class="text-sm font-medium text-primary hover:underline">
+                      Voir les détails
+                    </a>
+                  </div>
+                </div>
+              }
+            </div>
+  
+            <!-- Pagination -->
+            @if (pagination.totalPages > 1) {
+              <div class="flex justify-center mt-8">
+                <div class="flex gap-2">
+                  <button 
+                    class="border rounded-md px-3 py-1 text-sm"
+                    (click)="handlePageChange(pagination.currentPage - 1)"
+                    [disabled]="pagination.currentPage === 1"
+                  >
+                    Précédent
+                  </button>
+  
+                  @for (page of getPageRange(); track page) {
+                    @if (page === -1) {
+                      <button class="border rounded-md px-3 py-1 text-sm" disabled>
+                        ...
+                      </button>
+                    } @else {
+                      <button 
+                        class="border rounded-md px-3 py-1 text-sm"
+                        [class.bg-primary]="pagination.currentPage === page"
+                        [class.text-white]="pagination.currentPage === page"
+                        (click)="handlePageChange(page)"
+                      >
+                        {{page}}
+                      </button>
+                    }
+                  }
+  
+                  <button 
+                    class="border rounded-md px-3 py-1 text-sm"
+                    (click)="handlePageChange(pagination.currentPage + 1)"
+                    [disabled]="pagination.currentPage === pagination.totalPages"
+                  >
+                    Suivant
+                  </button>
+                </div>
+              </div>
+            }
+          </div>
+        }
+      </div>
+    </div>
+  </div></div>
+  <hr>
+<div class="bg-custom-black/80 text-center py-4">
+    <p class="text-custom-gray">© 2025 FLESK EVENT. Tous droits réservés.</p>
+</div>

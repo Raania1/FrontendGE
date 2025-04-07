@@ -34,7 +34,7 @@ export class NavbarORComponent {
   faSignOutAlt = faSignOutAlt;
   faBars = faBars;
   navItems = [
-    { label: 'Acceuil', url: '/profileOR' },
+    { label: 'Acceuil', url: '/homeOr' },
     { label: 'Evènnements', url: '/events' },
     { label: 'Réservations', url: '/orders' },
     

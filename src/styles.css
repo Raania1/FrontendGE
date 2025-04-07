@@ -25,8 +25,9 @@
   .sticky-nav {
     position: sticky;
     top: 0;
-    z-index: 1000; /* Pour s'assurer que la navbar reste au-dessus des autres éléments */
+    z-index: 1000; 
   }
+  
 
 
 

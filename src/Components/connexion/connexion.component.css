@@ -9,3 +9,15 @@
   .border-green {
     border: 1px solid green;
   }
+
+
+  .alert-box {
+    display: none;
+    padding: 10px;
+    border-radius: 5px;
+    margin: 10px 0;
+  }
+  
+  .success { background-color: #d4edda; color: #155724; }
+  .warning { background-color: #fff3cd; color: #856404; }
+  .failure { background-color: #f8d7da; color: #721c24; }

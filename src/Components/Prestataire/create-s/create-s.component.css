@@ -1,0 +1,11 @@
+/* create-service.component.css */
+/* Styles optionnels pour améliorer l'interface */
+.group:hover .group-hover\:opacity-100 {
+    opacity: 1;
+  }
+  
+  .transition-opacity {
+    transition-property: opacity;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
+  }

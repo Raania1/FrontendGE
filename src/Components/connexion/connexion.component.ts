@@ -6,7 +6,7 @@ import { NavbarComponent } from "../navbar/navbar.component";
 import { AuthService } from '../../Services/auth.service';
 import {  HttpClientModule } from '@angular/common/http';
 import { EmailPasswordComponent } from "../email-password/email-password.component";
-
+import { afficherAlertFailure } from '../../js/alert';
 @Component({
   selector: 'app-connexion',
   standalone: true,
@@ -31,7 +31,6 @@ export class ConnexionComponent {
       password:['',[Validators.required]],
     })
     submitted = false;
-    errorMessage: String | null = null
     onSubmit() {
       this.submitted = true;
       ;
@@ -43,6 +42,7 @@ export class ConnexionComponent {
       this.authService.login(this.userData.value.email, this.userData.value.password).subscribe(
       (response) => {
         console.log('Connexion réussie', response);
+        this.authService.afficherAlertSuccess('Connexion Réussie, Bienvennue ...','alert-success');
         const userRole = response.user.role;
 
         if (userRole === 'organizer') {
@@ -59,11 +59,12 @@ export class ConnexionComponent {
         console.error('Erreur de connexion', error);
 
         if (error.error?.errors?.email === "No user found with this email." || error.error?.errors?.email === "Invalid Credentials.") {
-          this.errorMessage = 'Email ou mot de passe incorrect.'; 
+          this.authService.afficherAlertFailure('Email ou mot de passe incorrect.','alert-failure');
         } else if (error.error?.errors?.message === "Account not approved yet.") {
-          this.errorMessage = 'Votre compte n\'est pas encore approuvé. Réessayez dès que vous êtes accepté comme prestataire.'; 
+          this.authService.afficherAlertWarning('Votre compte n\'est pas encore approuvé. Réessayez dès que vous êtes accepté comme prestataire.','alert-warning');
         } else {
-          this.errorMessage = 'Une erreur s\'est produite. Veuillez réessayer.'; 
+          this.authService.afficherAlertFailure('Email ou mot de passe incorrect.','alert-failure');
+
         }
       }
     );

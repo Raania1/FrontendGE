@@ -1,0 +1,51 @@
+/* Animation pour la lightbox */
+.lightbox {
+    animation: fadeIn 0.3s ease-out;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  /* Styles pour les éléments de la galerie */
+  .gallery-item {
+    transition: all 0.3s ease-in-out;
+    margin-right: 8px;
+  }
+  
+  .gallery-item:hover {
+    transform: scale(1.05);
+  }
+  
+  /* Empêcher le défilement quand la lightbox est ouverte */
+  body.overflow-hidden {
+    overflow: hidden;
+  }
+  
+  /* Style pour la galerie avec défilement horizontal */
+  .overflow-x-auto {
+    overflow-x: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e0 #f7fafc;
+    padding-bottom: 15px; /* Espace pour la scrollbar */
+  }
+  
+  .overflow-x-auto::-webkit-scrollbar {
+    height: 6px;
+  }
+  
+  .overflow-x-auto::-webkit-scrollbar-track {
+    background: #f7fafc;
+    border-radius: 10px;
+  }
+  
+  .overflow-x-auto::-webkit-scrollbar-thumb {
+    background-color: #cbd5e0;
+    border-radius: 10px;
+  }
+  
+  /* Ajustement pour le contenu à côté */
+  .grid-cols-1.lg\:grid-cols-2 {
+    align-items: flex-start;
+  }

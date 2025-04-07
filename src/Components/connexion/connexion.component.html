@@ -6,11 +6,11 @@
       <img src="/assets/FE1.png" alt="Logo" width="150" height="auto">
     </div>
     <h2 class="text-3xl font-serif text-custom-black text-center mb-6">Connexion</h2>
-    @if (errorMessage) {
-      <div class="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
-        {{ errorMessage }}
-      </div>
-    }
+    
+    <div class="alert-box failure" id="alert-failure"></div>
+    <div class="alert-box warning" id="alert-warning"></div>
+    <div class="alert-box success" id="alert-success"></div>
+
     <form class="space-y-6" [formGroup]="userData" (ngSubmit)="onSubmit()">
       <div>
         <label for="email" class="block text-sm font-medium text-custom-black">Email</label>

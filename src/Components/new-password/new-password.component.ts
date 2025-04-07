@@ -15,8 +15,6 @@ import { HttpClientModule } from '@angular/common/http';
 export class NewPasswordComponent implements OnInit {
   resetPasswordForm: FormGroup;
   submitted = false;
-  successMessage = '';
-  errorMessage = '';
   id: string = '';
   token: string = '';
 
@@ -51,20 +49,20 @@ export class NewPasswordComponent implements OnInit {
       this.authService.resetPassword(this.id, this.token, newPassword)
         .subscribe({
           next: (response: any) => {
-            this.successMessage = response.message;
-            this.errorMessage = '';
+            this.authService.afficherAlertSuccess('Réinitialisation du mot de passe réussie.','alert-successE');
+
             setTimeout(() => {
               this.router.navigate(['/connexion']);
             }, 2000);
           },
           error: (error) => {
-            this.errorMessage = error.error.message || "Une erreur est survenue.";
-            this.successMessage = '';
+            this.authService.afficherAlertFailure('Quelque chose s’est mal passé. Veuillez réessayer plus tard.','alert-failureE');
+
+
           }
         });
     } else {
-      this.errorMessage = "Veuillez corriger les erreurs dans le formulaire.";
-      this.successMessage = '';
+      this.authService.afficherAlertWarning('Veuillez entrer une confirmation compatible a votre nouveau mot de passe.','alert-warningE');
     }
   }
   

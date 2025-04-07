@@ -8,6 +8,7 @@ import {
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { OrganizerService } from '../../../Services/organizer.service';
 import { HttpClientModule } from '@angular/common/http';
+import { AuthService } from '../../../Services/auth.service';
 @Component({
   selector: 'app-profile-or',
   standalone: true,
@@ -29,7 +30,7 @@ export class ProfileOrComponent {
   formData = { ...this.organisateur };
   isEditing = false;
   activeTab = "infos";
-  constructor(private authService: OrganizerService) {}
+  constructor(private authService: OrganizerService,authServiceA: AuthService) {}
 
   ngOnInit(): void {
     this.fetchOrganizerData();  
@@ -62,6 +63,8 @@ export class ProfileOrComponent {
         (response) => {
           console.log('Réponse après mise à jour :', response);
           this.organisateur = response.updatedOrganiser; 
+          // this.authService.afficherAlertSuccess('Modification avec succées','alert-success');
+
           this.formData = { ...this.organisateur };  
           this.isEditing = false;
         },

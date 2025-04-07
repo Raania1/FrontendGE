@@ -1,0 +1,244 @@
+<div class="min-h-screen p-6">
+    <div >
+      <!-- En-tête avec filtres -->
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+        <div>
+          <h1 class="text-2xl font-bold text-gray-800">Gestion des Services</h1>
+          <p class="text-gray-600">Liste complète des services</p>
+        </div>
+        
+        <!-- Barre de recherche devrait être ici -->
+        <div class="w-full md:w-1/3">
+          <div class="relative">
+            <input
+              type="text"
+              [(ngModel)]="searchTerm"
+              (input)="filterServices()"
+              placeholder="Rechercher un service..."
+              class="pl-10 w-80 pr-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+            >
+            <fa-icon [icon]="faSearch" class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></fa-icon>
+          </div>
+        </div>
+      </div>
+    
+        
+      <div class="flex border-b overflow-x-auto scrollbar-hide mb-6">
+        <button
+              *ngFor="let tab of tabs"
+              (click)="setActiveTab(tab.key)"
+              [class.text-amber-600]="activeTab === tab.key"
+              [class.border-b-2]="activeTab === tab.key"
+              [class.border-amber-600]="activeTab === tab.key"
+              [class.text-gray-500]="activeTab !== tab.key"
+              [class.hover:text-gray-900]="activeTab !== tab.key"
+              class="py-4 px-6 text-center font-medium transition-colors whitespace-nowrap flex items-center"
+            >
+              <fa-icon *ngIf="tab.icon" [icon]="tab.icon" class="mr-2 w-4 h-4"></fa-icon>
+              {{ tab.label }}
+            </button>
+          </div>
+      
+   <!-- Message si aucun service -->
+   <div *ngIf="filteredServices.length === 0" class="text-center text-gray-600 py-6 bg-gray-100 rounded-lg">
+    <p class="text-lg text-gray-500">Pas de demande encore ..</p>
+  </div>
+
+      <!-- Tableau des services -->
+      <div *ngIf="filteredServices.length > 0" class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Photo de Couverture</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nom</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Prestataire</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statut</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Prix</th>
+              <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <tr *ngFor="let service of filteredServices" class="hover:bg-gray-50">
+                 <!-- Colonne Photo -->
+            <td class="px-6 py-4 whitespace-nowrap">
+                <div class="h-12 w-12 rounded-md overflow-hidden">
+                <img 
+                    [src]="service.photoCouverture" 
+                    [alt]="service.nom"
+                    class="h-full w-full object-cover">
+                </div>
+            </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="text-sm font-medium text-gray-900">{{ service.nom }}</div>
+                <div class="text-sm text-gray-500 truncate max-w-xs">{{ service.description }}</div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="text-sm text-gray-900">{{ service.prestataire.nom }} {{ service.prestataire.prenom }}</div>
+                <div class="text-sm text-gray-500">{{ service.prestataire.email }}</div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
+                  [ngClass]="{
+                    'bg-green-100 text-green-800': service.approoved,
+                    'bg-yellow-100 text-yellow-800': !service.approoved
+                  }">
+                  {{ service.approoved ? 'Approuvé' : 'En attente' }}
+                </span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                <span *ngIf="service.promo > 0" class="text-xs text-gray-500 line-through mr-1">
+                  {{ service.prix }} DT
+                </span>
+                <span class="font-bold text-amber-600">
+                  {{ calculateDiscountedPrice(service) }} DT
+                </span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
+                <div class="flex flex-row items-end justify-center  space-y-2">
+                  <!-- Bouton Détails avec icône -->
+                  <button 
+                    (click)="openModal(service)"
+                    class="text-blue-600 hover:text-blue-900 p-2 rounded hover:bg-blue-50 transition-colors"
+                    title="Détails">
+                    <fa-icon [icon]="faEye" class="text-lg"></fa-icon>
+                  </button>
+                  
+                  <!-- Bouton Approuver avec icône -->
+                  <button 
+                    *ngIf="!service.approoved"
+                    (click)="approveService(service.id)"
+                    class="text-green-600 hover:text-green-900 p-2 rounded hover:bg-green-50 transition-colors"
+                    title="Approuver">
+                    <fa-icon [icon]="faCheck" class="text-lg"></fa-icon>
+                  </button>
+
+                  <button 
+                  (click)="rejectService(service.id)"
+                    class="text-red-600 hover:text-red-900 p-2 rounded hover:bg-red-50 transition-colors"
+                    title="supprimer">
+                    <fa-icon [icon]="faTrash" class="text-lg"></fa-icon>
+                  </button>
+
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        
+       
+      </div>
+    </div>
+  </div>
+  
+  <!-- Modal Tailwind CSS -->
+  <div *ngIf="showModal" class="fixed inset-0 z-50 overflow-y-auto">
+    <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+      <!-- Fond overlay -->
+      <div class="fixed inset-0 transition-opacity overlay" aria-hidden="true">
+        <div class="absolute inset-0 bg-gray-500 bg-opacity-75" (click)="closeModal()"></div>
+      </div>
+  
+      <!-- Contenu du modal -->
+      <div class="inline-block align-bottom bg-white rounded-lg overflow-hidden shadow-xl transform transition-all modal-card sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">        <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+          <div class="sm:flex sm:items-start">
+            <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
+              <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">
+                Détails du service
+              </h3>
+              
+              <div *ngIf="selectedService" class="space-y-4">
+                <div class="relative h-64 w-full rounded-lg overflow-hidden gallery-container">                    <img 
+                      [src]="selectedService.Photos[selectedImageIndex]" 
+                      [alt]="'Photo ' + (selectedImageIndex + 1) + ' - ' + selectedService.nom"
+                      class="h-full w-full object-cover gallery-image">                    
+                    <!-- Navigation entre photos -->
+                    <button 
+                        (click)="prevImage(); $event.stopPropagation()"
+                        class="absolute left-2 top-1/2 -translate-y-1/2 gallery-nav-button">
+                        &lt;
+                    </button>
+                    <button 
+                        (click)="nextImage(); $event.stopPropagation()"
+                        class="absolute right-2 top-1/2 -translate-y-1/2 gallery-nav-button">
+                        &gt;
+                    </button>
+                    
+                    <!-- Indicateur de position -->
+                    <div class="absolute bottom-2 left-1/2 -translate-x-1/2 gallery-indicator">
+                        {{ selectedImageIndex + 1 }} / {{ selectedService.Photos.length }}
+                      </div>
+                  </div>
+                  
+                  <!-- Vignettes de l'album -->
+                  <div class="flex space-x-2 overflow-x-auto py-2 thumbnails-container">
+                    <div 
+                      *ngFor="let photo of selectedService.Photos; let i = index"
+                      (click)="selectImage(i)"
+                      [class.thumbnail-active]="i === selectedImageIndex"
+                      class="flex-shrink-0 h-16 w-16 cursor-pointer thumbnail">
+                      <img 
+                        [src]="photo" 
+                        [alt]="'Miniature ' + (i + 1)"
+                        class="h-full w-full object-cover">
+                    </div>
+                  </div>
+                <div>
+                  <h4 class="font-bold">{{ selectedService.nom }}</h4>
+                  <p class="text-gray-600">{{ selectedService.description }}</p>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-4">
+                  <div>
+                    <p class="text-sm text-gray-500">Type</p>
+                    <p>{{ getTypeLabel(selectedService.type) }}</p>
+                  </div>
+                  <div class="price-container">
+                    <span *ngIf="selectedService.promo > 0" class="price-original">
+                      {{ selectedService.prix }} DT
+                    </span>
+                    <span class="price-discounted">
+                      {{ calculateDiscountedPrice(selectedService) }} DT
+                    </span>
+                  </div>
+                  <div>
+                    <p class="text-sm text-gray-500">Statut</p>
+                    <span class="status-badge"
+                    [ngClass]="{
+                      'status-badge-approved': selectedService.approoved,
+                      'status-badge-pending': !selectedService.approoved
+                    }">
+                    {{ selectedService.approoved ? 'Approuvé' : 'En attente' }}
+                  </span>
+                  </div>
+                  <div>
+                    <p class="text-sm text-gray-500">Date création</p>
+                    <p>{{ selectedService.createdAt | date:'dd/MM/yyyy' }}</p>
+                  </div>
+                </div>
+                
+                <div class="pt-4 border-t">
+                  <h5 class="font-semibold mb-2">Prestataire</h5>
+                  <p>{{ selectedService.prestataire.nom }} {{ selectedService.prestataire.prenom }}</p>
+                  <p class="text-blue-600">{{ selectedService.prestataire.email }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+          <button *ngIf="!selectedService?.approoved"
+                  type="button"
+                  (click)="approveService(selectedService.id)"
+                  class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none sm:ml-3 sm:w-auto sm:text-sm">
+            Approuver
+          </button>
+          <button type="button"
+                  (click)="closeModal()"
+                  class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+            Fermer
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>

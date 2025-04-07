@@ -1,0 +1,258 @@
+<app-navbar-or></app-navbar-or>
+<div class="bg-gradient-to-br from-white to-gray-50 min-h-screen p-4 md:p-8">
+  <!-- Bouton Retour -->
+  <button (click)="goBack()" class="flex items-center gap-1 text-gray-500 hover:text-gray-700 mb-6">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M19 12H5M12 19l-7-7 7-7"/>
+    </svg>
+  </button>
+
+  <!-- Contenu Principal -->
+  <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <!-- Galerie Photos -->
+    <div class="relative">
+      <!-- Galerie -->
+      <div class="relative aspect-[4/3] w-full rounded-xl overflow-hidden bg-gray-200 mb-4">
+        <img [src]="serviceData.photoCouverture" [alt]="serviceData.nom" class="w-full h-full object-cover">
+        <div class="absolute top-4 right-4 flex gap-2">
+          <!-- <button class="p-2 bg-white/80 backdrop-blur-sm rounded-full hover:bg-white">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+            </svg>
+          </button> -->
+        </div>
+      </div>
+      <div class="rounded-md w-full mx-auto md:gap-2 gap-1 flex pb-10 pt-10 overflow-x-auto">
+        <div *ngFor="let photo of serviceData.Photos; let i = index" 
+             class="gallery-item rounded-2xl h-[200px] flex-shrink-0 object-cover cursor-pointer"
+             [class]="selectedIndex === i ? 'w-[300px]' : 'w-[50px]'"
+             (mouseenter)="selectedIndex = i"
+             (click)="openLightbox(i)">
+          <img [src]="photo" 
+               [alt]="'Photo ' + (i + 1) + ' - ' + serviceData.nom"
+               class="w-full h-full object-cover rounded-2xl">
+        </div>
+      </div>
+    
+      <!-- Lightbox -->
+      <div *ngIf="isLightboxOpen" 
+           class="lightbox fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center"
+           (click)="closeLightbox()">
+        <div class="max-w-6xl w-full p-4" (click)="$event.stopPropagation()">
+          <div class="bg-white rounded-2xl overflow-hidden shadow-2xl">
+            <div class="relative">
+              <img [src]="serviceData.Photos[selectedIndex]" 
+                   [alt]="'Photo ' + (selectedIndex + 1) + ' - ' + serviceData.nom"
+                   class="w-full h-auto max-h-[80vh] object-contain">
+              
+              <!-- Boutons de navigation -->
+              <button class="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/90 rounded-full p-3 hover:bg-white transition-all"
+                      (click)="navigateLightbox('prev')">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M15 18l-6-6 6-6"/>
+                </svg>
+              </button>
+              <button class="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/90 rounded-full p-3 hover:bg-white transition-all"
+                      (click)="navigateLightbox('next')">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M9 18l6-6-6-6"/>
+                </svg>
+              </button>
+            </div>
+            
+            <div class="p-6 bg-white border-t">
+              <h2 class="text-2xl font-bold" style="text-transform: capitalize;">{{serviceData.nom}}</h2>
+              <p class="text-gray-600 mt-4 text-lg">{{serviceData.description}}</p>
+              <div class="flex justify-between items-center mt-6">
+                <span class="text-base text-gray-500">Image {{selectedIndex + 1}} sur {{serviceData.Photos.length}}</span>
+                <button class="text-blue-600 hover:text-blue-800 text-base font-medium px-4 py-2 rounded-lg"
+                        (click)="closeLightbox()">
+                  Fermer
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+
+    <!-- Détails du Service -->
+    <div class="space-y-6">
+      <!-- En-tête -->
+      <div class="flex flex-col items-center text-center">
+        
+        <h1 class="text-2xl md:text-3xl font-bold font-serif text-gray-900" style="text-transform: capitalize;">{{serviceData.nom}}</h1>
+        <div class="flex items-center gap-2 text-gray-500 mt-2">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+          </svg>
+          <span class="text-sm" style="text-transform: capitalize;">{{serviceData.Prestataire.nom}} {{serviceData.Prestataire.prenom}}</span>
+          <!-- <div class="flex items-center gap-2 mb-2"> -->
+            <!-- <span class="border rounded-full px-2 py-1 text-xs">{{serviceData.type}}</span> -->
+            <!-- <div class="flex items-center text-amber-500">
+              <svg *ngFor="let star of [1,2,3,4]" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+              </svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+              </svg>
+              <span class="ml-1 text-xs text-gray-600">(4.0)</span>
+            </div> -->
+          <!-- </div> -->
+        </div>
+      </div>
+
+      <!-- Prix et Actions -->
+      <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+        <div class="flex justify-between items-center mb-4">
+          <div>
+            <!-- Modifiez les affichages de prix pour utiliser formatPrice() -->
+            <div *ngIf="serviceData.promo > 0; else normalPrice" class="space-y-1">
+                <div class="flex items-center gap-2">
+                <span class="text-xl font-bold text-amber-600">{{formatPrice(getFinalPrice())}}</span>
+                <span class="bg-red-100 text-red-800 text-xs px-2 py-1 rounded-md">-{{serviceData.promo}}%</span>
+                </div>
+                <span class="text-sm text-gray-500 line-through">{{formatPrice(serviceData.prix)}}</span>
+            </div>
+            <ng-template #normalPrice>
+                <span class="text-xl font-bold  text-amber-600">{{formatPrice(serviceData.prix)}}</span>
+            </ng-template>
+          </div>
+          <div class="flex gap-2">
+            <button class="border rounded-md px-3 py-2 text-sm hover:bg-gray-50 flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1">
+                <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+              </svg>
+              Favoris
+            </button>
+            <button class="bg-blue-600 text-white rounded-md px-3 py-2 text-sm hover:bg-blue-700 flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1">
+                <circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/>
+              </svg>
+              Réserver
+            </button>
+          </div>
+        </div>
+
+        <hr class="my-4 border-gray-200">
+
+        <!-- Infos supplémentaires -->
+        <div class="space-y-3 ">
+          <div *ngFor="let info of serviceInfos" class="flex gap-3">
+            <div class="text-gray-400 mt-0.5">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path *ngIf="info.icon === 'map'" d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0Z"/><circle *ngIf="info.icon === 'map'" cx="12" cy="10" r="3"/>
+                <rect *ngIf="info.icon === 'calendar'" width="18" height="18" x="3" y="4" rx="2" ry="2"/><line *ngIf="info.icon === 'calendar'" x1="16" x2="16" y1="2" y2="6"/><line *ngIf="info.icon === 'calendar'" x1="8" x2="8" y1="2" y2="6"/><line *ngIf="info.icon === 'calendar'" x1="3" x2="21" y1="10" y2="10"/>
+                <path *ngIf="info.icon === 'tag'" d="M12 2H2v10l9.29 9.29c.94.94 2.48.94 3.42 0l6.58-6.58c.94-.94.94-2.48 0-3.42L12 2Z"/><path *ngIf="info.icon === 'tag'" d="M7 7h.01"/>
+                <circle *ngIf="info.icon === 'clock'" cx="12" cy="12" r="10"/><polyline *ngIf="info.icon === 'clock'" points="12 6 12 12 16 14"/>
+              </svg>
+            </div>
+            <div>
+              <p class="text-sm font-medium">{{info.title}}</p>
+              <p class="text-sm text-gray-600">{{info.value}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Description -->
+      <div class=" p-4 rounded-xl shadow-lg border border-gray-100">
+        <h2 class="text-lg font-semibold mb-2">Description</h2>
+        <p class="text-gray-700">{{serviceData.description}}</p>
+      </div>
+
+      <!-- Prestataire -->
+      <div class=" p-6 rounded-xl shadow-lg border">
+            <h2 class="text-lg font-semibold mb-3">Prestataire</h2>
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-full overflow-hidden bg-gray-200">
+            <img [src]="serviceData.Prestataire.pdProfile" [alt]="serviceData.Prestataire.nom" class="w-full h-full object-cover">
+          </div>
+          <div>
+            <h3 class="font-medium"  style="text-transform: capitalize;">{{serviceData.Prestataire.nom}} {{serviceData.Prestataire.prenom}}</h3>
+            <p class="text-sm text-gray-600">{{serviceData.Prestataire.numTel}}</p>
+            <a href="#" class="text-blue-600 hover:underline text-sm">Voir le profil</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><br><hr>
+  <!-- Section Autres Services -->
+<div class="max-w-6xl mx-auto px-4 md:px-8 py-12">
+    <div class="flex items-center justify-between mb-6">
+      <h2 class="text-2xl font-medium font-serif text-gray-900">Autres services qui pourraient vous intéresser</h2>
+      <div class="flex gap-2">
+        <button
+          (click)="handlePrev()"
+          [disabled]="startIndex === 0"
+          class="inline-flex items-center justify-center rounded-full border border-gray-200 w-10 h-10 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M15 18l-6-6 6-6"/>
+          </svg>
+        </button>
+        <button
+          (click)="handleNext()"
+          [disabled]="startIndex >= otherServices.length - visibleCount"
+          class="inline-flex items-center justify-center rounded-full border border-gray-200 w-10 h-10 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 18l6-6-6-6"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <div *ngFor="let service of otherServices.slice(startIndex, startIndex + visibleCount)" class="group">
+        <div class="bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100 transition-all duration-300 hover:shadow-md h-full flex flex-col">
+          <div class="relative aspect-[4/3] overflow-hidden">
+            <img
+              [src]="service.photoCouverture"
+              [alt]="service.nom"
+              class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+            />
+            <span *ngIf="service.promo > 0" class="absolute top-3 right-3 bg-red-500 text-white text-xs px-2 py-1 rounded-full">
+              -{{service.promo}}%
+            </span>
+          </div>
+  
+          <div class="p-4 flex-grow flex flex-col">
+            <div class="flex justify-between items-start mb-2">
+              <h3 class="font-semibold text-gray-900 capitalize line-clamp-1">{{service.nom}}</h3>
+              <span class="border rounded-full px-2 py-1 text-xs capitalize">
+                {{service.type}}
+              </span>
+            </div>
+  
+            <p class="text-gray-600 text-sm mb-3 line-clamp-2 flex-grow">{{service.description}}</p>
+  
+            <div class="flex justify-between items-center">
+              <div>
+                <div *ngIf="service.promo > 0; else normalPrice">
+                  <span class="font-bold text-amber-600">
+                    {{formatPrice(calculateFinalPrice(service.prix, service.promo))}}
+                  </span>
+                  <span class="text-xs text-gray-500 line-through ml-1">{{formatPrice(service.prix)}}</span>
+                </div>
+                <ng-template #normalPrice>
+                  <span class="font-bold text-amber-600">{{formatPrice(service.prix)}}</span>
+                </ng-template>
+              </div>
+  
+              <span class="text-xs text-gray-500 capitalize">{{service.Prestataire.nom}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+
+<hr>
+<div class="bg-custom-black/80 text-center py-4">
+    <p class="text-custom-gray">© 2025 FLESK EVENT. Tous droits réservés.</p>
+</div>

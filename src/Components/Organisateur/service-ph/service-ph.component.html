@@ -1,0 +1,152 @@
+<app-navbar-or></app-navbar-or>
+
+<div class="bg-gray-50 min-h-screen">
+  <!-- Hero Section -->
+  <div class="relative bg-gray-900">
+    <div class="absolute inset-0 overflow-hidden">
+      <img src="https://media.istockphoto.com/id/1443275721/fr/photo/cam%C3%A9ra-de-main-et-ordinateur-de-photographe-sur-le-bureau.jpg?s=612x612&w=0&k=20&c=EcVnZh-44m4DHer-MwT2wvYJ4cHIS2mgt3mRT6nddx4=" 
+           alt="Services professionnels" 
+           class="w-full h-full object-cover opacity-50">
+    </div>
+    <div class="relative max-w-7xl mx-auto py-24 px-4 sm:py-32 sm:px-6 lg:px-8">
+      <h1 class="text-4xl font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl">
+        Découvrez nos services exceptionnels
+      </h1>
+      <p class="mt-6 text-xl text-gray-300 max-w-3xl">
+        Des photographes talentueux pour immortaliser chaque instant de votre événement.
+    </p>
+    </div>
+  </div>
+<!-- Filtres -->
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="bg-white rounded-lg shadow p-6">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div>
+          <label for="price-min" class="block text-sm font-medium text-gray-700 mb-1">Prix Min</label>
+          <input id="price-min" [(ngModel)]="prixMin" class="block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 sm:text-sm rounded-md" type="number">
+        </div>
+        <div>
+          <label for="price-max" class="block text-sm font-medium text-gray-700 mb-1">Prix Max</label>
+          <input id="price-max" [(ngModel)]="prixMax" class="block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 sm:text-sm rounded-md" type="number">
+        </div>
+        <button (click)="onSearch()" 
+                    class="w-full flex justify-center items-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+              Appliquer les filtres
+            </button>
+       
+        <button (click)="resetFilters()" 
+                    class="w-full flex justify-center items-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
+              Réinitialiser
+            </button>
+      </div>
+      
+    </div>
+  </div>
+  
+
+  <!-- Liste des services -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <!-- Service Item (répété dynamiquement) -->
+      <div *ngFor="let service of services" class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition duration-300">
+        <div class="relative h-64">
+          <img [src]="service.photoCouverture" 
+               [alt]="service.nom" 
+               class="w-full h-full object-cover">
+          <div *ngIf="service.promo > 0" class="absolute top-2 right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">
+            -{{service.promo}}%
+          </div>
+          <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-4">
+            <h3 class="text-xl font-bold text-white">{{service.nom}}</h3>
+            <p class="text-orange-300">{{service.type}}</p>
+          </div>
+        </div>
+        <div class="p-6">
+          <p class="text-gray-600 mb-4 line-clamp-2">{{service.description}}</p>
+          <div class="flex justify-between items-center">
+            <div>
+              <span *ngIf="service.promo === 0" class="text-orange-600 font-bold">{{service.prix}}DT</span>
+              <div *ngIf="service.promo > 0">
+                <span class="text-gray-400 line-through mr-2">{{service.prix}}DT</span>
+                <span class="text-orange-600 font-bold">{{calculateDiscount(service.prix, service.promo)}}DT</span>
+              </div>
+            </div>
+            <a [routerLink]="['/service', service.id]" class="text-sm bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg transition duration-300">
+              Voir détails
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    
+  </div>
+
+ 
+  <!-- Pagination -->
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
+    <div class="bg-white rounded-lg shadow px-6 py-4 flex items-center justify-between">
+      <div class="flex-1 flex justify-between sm:hidden">
+        <button (click)="previousPage()" 
+                [disabled]="currentPage === 1"
+                class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50">
+          Précédent
+        </button>
+        <button (click)="nextPage()" 
+                [disabled]="currentPage === totalPages"
+                class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50">
+          Suivant
+        </button>
+      </div>
+      <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+        <div>
+          <p class="text-sm text-gray-700">
+            Affichage <span class="font-medium">{{ (currentPage - 1) * itemsPerPage + 1 }}</span> à 
+            <span class="font-medium">{{ min(currentPage * itemsPerPage, totalServices) }}</span>
+                        sur <span class="font-medium">{{ totalServices }}</span> services
+          </p>
+        </div>
+        <div>
+          <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+            <button (click)="previousPage()" 
+                    [disabled]="currentPage === 1"
+                    class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50">
+              <span class="sr-only">Précédent</span>
+              <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+              </svg>
+            </button>
+            
+            <!-- Boutons de page -->
+            <button *ngFor="let page of getPages()" 
+                    (click)="goToPage(page)"
+                    [class]="currentPage === page ? 
+                            'z-10 bg-orange-50 border-orange-500 text-orange-600 relative inline-flex items-center px-4 py-2 border text-sm font-medium' : 
+                            'bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium'">
+              {{ page }}
+            </button>
+            
+            <button (click)="nextPage()" 
+                    [disabled]="currentPage === totalPages"
+                    class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50">
+              <span class="sr-only">Suivant</span>
+              <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+              </svg>
+            </button>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<hr>
+<div class="bg-custom-black/80 text-center py-4">
+    <p class="text-custom-gray">© 2025 FLESK EVENT. Tous droits réservés.</p>
+</div>

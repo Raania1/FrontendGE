@@ -15,6 +15,14 @@ import { SidebarAdComponent } from '../Components/Admin/sidebar-ad/sidebar-ad.co
 import { ProfileAComponent } from '../Components/Admin/profile-a/profile-a.component';
 import { ListOrganisateurComponent } from '../Components/Admin/list-organisateur/list-organisateur.component';
 import { ListPrestataireComponent } from '../Components/Admin/list-prestataire/list-prestataire.component';
+import { AcceuilORComponent } from '../Components/Organisateur/acceuil-or/acceuil-or.component';
+import { ServicePhComponent } from '../Components/Organisateur/service-ph/service-ph.component';
+import { CreateSComponent } from '../Components/Prestataire/create-s/create-s.component';
+import { ServicesPrComponent } from '../Components/Prestataire/services-pr/services-pr.component';
+import { EditServiceComponent } from '../Components/Prestataire/edit-service/edit-service.component';
+import { ServicesAdComponent } from '../Components/Admin/services-ad/services-ad.component';
+import { ServicesOrComponent } from '../Components/Organisateur/services-or/services-or.component';
+import { ServiceDetailsComponent } from '../Components/Organisateur/service-details/service-details.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -29,6 +37,14 @@ export const routes: Routes = [
     // espace organisateur
     {path: 'navOR',component:NavbarORComponent},
     {path: 'profileOR',component:ProfileOrComponent},
+    { path: 'homeOr', component: AcceuilORComponent },
+    { path: 'servicePH', component: ServicePhComponent },
+    { path: 'servicesOr', component: ServicesOrComponent },
+    { path: 'seviceDetail/:id', component: ServiceDetailsComponent },
+
+    // { path: 'services', component: ServicesComponent },
+
+
 
     // espace prestataire
     // {path: 'sidePr',component:SidebarPRComponent},
@@ -39,6 +55,9 @@ export const routes: Routes = [
         children: [
           { path: 'profile', component: ProfilePrComponent },
           { path: 'parametre', component: ParametrePRComponent },
+          { path: 'creatService', component: CreateSComponent },
+          { path: 'servicePR', component: ServicesPrComponent },
+          { path: 'EditService/:id', component: EditServiceComponent },
 
         ],
       },
@@ -49,6 +68,7 @@ export const routes: Routes = [
           { path: 'profile', component: ProfileAComponent },
           { path: 'ListOr', component: ListOrganisateurComponent },
           { path: 'ListPr', component: ListPrestataireComponent },
+          { path: 'serviceAd', component: ServicesAdComponent },
 
         ],
       }

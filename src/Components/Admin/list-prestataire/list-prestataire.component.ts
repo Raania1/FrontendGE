@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faBell, faUser, faTrash, faSearch, faCheck, faTimes, faFilePdf, faUsersSlash } from '@fortawesome/free-solid-svg-icons';
+import { faBell, faUser, faTrash, faSearch, faCheck, faTimes, faFilePdf, faUsersSlash, faCheckCircle, faClock, faLayerGroup } from '@fortawesome/free-solid-svg-icons';
 import { PrestataireService } from '../../../Services/prestataire.service';
 import { FormsModule } from '@angular/forms';
 
@@ -15,13 +15,17 @@ import { FormsModule } from '@angular/forms';
 export class ListPrestataireComponent {
 faBell = faBell;
     faUser = faUser;
-      faTrash =faTrash;
+    faTrash =faTrash;
     faSearch = faSearch;
     faCheck = faCheck; 
     faTimes = faTimes;
     faUsersSlash=faUsersSlash;
     faFilePdf=faFilePdf;
-    showAll: boolean = true; 
+    faLayerGroup = faLayerGroup;
+    faCheckCircle = faCheckCircle;
+    faClock = faClock;
+    showAll: boolean = true;
+
   constructor(private presService: PrestataireService,) {}
 
   pres : any[] = [];
@@ -34,9 +38,10 @@ faBell = faBell;
     this.presService.getAllPres().subscribe(
       (response) => {
         this.pres = response.pres;
+        console.log(this.pres)
       },
       (error) => {
-        console.error('Erreur lors de la récupération des organisateurs:', error);
+        console.error('Erreur lors de la récupération des prestataires:', error);
       }
     );
   }

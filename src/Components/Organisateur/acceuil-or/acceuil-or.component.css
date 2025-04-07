@@ -1,0 +1,7 @@
+:host {
+    display: block;
+  }
+  
+  .bg-cover {
+    transition: opacity 1s ease-in-out;
+  }

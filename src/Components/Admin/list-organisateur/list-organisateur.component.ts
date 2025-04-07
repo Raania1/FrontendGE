@@ -17,7 +17,7 @@ export class ListOrganisateurComponent {
   faBell = faBell;
     faUser = faUser;
       faTrash =faTrash;
-    faSearch = faSearch;
+faSearch = faSearch;
     faUsersSlash = faUsersSlash;
   users : any[] = [];
   constructor(private organizerService: OrganizerService,) {}

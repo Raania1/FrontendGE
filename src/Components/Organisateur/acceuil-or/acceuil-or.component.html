@@ -1,0 +1,198 @@
+<app-navbar-or></app-navbar-or>
+
+<div class="relative bg-white py-16 sm:py-24 overflow-hidden min-h-[500px]">
+    <div 
+      class="absolute inset-0 bg-cover bg-center transition-opacity duration-1000 ease-in-out"
+      [style.background-image]="'url(' + currentImage + ')'">
+      <div class="absolute inset-0 bg-black bg-opacity-40"></div>
+    </div>
+    
+    <div class="relative z-10 mx-auto max-w-7xl px-6 lg:px-12">
+      <div class="mx-auto max-w-3xl text-center">
+        <p class="mt-2 text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">
+          Tout pour réussir vos événements
+        </p>
+        <p class="mt-6 text-lg text-gray-200 leading-relaxed">
+          Nos prestataires experts vous proposent des services complets pour rendre chaque moment inoubliable, de la conception à la réalisation.
+        </p>
+        <button routerLink="/servicesOr" routerLinkActive="router-link-active"  class="mt-8 bg-custom-orange hover:bg-orange-600 text-white font-medium py-3 px-6 rounded-lg transition duration-300">
+          Découvrir nos services
+        </button>
+      </div>
+    </div>
+</div>
+
+<div class="bg-gray-100">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div class="mx-auto max-w-2xl py-10 sm:py-15 lg:max-w-none lg:py-15">
+      <div class="text-center mb-12">
+        <h3 class="text-4xl font-serif text-gray-900 mb-4">
+          Trouvez le prestataire idéal pour votre <span class="text-custom-orange">événement</span>
+        </h3>
+        <p class="text-lg text-gray-700 max-w-2xl mx-auto">
+          Des experts à votre service pour sublimer chaque instant.
+        </p>
+      </div>
+      
+      <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Photographes -->
+        <div class="group relative bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition duration-300">
+          <div class="aspect-w-16 aspect-h-9 overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1554941829-202a0b2403b8?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" 
+                 alt="Photographes" 
+                 class="w-full h-64 object-cover transition duration-500 group-hover:scale-105">
+          </div>
+          <div class="p-4">
+            <h3 class="text-lg  text-gray-900">
+              <a routerLink="/servicePH" routerLinkActive="router-link-active"  class="flex items-center justify-between">
+                <span>Photographes</span>
+                <i class="fas fa-arrow-right ml-2 text-custom-orange"></i>
+              </a>
+            </h3>
+          </div>
+        </div>
+        
+        <!-- Traiteurs -->
+        <div class="group relative bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition duration-300">
+          <div class="aspect-w-16 aspect-h-9 overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1555244162-803834f70033?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" 
+                 alt="Traiteurs" 
+                 class="w-full h-64 object-cover transition duration-500 group-hover:scale-105">
+          </div>
+          <div class="p-4">
+            <h3 class="text-lg  text-gray-900">
+              <a href="/traiteurs" class="flex items-center justify-between">
+                <span>Traiteurs</span>
+                <i class="fas fa-arrow-right ml-2 text-custom-orange"></i>
+              </a>
+            </h3>
+          </div>
+        </div>
+        
+        <!-- Salles -->
+        <div class="group relative bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition duration-300">
+          <div class="aspect-w-16 aspect-h-9 overflow-hidden">
+            <img src="https://th.bing.com/th/id/OIP.bQNZV8Ku5BxIDl54jTdVRwHaEy?w=1920&h=1240&rs=1&pid=ImgDetMain" 
+                 alt="Salles" 
+                 class="w-full h-64 object-cover transition duration-500 group-hover:scale-105">
+          </div>
+          <div class="p-4">
+            <h3 class="text-lg  text-gray-900">
+              <a href="/salles" class="flex items-center justify-between">
+                <span>Salles</span>
+                <i class="fas fa-arrow-right ml-2 text-custom-orange"></i>
+              </a>
+            </h3>
+          </div>
+        </div>
+        
+        <!-- DJs -->
+        <div class="group relative bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition duration-300">
+          <div class="aspect-w-16 aspect-h-9 overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1429962714451-bb934ecdc4ec?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" 
+                 alt="DJs" 
+                 class="w-full h-64 object-cover transition duration-500 group-hover:scale-105">
+          </div>
+          <div class="p-4">
+            <h3 class="text-lg  text-gray-900">
+              <a href="/djs" class="flex items-center justify-between">
+                <span>DJs</span>
+                <i class="fas fa-arrow-right ml-2 text-custom-orange"></i>
+              </a>
+            </h3>
+          </div>
+        </div>
+        
+        <!-- Troupes Musicales -->
+        <div class="group relative bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition duration-300">
+          <div class="aspect-w-16 aspect-h-9 overflow-hidden">
+            <img src="https://th.bing.com/th/id/OIP.5gB7Q-JPF9MHtGh2vQc69wHaHa?w=600&h=600&rs=1&pid=ImgDetMain" 
+                 alt="Troupes Musicales" 
+                 class="w-full h-64 object-cover transition duration-500 group-hover:scale-105">
+          </div>
+          <div class="p-4">
+            <h3 class="text-lg  text-gray-900">
+              <a href="/troupes-musicales" class="flex items-center justify-between">
+                <span>Troupes Musicales</span>
+                <i class="fas fa-arrow-right ml-2 text-custom-orange"></i>
+              </a>
+            </h3>
+          </div>
+        </div>
+        
+        <!-- Autres -->
+        <div class="group relative bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition duration-300">
+          <div class="aspect-w-16 aspect-h-9 overflow-hidden">
+            <img src="https://tailwindcss.com/plus-assets/img/ecommerce-images/home-page-02-edition-03.jpg" 
+                 alt="Autres services" 
+                 class="w-full h-64 object-cover transition duration-500 group-hover:scale-105">
+          </div>
+          <div class="p-4">
+            <h3 class="text-lg  text-gray-900">
+              <a routerLink="/services"  class="flex items-center justify-between">
+                <span>Autres services</span>
+                <i class="fas fa-arrow-right ml-2 text-custom-orange"></i>
+              </a>
+            </h3>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Processus -->
+<div class="bg-white py-16 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-7xl mx-auto">
+    <h2 class="text-center text-3xl font-serif text-gray-900 mb-12">Comment ça marche ?</h2>
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-8 text-center">
+      <!-- Trouver votre service -->
+      <div class="p-6 bg-gray-50 rounded-lg hover:bg-white hover:shadow-md transition duration-300">
+        <div class="flex justify-center mb-4">
+          <div class="w-16 h-16 bg-custom-orange/10 rounded-full flex items-center justify-center">
+            <i class="fas fa-search text-2xl text-custom-orange"></i>
+          </div>
+        </div>
+        <h3 class="font-semibold text-lg mb-2">Trouver votre service</h3>
+        <p class="text-gray-600 text-sm">Recherchez et découvrez une large gamme de services adaptés à vos besoins.</p>
+      </div>
+      
+      <!-- Réserver -->
+      <div class="p-6 bg-gray-50 rounded-lg hover:bg-white hover:shadow-md transition duration-300">
+        <div class="flex justify-center mb-4">
+          <div class="w-16 h-16 bg-custom-orange/10 rounded-full flex items-center justify-center">
+            <i class="fas fa-calendar-check text-2xl text-custom-orange"></i>
+          </div>
+        </div>
+        <h3 class="font-semibold text-lg mb-2">Réserver</h3>
+        <p class="text-gray-600 text-sm">Choisissez votre service et réservez-le en quelques clics en toute simplicité.</p>
+      </div>
+      
+      <!-- Payer -->
+      <div class="p-6 bg-gray-50 rounded-lg hover:bg-white hover:shadow-md transition duration-300">
+        <div class="flex justify-center mb-4">
+          <div class="w-16 h-16 bg-custom-orange/10 rounded-full flex items-center justify-center">
+            <i class="fas fa-credit-card text-2xl text-custom-orange"></i>
+          </div>
+        </div>
+        <h3 class="font-semibold text-lg mb-2">Payer</h3>
+        <p class="text-gray-600 text-sm">Effectuez un paiement sécurisé via nos différentes options de paiement.</p>
+      </div>
+      
+      <!-- Donner des avis -->
+      <div class="p-6 bg-gray-50 rounded-lg hover:bg-white hover:shadow-md transition duration-300">
+        <div class="flex justify-center mb-4">
+          <div class="w-16 h-16 bg-custom-orange/10 rounded-full flex items-center justify-center">
+            <i class="fas fa-comment-alt text-2xl text-custom-orange"></i>
+          </div>
+        </div>
+        <h3 class="font-semibold text-lg mb-2">Donner votre avis</h3>
+        <p class="text-gray-600 text-sm">Partagez votre expérience et aidez la communauté à choisir.</p>
+      </div>
+    </div>
+  </div>
+</div>
+<hr>
+<div class="bg-custom-black/80 text-center py-4">
+    <p class="text-custom-gray">© 2025 FLESK EVENT. Tous droits réservés.</p>
+</div>

@@ -14,8 +14,6 @@ import { HttpClientModule, HttpErrorResponse } from '@angular/common/http';
 export class EmailPasswordComponent {
   resetForm: FormGroup;
   submitted = false;
-  successMessage: string = '';
-  errorMessage: string = '';
 
   @Output() closeModal = new EventEmitter<void>();
 
@@ -37,17 +35,21 @@ export class EmailPasswordComponent {
 
       this.authService.forgetPassword(emailValue).subscribe({
         next: (response) => {
-          this.successMessage = "Un lien de réinitialisation a été envoyé à votre email.";
-          this.errorMessage = '';
+          this.authService.afficherAlertSuccess('Un lien de réinitialisation a été envoyé à votre email.','alert-successE');
         },
         error: (error: HttpErrorResponse) => {
-          this.errorMessage = error.status === 404 ? "Utilisateur non trouvé." : "Une erreur est survenue.";
-          this.successMessage = '';
+          if(error.status === 404){
+            this.authService.afficherAlertFailure('Utilisateur non trouvé.','alert-failureE');
+          }
+          else{
+            this.authService.afficherAlertFailure('Une erreur est survenue.','alert-failureE');
+
+          }
+
         }
       });
     } else {
-      this.errorMessage = "Veuillez entrer une adresse email valide.";
-      this.successMessage = '';
+      this.authService.afficherAlertWarning('Veuillez entrer une adresse email valide.','alert-warningE');
     }
   }
 }

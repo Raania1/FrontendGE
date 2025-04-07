@@ -1,0 +1,215 @@
+<br><div class="flex justify-between items-center mb-6">
+    <div class="relative w-1/3">
+        <h3 class="text-l font-serif font-bold text-custom-black">Créer un Service</h3>
+    </div>
+    <div class="flex items-center space-x-4">
+      <fa-icon [icon]="faBell" class="h-6 w-6 cursor-pointer text-custom-gray"></fa-icon>
+      <div class="flex items-center space-x-2">
+        <span class="text-sm font-medium text-custom-black">{{prestataire.nom}} {{prestataire.prenom}}</span>
+        <div class="relative">
+          <div class="relative h-8 w-8 rounded-full border-2 border-white overflow-hidden shadow-md">
+            <img
+              [src]="prestataire.pdProfile"
+              [alt]="prestataire.nom"
+              class="w-full h-full object-cover"
+            />
+          </div>
+          <div class="absolute bottom-0 right-0 w-2 h-2 bg-green-400 rounded-full border border-white"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+<div class="min-h-screen p-6 ">
+  <a routerLink="/prestataire/servicePR" class="flex items-center text-gray-600 hover:text-gray-900 mb-2">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+    </svg>
+    
+  </a>  
+    <h1 class="text-2xl font-bold text-gray-900 mb-6">Créer un nouveau service</h1>
+    <p class="mt-2 text-sm text-gray-500">Complétez le formulaire ci-dessous pour ajouter un nouveau service à votre catalogue</p>
+  
+    <hr class="my-6">
+  
+    <div class="flex flex-col lg:flex-row gap-6">
+      <div class="bg-white rounded-lg shadow-md p-6 flex-1">
+        <h2 class="text-xl font-bold text-gray-900 mb-6">Informations du service</h2>
+        
+        <form [formGroup]="serviceForm" (ngSubmit)="onSubmit()" class="space-y-6">
+            <div>
+              <label for="nom" class="block text-sm font-medium text-gray-700">Nom du service*</label>
+              <input type="text" id="nom" formControlName="nom" required
+                     class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border">
+              <div *ngIf="formSubmitted && serviceForm.get('nom')?.errors" class="text-red-500 text-xs mt-1">
+                Le nom du service est requis
+              </div>
+            </div>
+          
+            <div>
+              <label for="description" class="block text-sm font-medium text-gray-700">Description*</label>
+              <textarea id="description" formControlName="description" rows="4" required
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border"></textarea>
+              <div *ngIf="formSubmitted && serviceForm.get('description')?.errors" class="text-red-500 text-xs mt-1">
+                La description est requise
+              </div>
+            </div>
+          
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label for="prix" class="block text-sm font-medium text-gray-700">Prix (DT)*</label>
+                <input type="number" id="prix" formControlName="prix" step="0.01" min="0" required
+                       class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border">
+                <div *ngIf="formSubmitted && serviceForm.get('prix')?.errors" class="text-red-500 text-xs mt-1">
+                  Un prix valide est requis
+                </div>
+              </div>
+              <div>
+                <label for="promo" class="block text-sm font-medium text-gray-700">Promotion (%)</label>
+                <input type="number" id="promo" formControlName="promo" min="0" max="100"
+                       class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border">
+                <div *ngIf="formSubmitted && serviceForm.get('promo')?.errors" class="text-red-500 text-xs mt-1">
+                  La promotion doit être entre 0 et 100%
+                </div>
+              </div>
+            </div>
+          
+            <div>
+              <label for="type" class="block text-sm font-medium text-gray-700">Type de service</label>
+              <select id="type" formControlName="type"
+                      class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border">
+                <option value="default_type">Type par défaut</option>
+                <option value="premium">Premium</option>
+                <option value="standard">Standard</option>
+                <option value="basique">Basique</option>
+              </select>
+            </div>
+          
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Photo de couverture*</label>
+              <div (dragover)="hoverCover = true" 
+                   (dragleave)="hoverCover = false" 
+                   (drop)="onCoverDrop($event)"
+                   [class.bg-indigo-50]="hoverCover"
+                   [class.border-indigo-300]="hoverCover"
+                   class="relative flex flex-col items-center justify-center w-full p-6 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer transition-colors duration-200 mb-2">
+                
+                <svg class="w-8 h-8 mb-3 text-custom-orange" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
+                </svg>
+                
+                <p class="mb-1 text-sm text-gray-600">
+                  <span class="font-semibold">Cliquez pour upload</span>
+                  ou glissez-déposez
+                </p>
+                <p class="text-xs text-gray-600">JPEG, PNG ou JPG</p>
+                
+                <input type="file" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                       accept="image/*" (change)="onCoverPhotoSelected($event)">
+              </div>
+          
+              <div *ngIf="previewUrls.cover" class="mt-2 flex items-center gap-2">
+                <div class="relative">
+                  <img [src]="previewUrls.cover" alt="Aperçu couverture" class="h-20 rounded-md object-cover border">
+                  <button (click)="removeCoverPhoto()" class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center">
+                    &times;
+                  </button>
+                </div>
+                <span class="text-sm text-gray-600 truncate max-w-xs">{{ coverPhoto?.name }}</span>
+              </div>
+              <div *ngIf="formSubmitted && !coverPhoto" class="text-red-500 text-xs mt-1">
+                Une photo de couverture est requise
+              </div>
+            </div>
+          
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Galerie photos (max 15)</label>
+              <div (dragover)="hoverGallery = true" 
+                   (dragleave)="hoverGallery = false" 
+                   (drop)="onGalleryDrop($event)"
+                   [class.bg-indigo-50]="hoverGallery"
+                   [class.border-indigo-300]="hoverGallery"
+                   class="relative flex flex-col items-center justify-center w-full p-6 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer transition-colors duration-200 mb-2">
+                
+                <svg class="w-8 h-8 mb-3 text-custom-orange" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
+                </svg>
+                
+                <p class="mb-1 text-sm text-gray-600">
+                  <span class="font-semibold">Cliquez pour upload</span>
+                  ou glissez-déposez
+                </p>
+                <p class="text-xs text-gray-600">JPEG, PNG ou JPG</p>
+                
+                <input type="file" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                       accept="image/*" multiple (change)="onGalleryPhotosSelected($event)">
+              </div>
+          
+              <div *ngIf="previewUrls.gallery.length > 0" class="mt-2 flex flex-wrap gap-2">
+                <div *ngFor="let url of previewUrls.gallery; let i = index" class="relative group">
+                  <img [src]="url" [alt]="'Photo galerie ' + (i+1)" class="h-20 w-20 rounded-md object-cover border">
+                  <button (click)="removeGalleryPhoto(i)" class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                    &times;
+                  </button>
+                </div>
+              </div>
+              <p class="text-xs text-gray-500 mt-1">{{ galleryPhotos.length }}/15 photos sélectionnées</p>
+            </div>
+          
+            <div class="pt-4 flex gap-3">
+              <button type="submit" 
+                      [disabled]="isLoading"
+                      class="flex-1 justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-custom-orange hover:bg-custom-orangeBold focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed">
+                <span *ngIf="!isLoading">Créer le service</span>
+                <span *ngIf="isLoading">
+                  <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white inline" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Création en cours...
+                </span>
+              </button>
+              
+              <button type="button" (click)="resetForm()" [disabled]="isLoading"
+                      class="flex-1 justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed">
+                Réinitialiser
+              </button>
+            </div>
+          
+            <div *ngIf="successMessage" class="p-4 mt-4 text-sm text-green-700 bg-green-100 rounded-lg">
+              {{ successMessage }}
+            </div>
+          
+            <div *ngIf="errorMessage" class="p-4 mt-4 text-sm text-red-700 bg-red-100 rounded-lg">
+              {{ errorMessage }}
+            </div>
+          </form>
+      </div>
+  
+      <div class="bg-white rounded-lg shadow-md p-6 lg:w-1/3">
+        <h2 class="text-xl font-bold text-gray-900 mb-6">Informations importantes</h2>
+        <hr class="mb-4">
+        
+        <div class="space-y-4">
+          <div>
+            <p class="text-sm font-bold text-gray-900">Processus de validation</p>
+            <p class="text-sm text-gray-500 mt-1">Votre service sera examiné par notree équipe avant d'etre publié. Ce processus peut prendre jusqu'à 24 heures.</p>
+          </div>
+  
+          <div>
+            <p class="text-sm font-bold text-gray-900">Photos de qualité</p>
+            <p class="text-sm text-gray-500 mt-1">Ajoutez des photos nettes et de haute qualité pour mettre en valeur votre service.Les images doivent répresenter fidèlement ce que vous proposez.</p>
+          </div>
+  
+          <div>
+            <p class="text-sm font-bold text-gray-900">Description détaillée</p>
+            <p class="text-sm text-gray-500 mt-1">Plus votre descriptions est précise, plus les clients pourront comprendre votre offre. N'hésitez pas à mentionner ce qui rend votre service unique.</p>
+          </div>
+
+          <div>
+            <p class="text-sm font-bold text-gray-900">Tarification</p>
+            <p class="text-sm text-gray-500 mt-1">Indiquez un prix clair pour votre service. Si le prix varie, utilisez un prix de départ et expliquez les variations dans la description.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
