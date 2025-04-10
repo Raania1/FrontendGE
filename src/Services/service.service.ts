@@ -110,5 +110,4 @@ getServices(params: any): Observable<any> {
     })
   );
 }
-
 }

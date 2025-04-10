@@ -4,104 +4,89 @@ import { RouterLink, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ServiceService } from '../../../Services/service.service';
+import { PrestataireService } from '../../../Services/prestataire.service';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-service-ph',
   standalone: true,
-  imports: [NavbarORComponent,RouterModule,FormsModule,CommonModule,RouterLink],
+  imports: [NavbarORComponent, RouterModule, FormsModule, CommonModule, RouterModule],
   templateUrl: './service-ph.component.html',
   styleUrl: './service-ph.component.css'
 })
 export class ServicePhComponent implements OnInit {
-  services: any[] = [];
-  totalServices = 0;
-  totalPages = 0;
-  currentPage = 1;
-  itemsPerPage = 15; // Doit correspondre à la limite dans le backend
-  selectedType = 'default_type'; // Type par défaut
-  prixMin: number = 0; // Prix minimum
-  prixMax: number = 1000000; // Prix maximum
-  min(a: number, b: number): number {
-    return Math.min(a, b);
-  }
-  
+  prestataires: any[] = [];
+  page: number = 1;
+  limit: number = 6;
+  totalPages: number = 1;
+  totalItems: number = 0;
+  travailFilter: string = '';
+  nomFilter: string = '';
+  prenomFilter: string = '';
+  villeFilter: string = '';
 
-  constructor(private servicesService: ServiceService) {}
+  constructor(private prestataireService: PrestataireService, 
+       private location: Location,
+  ) {}
 
   ngOnInit(): void {
-    this.loadServices(this.selectedType);
+    this.fetchPrestataires();
   }
 
-  isLoading = false;
-
-  loadServices(type: string): void {
-    this.isLoading = true;
-    this.selectedType = type;
-    this.servicesService.getServicesByType(type,this.prixMin, this.prixMax, this.currentPage, this.itemsPerPage).subscribe(
-      (data) => {
-        this.services = data.services || [];
-        this.totalServices = data.total;
-        this.totalPages = data.totalPages;
-        this.isLoading = false;
+  fetchPrestataires(): void {
+    this.prestataireService.getAllPrestataires(
+      this.travailFilter, 
+      this.nomFilter, 
+      this.prenomFilter, 
+      this.villeFilter,
+      this.page, 
+      this.limit
+    ).subscribe({
+      next: (res) => {
+        this.prestataires = res.data;
+        this.totalPages = res.pagination.totalPages;
+        this.totalItems = res.pagination.total;
       },
-      (error) => {
-        console.error('Erreur lors du chargement des services', error);
-        this.isLoading = false;
+      error: (err) => {
+        console.error('Erreur:', err);
+        // Gérer le cas où aucun prestataire n'est trouvé
+        if (err.status === 404) {
+          this.prestataires = [];
+          this.totalPages = 0;
+          this.totalItems = 0;
+        }
       }
-    );
+    });
   }
 
-  onSearch(): void {
-    this.currentPage = 1; // Réinitialisation de la page à 1 lors de la recherche
-    this.loadServices(this.selectedType); // Recharger les services avec les nouveaux filtres
-  }
-  resetFilters(): void {
-    this.prixMin = 0;
-    this.prixMax = 1000000;
-    this.loadServices(this.selectedType); // Recharger tous les services sans les filtres
-  }
-  
-  calculateDiscount(price: number, promo: number): number {
-    return price - (price * (promo / 100));
+  changePage(direction: 'next' | 'prev') {
+    if (direction === 'next' && this.page < this.totalPages) {
+      this.page++;
+    } else if (direction === 'prev' && this.page > 1) {
+      this.page--;
+    }
+    this.fetchPrestataires();
   }
 
-  goToPage(page: number): void {
-    if (page >= 1 && page <= this.totalPages && page !== this.currentPage) {
-      this.currentPage = page;
-      this.loadServices(this.selectedType);
-    }
+  onFilterChange() {
+    this.page = 1; // Reset à la première page quand les filtres changent
+    this.fetchPrestataires();
   }
-
-  nextPage(): void {
-    if (this.currentPage < this.totalPages) {
-      this.currentPage++;
-      this.loadServices(this.selectedType);
-    }
-  }
-
-  previousPage(): void {
-    if (this.currentPage > 1) {
-      this.currentPage--;
-      this.loadServices(this.selectedType);
-    }
-  }
-  getPages(): number[] {
-    const pages = [];
-    const maxVisiblePages = 15; // Nombre maximum de pages visibles dans la pagination
-    
-    let startPage = Math.max(1, this.currentPage - Math.floor(maxVisiblePages / 2));
-    let endPage = startPage + maxVisiblePages - 1;
-    
-    if (endPage > this.totalPages) {
-      endPage = this.totalPages;
-      startPage = Math.max(1, endPage - maxVisiblePages + 1);
-    }
-    
-    for (let i = startPage; i <= endPage; i++) {
-      pages.push(i);
-    }
-    
-    return pages;
-  }
+  // Dans service-ph.component.ts
+getMin(a: number, b: number): number {
+  return Math.min(a, b);
+}
+// Dans service-ph.component.ts
+resetFilters(): void {
+  this.travailFilter = '';
+  this.nomFilter = '';
+  this.prenomFilter = '';
+  this.villeFilter = '';
+  this.page = 1;
+  this.fetchPrestataires();
 }
 
+goBack(): void {
+  this.location.back();
+}
+}

@@ -35,7 +35,7 @@ export class NavbarORComponent {
   faBars = faBars;
   navItems = [
     { label: 'Acceuil', url: '/homeOr' },
-    { label: 'Evènnements', url: '/events' },
+    { label: 'Evènnements', url: '/creatEvent' },
     { label: 'Réservations', url: '/orders' },
     
   ];

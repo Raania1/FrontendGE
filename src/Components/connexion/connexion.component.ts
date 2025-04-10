@@ -46,7 +46,7 @@ export class ConnexionComponent {
         const userRole = response.user.role;
 
         if (userRole === 'organizer') {
-          this.router.navigate(['/navOR']); 
+          this.router.navigate(['/homeOr']); 
         } else if (userRole === 'prestataire') {
           this.router.navigate(['/prestataire/parametre']); 
         } else if (userRole === 'admin') {

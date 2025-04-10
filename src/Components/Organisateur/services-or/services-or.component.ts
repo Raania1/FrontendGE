@@ -49,12 +49,14 @@ export class ServicesOrComponent implements OnInit {
 
   // Constants
   serviceTypes = [
-    { id: "photographer", label: "Photographe" },
-    { id: "traiteur", label: "Traiteur" },
-    { id: "salle_des_fetes", label: "Salle des fêtes" },
-    { id: "animation", label: "Animation" },
-    { id: "decoration", label: "Décoration" },
-    { id: "videaste", label: "Vidéaste" },
+    { id: "Photographe", label: "Photographe" },
+    { id: "Traiteur", label: "Traiteur" },
+    { id: "Salle des fêtes", label: "Salle des fêtes" },
+    { id: "Animation", label: "Animation" },
+    { id: "Décoration", label: "Décoration" },
+    { id: "Music", label: "Music" },
+    { id: "Autres", label: "Autres" },
+
   ];
 
   constructor(
@@ -106,6 +108,7 @@ export class ServicesOrComponent implements OnInit {
           currentPage: response.currentPage,
           itemsPerPage: this.pagination.itemsPerPage
         };
+        console.log('Params envoyés :', params);
       },
       error: (err) => {
         console.error('Error:', err);
@@ -152,13 +155,15 @@ export class ServicesOrComponent implements OnInit {
   }
 
   getTypeLabel(type: string): string {
+    console.log(type)
     const typeMap: Record<string, string> = {
-      photographer: "Photographe",
-      traiteur: "Traiteur",
-      salle_des_fetes: "Salle des fêtes",
-      animation: "Animation",
-      decoration: "Décoration",
-      videaste: "Vidéaste",
+      Photographe: "Photographe",
+      Traiteur: "Traiteur",
+      Salle_des_fêtes: "Salle des fêtes",
+      Animation: "Animation",
+      Décoration: "Décoration",
+      Music: "Music",
+      Autres: "Autres",
 
     };
     return typeMap[type] || "Service";

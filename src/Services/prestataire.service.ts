@@ -12,6 +12,7 @@ export class PrestataireService {
   private apiUrlA ='http://localhost:8000/prestataire/prestataires';
   private apiUrlN ='http://localhost:8000/prestataire/notProovided';
   private apiUrlP ='http://localhost:8000/prestataire/approovedPrestataire/';
+  private apiUrlPS ='http://localhost:8000/prestataire/';
 
 
   constructor(private http: HttpClient) { }
@@ -65,4 +66,31 @@ export class PrestataireService {
     const headers = { Authorization: `Bearer ${token}` };
     return this.http.put<any>(`${this.apiUrlP}${prestataireId}`, {approoved},{ headers });
   }
+  getServicePhotosByPrestataire(id: string) {
+    return this.http.get<{ status: number; photos: string[] }>(`${this.apiUrlPS}/${id}/service-photos`);
+  }
+
+  // getAllPrestataires(travail: string = '', page: number = 1, limit: number = 6) {
+  //   let query = `?page=${page}&limit=${limit}`;
+  //   if (travail) query += `&travail=${encodeURIComponent(travail)}`;
+  
+  //   return this.http.get<any>(`http://localhost:8000/prestataire/presP${query}`);
+  // }
+  getAllPrestataires(
+    travail: string = '', 
+    nom: string = '', 
+    prenom: string = '', 
+    ville: string = '', 
+    page: number = 1, 
+    limit: number = 6
+  ) {
+    let query = `?page=${page}&limit=${limit}`;
+    if (travail) query += `&travail=${encodeURIComponent(travail)}`;
+    if (nom) query += `&nom=${encodeURIComponent(nom)}`;
+    if (prenom) query += `&prenom=${encodeURIComponent(prenom)}`;
+    if (ville) query += `&ville=${encodeURIComponent(ville)}`;
+  
+    return this.http.get<any>(`http://localhost:8000/prestataire/presP${query}`);
+  }
+  
 }

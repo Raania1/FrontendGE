@@ -1,152 +1,185 @@
 <app-navbar-or></app-navbar-or>
 
-<div class="bg-gray-50 min-h-screen">
-  <!-- Hero Section -->
-  <div class="relative bg-gray-900">
-    <div class="absolute inset-0 overflow-hidden">
-      <img src="https://media.istockphoto.com/id/1443275721/fr/photo/cam%C3%A9ra-de-main-et-ordinateur-de-photographe-sur-le-bureau.jpg?s=612x612&w=0&k=20&c=EcVnZh-44m4DHer-MwT2wvYJ4cHIS2mgt3mRT6nddx4=" 
-           alt="Services professionnels" 
-           class="w-full h-full object-cover opacity-50">
-    </div>
-    <div class="relative max-w-7xl mx-auto py-24 px-4 sm:py-32 sm:px-6 lg:px-8">
-      <h1 class="text-4xl font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl">
-        Découvrez nos services exceptionnels
-      </h1>
-      <p class="mt-6 text-xl text-gray-300 max-w-3xl">
-        Des photographes talentueux pour immortaliser chaque instant de votre événement.
-    </p>
-    </div>
-  </div>
-<!-- Filtres -->
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <div class="bg-white rounded-lg shadow p-6">
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div>
-          <label for="price-min" class="block text-sm font-medium text-gray-700 mb-1">Prix Min</label>
-          <input id="price-min" [(ngModel)]="prixMin" class="block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 sm:text-sm rounded-md" type="number">
-        </div>
-        <div>
-          <label for="price-max" class="block text-sm font-medium text-gray-700 mb-1">Prix Max</label>
-          <input id="price-max" [(ngModel)]="prixMax" class="block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 sm:text-sm rounded-md" type="number">
-        </div>
-        <button (click)="onSearch()" 
-                    class="w-full flex justify-center items-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-              Appliquer les filtres
-            </button>
-       
-        <button (click)="resetFilters()" 
-                    class="w-full flex justify-center items-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-              </svg>
-              Réinitialiser
-            </button>
-      </div>
-      
-    </div>
-  </div>
+<div class="max-w-7xl mx-auto px-4 sm:px-6 py-8">
   
-
-  <!-- Liste des services -->
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-      <!-- Service Item (répété dynamiquement) -->
-      <div *ngFor="let service of services" class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition duration-300">
-        <div class="relative h-64">
-          <img [src]="service.photoCouverture" 
-               [alt]="service.nom" 
-               class="w-full h-full object-cover">
-          <div *ngIf="service.promo > 0" class="absolute top-2 right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">
-            -{{service.promo}}%
-          </div>
-          <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-4">
-            <h3 class="text-xl font-bold text-white">{{service.nom}}</h3>
-            <p class="text-orange-300">{{service.type}}</p>
-          </div>
-        </div>
-        <div class="p-6">
-          <p class="text-gray-600 mb-4 line-clamp-2">{{service.description}}</p>
-          <div class="flex justify-between items-center">
-            <div>
-              <span *ngIf="service.promo === 0" class="text-orange-600 font-bold">{{service.prix}}DT</span>
-              <div *ngIf="service.promo > 0">
-                <span class="text-gray-400 line-through mr-2">{{service.prix}}DT</span>
-                <span class="text-orange-600 font-bold">{{calculateDiscount(service.prix, service.promo)}}DT</span>
-              </div>
-            </div>
-            <a [routerLink]="['/service', service.id]" class="text-sm bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg transition duration-300">
-              Voir détails
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-
+  <button (click)="goBack()" class="flex items-center gap-1 text-gray-500 hover:text-gray-700 mb-6">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M19 12H5M12 19l-7-7 7-7"/>
+    </svg>
+  </button>
+  <div class="flex flex-col lg:flex-row gap-6">
     
-  </div>
-
- 
-  <!-- Pagination -->
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
-    <div class="bg-white rounded-lg shadow px-6 py-4 flex items-center justify-between">
-      <div class="flex-1 flex justify-between sm:hidden">
-        <button (click)="previousPage()" 
-                [disabled]="currentPage === 1"
-                class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50">
-          Précédent
-        </button>
-        <button (click)="nextPage()" 
-                [disabled]="currentPage === totalPages"
-                class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50">
-          Suivant
-        </button>
-      </div>
-      <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
-        <div>
-          <p class="text-sm text-gray-700">
-            Affichage <span class="font-medium">{{ (currentPage - 1) * itemsPerPage + 1 }}</span> à 
-            <span class="font-medium">{{ min(currentPage * itemsPerPage, totalServices) }}</span>
-                        sur <span class="font-medium">{{ totalServices }}</span> services
-          </p>
+    <!-- Colonne de filtrage (gauche) -->
+    <div class="lg:w-1/4">
+      <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 sticky top-4">
+        <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-amber-600" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z" clip-rule="evenodd" />
+          </svg>
+          Filtres
+        </h3>
+        
+        <div class="space-y-4">
+          <!-- Filtre Travail -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Travail</label>
+            <input 
+              type="text"
+              [(ngModel)]="travailFilter"
+              class="w-full pl-3 pr-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all outline-none"
+            />
+          </div>
+          
+          <!-- Filtre Nom -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Nom</label>
+            <input 
+              type="text"
+              [(ngModel)]="nomFilter"
+              class="w-full pl-3 pr-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all outline-none"
+            />
+          </div>
+          
+          <!-- Filtre Prénom -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Prénom</label>
+            <input 
+              type="text"
+              [(ngModel)]="prenomFilter"
+              class="w-full pl-3 pr-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all outline-none"
+            />
+          </div>
+          
+          <!-- Filtre Ville -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Ville</label>
+            <input 
+              type="text"
+              [(ngModel)]="villeFilter"
+              class="w-full pl-3 pr-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all outline-none"
+            />
+          </div>
         </div>
-        <div>
-          <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
-            <button (click)="previousPage()" 
-                    [disabled]="currentPage === 1"
-                    class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50">
-              <span class="sr-only">Précédent</span>
-              <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
-              </svg>
-            </button>
-            
-            <!-- Boutons de page -->
-            <button *ngFor="let page of getPages()" 
-                    (click)="goToPage(page)"
-                    [class]="currentPage === page ? 
-                            'z-10 bg-orange-50 border-orange-500 text-orange-600 relative inline-flex items-center px-4 py-2 border text-sm font-medium' : 
-                            'bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium'">
-              {{ page }}
-            </button>
-            
-            <button (click)="nextPage()" 
-                    [disabled]="currentPage === totalPages"
-                    class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50">
-              <span class="sr-only">Suivant</span>
-              <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-              </svg>
-            </button>
-          </nav>
+        
+        <!-- Boutons d'action -->
+        <div class="flex space-x-3 mt-6">
+          <button 
+            (click)="resetFilters()"
+            class="flex-1 px-3 py-2 bg-white border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors flex items-center justify-center text-sm"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+            Réinitialiser
+          </button>
+          <button 
+            (click)="fetchPrestataires()"
+            class="flex-1 px-3 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition-colors flex items-center justify-center text-sm"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            Appliquer
+          </button>
         </div>
       </div>
     </div>
-  </div>
 
-<hr>
-<div class="bg-custom-black/80 text-center py-4">
-    <p class="text-custom-gray">© 2025 FLESK EVENT. Tous droits réservés.</p>
+    <!-- Colonne principale (droite) -->
+    <div class="lg:w-3/4">
+      <div class="text-sm text-gray-500">
+        Affichage de {{ (page - 1) * limit + 1 }} à {{ getMin(page * limit, totalItems) }} sur {{ totalItems }} prestataires
+      </div><br>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div *ngFor="let p of prestataires" class="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow border border-gray-100 flex flex-col">
+          <!-- Le reste de votre contenu reste inchangé -->
+          <div class="flex items-start gap-4 mb-4">
+            <div class="flex-shrink-0">
+              <img 
+                [src]="p.pdProfile || '/assets/images/default-avatar.png'" 
+                [alt]="p.nom"
+                class="w-16 h-16 rounded-full object-cover border-2 border-amber-100"
+              />
+            </div>
+          
+            <div class="flex-1">
+              <div class="flex items-start justify-between">
+                <h3 [routerLink]="['/PresDetails', p.id]" class="text-l font-bold text-amber-700 cursor-pointer font-serif" style="text-transform: capitalize;">{{ p.nom }} {{p.prenom}}</h3>
+                <div class="bg-amber-50 text-amber-700 text-xs font-medium px-2.5 py-1 rounded-full" style="text-transform: capitalize;">
+                  {{ p.travail }}
+                </div>
+              </div>
+            
+              <p class="text-gray-600 mt-1 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+                {{ p.email }}
+              </p>
+            </div>
+          </div>
+      
+        
+          <div class="mt-auto pt-5 border-t border-gray-200 flex items-center justify-between">
+            <div class="flex items-center text-base text-gray-600">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+              <span>{{ p.Services?.length || 0 }} services proposés</span>
+            </div>
+            
+            <button [routerLink]="['/PresDetails', p.id]" 
+                    class="px-4 py-2 text-amber-600  rounded-lg hover:text-amber-700 transition-colors text-sm font-medium">
+              Voir profil
+            </button>
+          </div>
+          
+        </div>
+      </div><br>
+      <!-- Résultats et pagination -->
+      <div class="mb-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div class="text-sm text-gray-500">
+          <!-- Affichage de {{ (page - 1) * limit + 1 }} à {{ getMin(page * limit, totalItems) }} sur {{ totalItems }} prestataires -->
+        </div>
+
+        <div class="flex items-center gap-3">
+          <span class="text-sm text-gray-500">Page {{ page }} sur {{ totalPages }}</span>
+          <div class="flex gap-2">
+            <button 
+              (click)="changePage('prev')" 
+              [disabled]="page === 1"
+              class="flex items-center justify-center w-10 h-10 rounded-full bg-white border border-gray-200 shadow-sm hover:bg-amber-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-amber-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+            <button 
+              (click)="changePage('next')" 
+              [disabled]="page === totalPages"
+              class="flex items-center justify-center w-10 h-10 rounded-full bg-white border border-gray-200 shadow-sm hover:bg-amber-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-amber-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- État vide -->
+      <div *ngIf="prestataires.length === 0" class="text-center py-12">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto text-gray-300 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+        </svg>
+        <h3 class="text-lg font-medium text-gray-600 mb-1">Aucun prestataire trouvé</h3>
+        <p class="text-gray-500">Essayez de modifier vos critères de recherche</p>
+      </div>
+    </div>
+  </div>
 </div>
+
+<footer class="bg-custom-black/80 text-center py-4">
+  <p class="text-custom-gray">© 2025 FLESK EVENT. Tous droits réservés.</p>
+</footer>

@@ -3,10 +3,10 @@ import { Location } from '@angular/common';
 import { NavbarORComponent } from "../navbar-or/navbar-or.component";
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink, RouterModule } from '@angular/router';
 import { ServiceService } from '../../../Services/service.service';
 import { PrestataireService } from '../../../Services/prestataire.service';
-import { firstValueFrom } from 'rxjs'; // À ajouter en haut si ce n’est pas déjà fait
+import { firstValueFrom } from 'rxjs'; 
 
 interface ServiceInfo {
   icon: string;
@@ -17,7 +17,7 @@ interface ServiceInfo {
 @Component({
   selector: 'app-service-details',
   standalone: true,
-  imports: [NavbarORComponent, FormsModule, CommonModule],
+  imports: [NavbarORComponent, FormsModule, CommonModule,RouterLink,RouterModule],
   templateUrl: './service-details.component.html',
   styleUrls: ['./service-details.component.css']
 })

@@ -23,6 +23,8 @@ import { EditServiceComponent } from '../Components/Prestataire/edit-service/edi
 import { ServicesAdComponent } from '../Components/Admin/services-ad/services-ad.component';
 import { ServicesOrComponent } from '../Components/Organisateur/services-or/services-or.component';
 import { ServiceDetailsComponent } from '../Components/Organisateur/service-details/service-details.component';
+import { CreatEventComponent } from '../Components/Organisateur/creat-event/creat-event.component';
+import { PresDetailsComponent } from '../Components/Organisateur/pres-details/pres-details.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -41,6 +43,8 @@ export const routes: Routes = [
     { path: 'servicePH', component: ServicePhComponent },
     { path: 'servicesOr', component: ServicesOrComponent },
     { path: 'seviceDetail/:id', component: ServiceDetailsComponent },
+    { path: 'creatEvent', component: CreatEventComponent },
+    { path: 'PresDetails/:id', component: PresDetailsComponent },
 
     // { path: 'services', component: ServicesComponent },
 
