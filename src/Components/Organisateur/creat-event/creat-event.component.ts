@@ -45,7 +45,6 @@ export class CreatEventComponent {
   successMessage: string | null = null;
   openedMenuId: string | null = null;
 
-  // Propriétés pour la recherche de services
   searchTerm: string = '';
   selectedService: any = null;
   services: Service[] = [];
@@ -70,7 +69,6 @@ export class CreatEventComponent {
     this.loadEventsWithServices();
   }
 
-  // Formatage des prix en DT
   formatPrice(price: number): string {
     if (isNaN(price)) return '0 DT';
     
@@ -84,7 +82,6 @@ export class CreatEventComponent {
     }).format(price) + (isWholeNumber ? ' DT' : '');
   }
 
-  // Calcul du prix après réduction
   calculateFinalPrice(price: number, discount: number): number {
     return price - (price * discount) / 100;
   }
@@ -179,6 +176,7 @@ export class CreatEventComponent {
       },
       error: (error) => {
         this.handleEventsLoadingError(error);
+        console.log(error)
       }
     });
   }
@@ -215,7 +213,6 @@ export class CreatEventComponent {
   private handleEventsLoadingError(error: any) {
     console.error('Error loading events', error);
     this.isLoading = false;
-    this.errorMessage = 'Erreur lors du chargement des événements';
   }
 
   openAddServiceModal(event: Event) {
@@ -246,7 +243,6 @@ export class CreatEventComponent {
           
           const eventIndex = this.events.findIndex(e => e.id === this.selectedEvent?.id);
           if (eventIndex !== -1 && this.selectedEvent) {
-            // Calcul du prix final avec promotion
             const finalPrice = this.selectedService.promo 
               ? this.calculateFinalPrice(this.selectedService.prix, this.selectedService.promo)
               : this.selectedService.prix;
@@ -289,10 +285,9 @@ export class CreatEventComponent {
     const user = JSON.parse(localStorage.getItem('user') || '{}');  
     return user.Id;
   }
-  // Dans la classe CreatEventComponent, ajoutez cette méthode :
 
 async removeService(eventId: string, serviceId: string, event: MouseEvent) {
-  event.stopPropagation(); // Empêche la propagation du clic
+  event.stopPropagation(); 
 
   if (!confirm('Êtes-vous sûr de vouloir supprimer ce service de l\'événement ?')) {
     return;
@@ -301,15 +296,12 @@ async removeService(eventId: string, serviceId: string, event: MouseEvent) {
   this.isLoading = true;
   
   try {
-    // Appel à l'API de suppression
     await this.eventService.removeServiceFromEvent(eventId, serviceId).toPromise();
     
-    // Mise à jour locale
     const eventIndex = this.events.findIndex(e => e.id === eventId);
     const serviceIndex = this.eventServices[eventId]?.findIndex(s => s.id === serviceId);
 
     if (eventIndex !== -1 && serviceIndex !== -1) {
-      // Soustraire le prix du budget total
       const service = this.eventServices[eventId][serviceIndex];
       const priceToRemove = service.promo && service.promo > 0 
         ? this.calculateFinalPrice(service.prix, service.promo) 
@@ -317,7 +309,6 @@ async removeService(eventId: string, serviceId: string, event: MouseEvent) {
       
       this.events[eventIndex].budgetTotale -= priceToRemove;
       
-      // Supprimer le service de la liste
       this.eventServices[eventId].splice(serviceIndex, 1);
     }
 
@@ -331,13 +322,11 @@ async removeService(eventId: string, serviceId: string, event: MouseEvent) {
     this.isLoading = false;
   }
 }
-// Ajoutez cette propriété à votre composant
 isDeleting = false;
 
-// Méthode pour supprimer un événement
 async deleteEvent(eventId: string, event: MouseEvent) {
   event.stopPropagation();
-  this.openedMenuId = null; // Ferme le menu déroulant
+  this.openedMenuId = null; 
 
   if (!confirm('Êtes-vous sûr de vouloir supprimer cet événement ? Cette action est irréversible.')) {
     return;
@@ -348,7 +337,6 @@ async deleteEvent(eventId: string, event: MouseEvent) {
   try {
     await this.eventService.deleteEvent(eventId).toPromise();
     
-    // Suppression locale
     this.events = this.events.filter(e => e.id !== eventId);
     delete this.eventServices[eventId];
     

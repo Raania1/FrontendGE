@@ -1,0 +1,40 @@
+/* S'assurer que les menus ne sont pas coupés */
+.menu-container {
+    overflow: visible !important;
+  }
+  
+  /* Pour les cartes de service */
+  .overflow-hidden {
+    overflow: visible !important;
+  }
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .animate-fade-in {
+    animation: fade-in 0.2s ease-out;
+  }
+
+  /* Animation pour le modal */
+.animate-fade-in {
+    animation: fadeIn 0.2s ease-in-out;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  /* Empêche le défilement lorsque le modal est ouvert */
+  body.modal-open {
+    overflow: hidden;
+  }
+  

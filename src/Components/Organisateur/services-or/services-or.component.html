@@ -287,9 +287,9 @@
               <option value="promo-desc">Meilleures promotions</option>
             </select>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
                 @for (service of filteredServices; track service.id) {
-                    <div class="overflow-hidden transition-all hover:shadow-md rounded-lg border">
+                  <div class="group overflow-hidden transform transition-all duration-300 hover:-translate-y-1.5 hover:scale-[1.02] hover:shadow-md hover:border-custom-orange  rounded-lg border ">
                     <div class="relative h-48 w-full">
                         <img [src]="getServiceImage(service)" [alt]="service.nom" class="object-cover w-full h-full">
                         @if (service.promo > 0) {
@@ -298,11 +298,11 @@
                           </span>
                         }
                         <span class="absolute top-2 left-2 bg-white text-gray-800 text-xs font-medium px-2.5 py-0.5 rounded border">
-                          {{getTypeLabel(service.type)}}
+                          {{service.type}}
                         </span>
                       </div>
                   <div class="p-4">
-                    <h3 class="text-lg font-semibold line-clamp-1 mb-1 "  style="text-transform: capitalize;">{{service.nom}}</h3>
+                    <h3 [routerLink]="['/seviceDetail', service.id]" class="text-lg font-semibold font-serif line-clamp-1 mb-1 "  style="text-transform: capitalize;">{{service.nom}}</h3>
                     <p class="text-sm text-gray-500 line-clamp-2 mb-3">{{service.description}}</p>
                     <div class="flex items-center justify-between">
                       <div>
@@ -317,11 +317,65 @@
                       </div>
                     </div>
                   </div>
-                  <div class="p-4 pt-0 flex justify-end">
+                  <!-- <div class="p-4 pt-0 flex justify-end">
                     <a [routerLink]="['/seviceDetail', service.id]" class="text-sm font-medium text-primary hover:underline">
-                      Voir les détails
+                      Voir plus
+                    </a> 
+                    <a [routerLink]="['/seviceDetail', service.id]" class="text-sm font-medium text-primary hover:underline">
+                      Ajouter a un evennement
                     </a>
+                  </div> -->
+                  <div class="p-4 pt-0 flex justify-between items-center relative menu-container">
+
+                    <div class="flex items-center gap-2">
+                      <div class="flex items-center bg-green-50 text-green-700 px-3 py-1 rounded-full shadow-sm text-sm font-medium">
+                        <svg xmlns="http://www.w3.org/2000/svg" 
+                             class="h-4 w-4 mr-1 text-green-500" fill="none" 
+                             viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                        </svg>
+                        Réservé par 5 clients
+                      </div>
+                    </div>
+                  
+                    <div class="flex items-center gap-2">
+                        <abbr title="Réserver">
+                        <div class="bg-gray-100 hover:bg-amber-600/5 rounded-full p-2 transition duration-200 cursor-pointer">
+                          <svg xmlns="http://www.w3.org/2000/svg" 
+                               width="20" height="20" viewBox="0 0 24 24" 
+                               fill="none" stroke="currentColor" stroke-width="2" 
+                               stroke-linecap="round" stroke-linejoin="round" 
+                               class="text-gray-600 hover:text-primary transition duration-200">
+                            <circle cx="8" cy="21" r="1"/>
+                            <circle cx="19" cy="21" r="1"/>
+                            <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/>
+                          </svg>
+                        </div>
+                      </abbr>
+                      
+                  
+                      <!-- Bouton menu (3 points) -->
+                      <button class="bg-gray-100 hover:bg-amber-600/5 rounded-full p-2 focus:outline-none transition duration-200"
+                              (click)="toggleMenu(service.id)">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                          <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
+                        </svg>
+                      </button>
+                  
+                      <!-- Menu déroulant -->
+                      <div *ngIf="isMenuOpen(service.id)" 
+                           class="absolute bottom-full mb-2
+                           right-0 mt-2 w-56 bg-white rounded-xl shadow-xl border border-gray-100 z-50 animate-fade-in">
+                        <div class="py-2">
+                          <a (click)="openModal(service.id)" 
+                            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-primary transition cursor-pointer">
+                            Ajouter à votre événement
+                          </a>
+                        </div>
+                      </div>
+                    </div>
                   </div>
+                  
                 </div>
               }
             </div>
@@ -370,7 +424,66 @@
       </div>
     </div>
   </div></div>
+  
   <hr>
 <div class="bg-custom-black/80 text-center py-4">
     <p class="text-custom-gray">© 2025 FLESK EVENT. Tous droits réservés.</p>
 </div>
+
+<!-- Modal Overlay -->
+<div *ngIf="showModal" class="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-4 transition-opacity duration-300">
+
+  <!-- Modal Container -->
+  <div class="bg-white rounded-2xl w-full max-w-lg p-6 shadow-xl transform transition-all duration-300 scale-95 animate-fadeIn max-h-[90vh] overflow-y-auto">
+    
+    <!-- Title -->
+    <h3 class="text-xl font-semibold text-gray-800 mb-4">
+      <i class="fas fa-calendar-alt text-custom-gray"></i>&nbsp;&nbsp;
+      Ajouter ce service à Votre événement
+    </h3>
+
+    <!-- Event List -->
+    <div *ngIf="userEvents.length > 0" class="space-y-3">
+      <label 
+        *ngFor="let event of userEvents"
+        class="flex items-center gap-3 p-3 border rounded-lg cursor-pointer hover:border-amber-600 transition"
+      >
+        <input
+          type="radio"
+          name="selectedEvent"
+          [value]="event.id"
+          [(ngModel)]="selectedEventId"
+          class="accent-amber-600"
+        />
+        <span class="text-gray-700">
+          {{ event.nom }} <span class="text-gray-500 text-sm">({{ event.dateDebut | date:'longDate' }})</span>
+        </span>
+      </label>
+    </div>
+
+    <!-- No Events -->
+    <div *ngIf="userEvents.length === 0" class="text-gray-500 mt-4">
+      Vous n'avez aucun événement créé.
+      <a routerLink="/creatEvent" class="text-amber-600 hover:underline font-medium">Créez-en un</a>.
+    </div>
+
+    <!-- Footer Buttons -->
+    <div class="flex justify-end gap-3 mt-6 border-t pt-4">
+      <button
+        (click)="addToEvent()"
+        [disabled]="!canConfirm()"
+        class="px-4 py-2 border rounded-md hover:bg-gray-100 disabled:opacity-50 transition"
+      >
+        Confirmer
+      </button>
+
+      <button
+        (click)="closeModal()"
+        class="px-4 py-2 bg-amber-600 text-white rounded-md hover:bg-amber-700 transition"
+      >
+        Annuler
+      </button>
+    </div>
+  </div>
+</div>
+

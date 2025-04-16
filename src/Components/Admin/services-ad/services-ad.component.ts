@@ -207,7 +207,7 @@ closeModal(): void {
       next: (response) => {
         console.log('Service supprimé:', response);
         this.services = this.services.filter((service: any) => service.id !== id);
-        this.filterServices(); // Met à jour l'affichage
+        this.filterServices(); 
         alert("Service supprimé avec succès.");
       },
       error: (err) => {
@@ -216,25 +216,25 @@ closeModal(): void {
       }
     });
    }
-   
- 
-   // Basculer le filtre "En attente"
-  //  togglePendingFilter(): void {
-  //    this.showPendingOnly = !this.showPendingOnly;
-  //    this.filterServices();
-  //  }
- 
-   // Helper pour les types de service
-   getTypeLabel(type: string): string {
-     switch (type) {
-       case 'premium': return 'Premium';
-       case 'standard': return 'Standard';
-       default: return 'Basique';
-     }
-   }
- 
-   // Calcul du prix après promotion
-   calculateDiscountedPrice(service: any): number {
-     return service.prix * (1 - service.promo / 100);
-   }
+
+  formatPrice(price: number): string {
+    if (isNaN(price)) return '0 DT';
+    
+    const isWholeNumber = price % 1 === 0;
+    
+    return new Intl.NumberFormat('fr-FR', {
+      style: isWholeNumber ? 'decimal' : 'currency',
+      currency: 'TND',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: isWholeNumber ? 0 : 3
+    }).format(price) + (isWholeNumber ? ' DT' : '');
+  }
+
+  // Calcul du prix après réduction
+  calculateDiscountedPrice(service: any): string {
+    if (service.promo > 0) {
+      return this.formatPrice(service.prix * (1 - service.promo/100));
+    }
+    return this.formatPrice(service.prix);
+  }
 }

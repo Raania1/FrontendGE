@@ -1,178 +1,185 @@
 <br><div class="flex justify-between items-center mb-6">
-    <div class="relative w-1/3">
-        <h3 class="text-l font-serif font-bold text-custom-black">Mes Services</h3>
-    </div>
-    <div class="flex items-center space-x-4">
-      <fa-icon [icon]="faBell" class="h-6 w-6 cursor-pointer text-custom-gray"></fa-icon>
-      <div class="flex items-center space-x-2">
-        <span class="text-sm font-medium text-custom-black">{{prestataire.nom}} {{prestataire.prenom}}</span>
-        <div class="relative">
-          <div class="relative h-8 w-8 rounded-full border-2 border-white overflow-hidden shadow-md">
-            <img
-              [src]="prestataire.pdProfile"
-              [alt]="prestataire.nom"
-              class="w-full h-full object-cover"
-            />
-          </div>
-          <div class="absolute bottom-0 right-0 w-2 h-2 bg-green-400 rounded-full border border-white"></div>
+  <div class="relative w-1/3">
+      <h3 class="text-l font-serif font-bold text-custom-black">Mes Services</h3>
+  </div>
+  <div class="flex items-center space-x-4">
+    <fa-icon [icon]="faBell" class="h-6 w-6 cursor-pointer text-custom-gray"></fa-icon>
+    <div class="flex items-center space-x-2">
+      <span class="text-sm font-medium text-custom-black">{{prestataire.nom}} {{prestataire.prenom}}</span>
+      <div class="relative">
+        <div class="relative h-8 w-8 rounded-full border-2 border-white overflow-hidden shadow-md">
+          <img
+            [src]="prestataire.pdProfile"
+            [alt]="prestataire.nom"
+            class="w-full h-full object-cover"
+          />
         </div>
+        <div class="absolute bottom-0 right-0 w-2 h-2 bg-green-400 rounded-full border border-white"></div>
       </div>
     </div>
   </div>
+</div>
 
-    <div class="min-h-screen p-6 bg-white">
-      <!-- En-tête avec bouton responsive -->
-      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
-        <div>
-          <h1 class="text-2xl font-bold text-gray-900">Mes Services</h1>
-          <p class="mt-2 text-sm text-gray-500">Gérer vos services et leur disponibilité</p>
-        </div>
-        <button 
-          class="flex items-center gap-2 px-4 py-2 bg-custom-orange text-white rounded-md hover:bg-custom-orangeBold transition-colors w-full sm:w-auto justify-center"
-          routerLink="/prestataire/creatService">
-          <fa-icon [icon]="faPlus" class="w-5 h-5"></fa-icon>
-          <span>Nouveau service</span>
-        </button>
-      </div>
-    
-      <hr class="mb-6">
-    
-      <!-- Conteneur principal avec onglets -->
-      <div class="bg-white rounded-lg shadow-md overflow-hidden">
-        <!-- Onglets améliorés -->
-        <div class="flex border-b overflow-x-auto scrollbar-hide">
-          <button
-            *ngFor="let tab of tabs"
-            (click)="setActiveTab(tab.key)"
-            [class.text-amber-600]="activeTab === tab.key"
-            [class.border-b-2]="activeTab === tab.key"
-            [class.border-amber-600]="activeTab === tab.key"
-            [class.text-gray-500]="activeTab !== tab.key"
-            [class.hover:text-gray-900]="activeTab !== tab.key"
-            class="py-4 px-6 text-center font-medium transition-colors whitespace-nowrap flex items-center"
-          >
-            <fa-icon *ngIf="tab.icon" [icon]="tab.icon" class="mr-2 w-4 h-4"></fa-icon>
-            {{ tab.label }}
-          </button>
-        </div>
-    
-        <!-- Liste des services avec grille responsive -->
-        <div class="p-4">
-          <div *ngIf="filteredServices.length > 0; else noServices" 
-               class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<div class="min-h-screen p-6 bg-white">
+  <!-- En-tête avec bouton responsive -->
+  <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+    <div>
+      <h1 class="text-2xl font-bold text-gray-900">Mes Services</h1>
+      <p class="mt-2 text-sm text-gray-500">Gérer vos services et leur disponibilité</p>
+    </div>
+    <button 
+      class="flex items-center gap-2 px-4 py-2 bg-custom-orange text-white rounded-md hover:bg-custom-orangeBold transition-colors w-full sm:w-auto justify-center"
+      routerLink="/prestataire/creatService">
+      <fa-icon [icon]="faPlus" class="w-5 h-5"></fa-icon>
+      <span>Nouveau service</span>
+    </button>
+  </div>
+
+  <hr class="mb-6">
+
+  <!-- Conteneur principal avec onglets -->
+  <div class="bg-white rounded-lg shadow-md overflow-hidden">
+    <!-- Onglets améliorés -->
+    <div class="flex border-b overflow-x-auto scrollbar-hide">
+      <button
+        *ngFor="let tab of tabs"
+        (click)="setActiveTab(tab.key)"
+        [class.text-amber-600]="activeTab === tab.key"
+        [class.border-b-2]="activeTab === tab.key"
+        [class.border-amber-600]="activeTab === tab.key"
+        [class.text-gray-500]="activeTab !== tab.key"
+        [class.hover:text-gray-900]="activeTab !== tab.key"
+        class="py-4 px-6 text-center font-medium transition-colors whitespace-nowrap flex items-center"
+      >
+        <fa-icon *ngIf="tab.icon" [icon]="tab.icon" class="mr-2 w-4 h-4"></fa-icon>
+        {{ tab.label }}
+      </button>
+    </div>
+
+    <!-- Liste des services avec grille responsive -->
+    <div class="p-4">
+      <div *ngIf="filteredServices.length > 0; else noServices" 
+           class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        
+        <!-- Carte de service -->
+        <div *ngFor="let service of filteredServices" 
+             class="border rounded-lg overflow-hidden hover:shadow-lg transition-all duration-300 flex flex-col h-full">
+          
+          <!-- Image de couverture avec badge -->
+          <div class="relative h-48 overflow-hidden bg-gray-100">
+            <img [src]="service.photoCouverture || 'assets/default-service.jpg'" 
+                 [alt]="service.nom"
+                 class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
             
-            <!-- Carte de service -->
-            <div *ngFor="let service of filteredServices" 
-                 class="border rounded-lg overflow-hidden hover:shadow-lg transition-all duration-300 flex flex-col h-full">
-              
-              <!-- Image de couverture avec badge -->
-              <div class="relative h-48 overflow-hidden bg-gray-100">
-                <img [src]="service.photoCouverture || 'assets/default-service.jpg'" 
-                     [alt]="service.nom"
-                     class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
-                
-                <!-- Badge d'état -->
-                <span class="absolute top-3 right-3 px-3 py-1 rounded-full text-xs font-semibold"
-                      [ngClass]="{
-                        'bg-green-100 text-green-800': service.approoved,
-                        'bg-yellow-100 text-yellow-800': !service.approoved
-                      }">
-                  {{ service.approoved ? 'Approuvé' : 'En attente' }}
-                </span>
-                
-                <!-- Badge promotion -->
-                <div *ngIf="service.promo > 0" 
-                     class="absolute top-3 left-3 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded">
-                  -{{ service.promo }}%
-                </div>
-              </div>
-    
-              <!-- Corps de la carte -->
-              <div class="p-4 flex-grow flex flex-col">
-                <div class="flex justify-between items-start mb-2">
-                  <h3 class="text-lg font-bold text-gray-900 truncate">{{ service.nom }}</h3>
-                  <div class="flex items-baseline">
-                    <span *ngIf="service.promo > 0" class="text-xs text-gray-500 line-through mr-1">
-                      {{ service.prix }} DT
-                    </span>
-                    <span class="text-lg font-bold text-amber-600">
-                      {{ calculateDiscountedPrice(service) }} DT
-                    </span>
-                  </div>
-                </div>
-    
-                <!-- Description avec limite de lignes -->
-                <p class="text-gray-600 text-sm mb-4 line-clamp-3 flex-grow">
-                  {{ service.description }}
-                </p>
-    
-                <!-- Footer de la carte -->
-                <div class="flex justify-between items-center mt-auto pt-2 border-t border-gray-100">
-                  <!-- Type de service -->
-                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
-                        [ngClass]="{
-                          'bg-purple-100 text-purple-800': service.type === 'premium',
-                          'bg-blue-100 text-blue-800': service.type === 'standard',
-                          'bg-gray-100 text-gray-800': service.type === 'default_type'
-                        }">
-                    {{ getTypeLabel(service.type) }}
+            <!-- Badge d'état -->
+            <span class="absolute top-3 right-3 px-3 py-1 rounded-full text-xs font-semibold"
+                  [ngClass]="{
+                    'bg-green-100 text-green-800': service.approoved,
+                    'bg-yellow-100 text-yellow-800': !service.approoved
+                  }">
+              {{ service.approoved ? 'Approuvé' : 'En attente' }}
+            </span>
+            
+            <!-- Badge promotion -->
+            <div *ngIf="service.promo > 0" 
+                 class="absolute top-3 left-3 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded">
+              -{{ service.promo }}%
+            </div>
+          </div>
+
+          <!-- Corps de la carte -->
+          <div class="p-4 flex-grow flex flex-col">
+            <div class="flex justify-between items-start mb-2">
+              <h3 class="text-lg font-bold text-gray-900 truncate">{{ service.nom }}</h3>
+              <div class="flex items-baseline">
+                <ng-container *ngIf="service.promo > 0; else normalPrice">
+                  <span class="text-xs text-gray-500 line-through mr-1">
+                    {{ formatPrice(service.prix) }}
                   </span>
-    
-                  <!-- Actions -->
-                  <div class="flex space-x-2">
-                    <button 
-                    (click)="editService(service.id)" 
-                            class="p-2 text-gray-500 hover:text-blue-600 transition-colors">
-                      <fa-icon [icon]="faEdit"></fa-icon>
-                    </button>
-                    <!-- Bouton de suppression -->
-                    <button (click)="confirmDelete(service.id)" 
-                    [disabled]="isLoading"
-                    class="p-2 text-gray-500 hover:text-red-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
-                    <fa-icon [icon]="faTrash"></fa-icon>
-                    </button>
+                  <span class="text-lg font-bold text-amber-600">
+                    {{ calculateDiscountedPrice(service) }}
+                  </span>
+                </ng-container>
+                <ng-template #normalPrice>
+                  <span class="text-lg font-bold text-amber-600">
+                    {{ formatPrice(service.prix) }}
+                  </span>
+                </ng-template>
+              </div>
+            </div>
 
-                    <!-- Indicateur de chargement -->
-                    <div *ngIf="isLoading" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                    <div class="bg-white p-4 rounded-lg flex items-center">
-                    <svg class="animate-spin h-8 w-8 text-custom-orange mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    <span>Suppression en cours...</span>
-                    </div>
-                    </div>
+            <!-- Description avec limite de lignes -->
+            <p class="text-gray-600 text-sm mb-4 line-clamp-3 flex-grow">
+              {{ service.description }}
+            </p>
 
-                    <!-- Messages de feedback -->
-                    <div *ngIf="successMessage" class="fixed top-4 right-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded z-50">
-                    {{ successMessage }}
-                    </div>
+            <!-- Footer de la carte -->
+            <div class="flex justify-between items-center mt-auto pt-2 border-t border-gray-100">
+              <!-- Type de service -->
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+                    [ngClass]="{
+                      'bg-purple-100 text-purple-800': service.type === 'premium',
+                      'bg-blue-100 text-blue-800': service.type === 'standard',
+                      'bg-gray-100 text-gray-800': service.type === 'default_type'
+                    }">
+                {{ service.type}}
+              </span>
 
-                    <div *ngIf="errorMessage" class="fixed top-4 right-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded z-50">
-                    {{ errorMessage }}
-                    </div>
-                  </div>
-                </div>
+              <!-- Actions -->
+              <div class="flex space-x-2">
+                <button 
+                  (click)="editService(service.id)" 
+                  class="p-2 text-gray-500 hover:text-blue-600 transition-colors">
+                  <fa-icon [icon]="faEdit"></fa-icon>
+                </button>
+                <button 
+                  (click)="confirmDelete(service.id)" 
+                  [disabled]="isLoading"
+                  class="p-2 text-gray-500 hover:text-red-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                  <fa-icon [icon]="faTrash"></fa-icon>
+                </button>
               </div>
             </div>
           </div>
-    
-          <!-- Message quand aucun service -->
-          <ng-template #noServices>
-            <div class="text-center py-12">
-              <fa-icon [icon]="faBoxOpen" class="text-gray-300 text-5xl mb-4"></fa-icon>
-              <h3 class="text-lg font-medium text-gray-900">Aucun service trouvé</h3>
-              <p class="mt-1 text-sm text-gray-500">
-                {{ activeTab === 'tous' ? 'Commencez par créer votre premier service' : 
-                   'Aucun service dans cette catégorie' }}
-              </p>
-              <button *ngIf="activeTab === 'tous'"
-                      class="mt-4 px-4 py-2 bg-custom-orange text-white rounded-md hover:bg-custom-orangeBold transition-colors"
-                      routerLink="/prestataire/creatService">
-                Créer un service
-              </button>
-            </div>
-          </ng-template>
         </div>
       </div>
+
+      <!-- Message quand aucun service -->
+      <ng-template #noServices>
+        <div class="text-center py-12">
+          <fa-icon [icon]="faBoxOpen" class="text-gray-300 text-5xl mb-4"></fa-icon>
+          <h3 class="text-lg font-medium text-gray-900">Aucun service trouvé</h3>
+          <p class="mt-1 text-sm text-gray-500">
+            {{ activeTab === 'tous' ? 'Commencez par créer votre premier service' : 
+               'Aucun service dans cette catégorie' }}
+          </p>
+          <button *ngIf="activeTab === 'tous'"
+                  class="mt-4 px-4 py-2 bg-custom-orange text-white rounded-md hover:bg-custom-orangeBold transition-colors"
+                  routerLink="/prestataire/creatService">
+            Créer un service
+          </button>
+        </div>
+      </ng-template>
     </div>
+  </div>
+
+  <!-- Indicateur de chargement -->
+  <div *ngIf="isLoading" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white p-4 rounded-lg flex items-center">
+      <svg class="animate-spin h-8 w-8 text-custom-orange mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+      </svg>
+      <span>Suppression en cours...</span>
+    </div>
+  </div>
+
+  <!-- Messages de feedback -->
+  <div *ngIf="successMessage" class="fixed top-4 right-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded z-50">
+    {{ successMessage }}
+  </div>
+
+  <div *ngIf="errorMessage" class="fixed top-4 right-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded z-50">
+    {{ errorMessage }}
+  </div>
+</div>

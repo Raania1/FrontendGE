@@ -42,7 +42,6 @@ export class ServiceDetailsComponent implements OnInit {
   ngOnInit(): void {
     this.loadServiceData();
     this.updateVisibleCount();
-
   }
 
 
@@ -50,11 +49,13 @@ export class ServiceDetailsComponent implements OnInit {
     if (!this.serviceId) return;
   
     this.isLoading = true;
-  
+    this.serviceData = {}; // Réinitialisation
+    this.otherServices = [];
     try {
       const response = await firstValueFrom(this.serviceService.getServiceById(this.serviceId));
       this.serviceData = response.service;
-  
+      this.filterByType();
+
       console.log('Service récupéré:', this.serviceData);
   
       // Récupération du prestataire si Prestataireid est présent
@@ -67,10 +68,11 @@ export class ServiceDetailsComponent implements OnInit {
         } catch (error) {
           console.error('Erreur lors de la récupération du prestataire:', error);
           this.serviceData.Prestataire = {};
+        }finally {
+        this.isLoading = false;
         }
       }
   
-      // Initialiser les infos une fois tout est chargé
       this.serviceInfos = [
         {
           icon: 'map',
@@ -107,7 +109,7 @@ formatPrice(price: number): string {
     minimumFractionDigits: 0,
     maximumFractionDigits: isWholeNumber ? 0 : 3
   })
-  .format(price) + (isWholeNumber ? ' DT' : ''); // Ajoute DT pour les nombres entiers
+  .format(price) + (isWholeNumber ? ' DT' : ''); 
 }
 
   getFinalPrice(): number {
@@ -163,88 +165,54 @@ formatPrice(price: number): string {
       this.selectedIndex = (this.selectedIndex + 1) % length;
     }
   }
+
+  otherServices: any[] = [];  
+  filterByType() {
+    if (!this.serviceData?.type) return;
   
-  // Dans la classe ServiceDetailsComponent
-otherServices = [
-  {
-    id: '3',
-    nom: "Salle des fêtes élégante",
-    description: "Espace moderne pour 150 personnes avec terrasse",
-    prix: 800,
-    promo: 15,
-    type: "salle",
-    photoCouverture: "https://images.unsplash.com/photo-1519671482749-fd09be7ccebf",
-    Prestataire: {
-      nom: "Lambert",
-      prenom: "Élodie"
-    }
-  },
-  {
-    id: '4',
-    nom: "Animation musicale",
-    description: "DJ professionnel avec équipement complet",
-    prix: 450,
-    promo: 0,
-    type: "animation",
-    photoCouverture: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745",
-    Prestataire: {
-      nom: "Girard",
-      prenom: "Thomas"
-    }
-  },
-  {
-    id: '1',
-    nom: "Photographe professionnel",
-    description: "Capture de moments spéciaux avec matériel haut de gamme",
-    prix: 350,
-    promo: 10,
-    type: "photographe",
-    photoCouverture: "https://images.unsplash.com/photo-1554080353-a576cf803bda",
-    Prestataire: {
-      nom: "Martin",
-      prenom: "Sophie"
-    }
-  },
-  {
-    id: '2',
-    nom: "Traiteur événementiel",
-    description: "Service traiteur premium pour vos réceptions",
-    prix: 120,
-    promo: 0,
-    type: "traiteur",
-    photoCouverture: "https://images.unsplash.com/photo-1555244162-803834f70033",
-    Prestataire: {
-      nom: "Dubois",
-      prenom: "Pierre"
-    }
-  },
-  {
-    id: '3',
-    nom: "Salle des fêtes élégante",
-    description: "Espace moderne pour 150 personnes avec terrasse",
-    prix: 800,
-    promo: 15,
-    type: "salle",
-    photoCouverture: "https://images.unsplash.com/photo-1519671482749-fd09be7ccebf",
-    Prestataire: {
-      nom: "Lambert",
-      prenom: "Élodie"
-    }
-  },
-  {
-    id: '4',
-    nom: "Animation musicale",
-    description: "DJ professionnel avec équipement complet",
-    prix: 450,
-    promo: 0,
-    type: "animation",
-    photoCouverture: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745",
-    Prestataire: {
-      nom: "Girard",
-      prenom: "Thomas"
+    this.serviceService.getServicesByType(this.serviceData.type).subscribe({
+      next: (response) => {
+        this.otherServices = response.services || response.data || [];
+        console.log('Services similaires:', this.otherServices);
+        const prestatairePromises = this.otherServices.map((service:any) => {
+          if (service.Prestataireid) {
+            return this.prestataireService.getPrestataireById(service.Prestataireid)
+              .toPromise()
+              .then(prestataireResponse => {
+                service.prestataire = prestataireResponse.pres;
+              })
+              .catch(error => {
+                console.error('Erreur prestataire:', error);
+                service.prestataire = {};
+              });
+          }
+          return Promise.resolve();
+        });
+        
+         Promise.all(prestatairePromises);
+      },
+      error: (error) => {
+        console.error('Erreur:', error);
+        this.otherServices = [];
+      },
+    });
+  }
+  navigateToService(serviceId: string) {
+    if (serviceId !== this.serviceId) {
+      this.serviceId = serviceId;
+      this.isLoading = true;
+      
+      // Réinitialise les données avant de recharger
+      this.serviceData = {};
+      this.otherServices = [];
+      
+      // Recharge les données
+      this.loadServiceData();
+      
+      // Faire défiler vers le haut
+      window.scrollTo(0, 0);
     }
   }
-];
 
 startIndex = 0;
 visibleCount = 4;

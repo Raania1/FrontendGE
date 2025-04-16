@@ -7,7 +7,7 @@ import { catchError, Observable, throwError } from 'rxjs';
 })
 export class ServiceService {
 
-  private apiUrl = 'http://localhost:8000/service/servicesByTypeP'; 
+  private apiUrl = 'http://localhost:8000/service/filter'; 
   private apiUrl1 = 'http://localhost:8000/service/create'; 
   private apiUrl2 = 'http://localhost:8000/service/getById/'; 
   private apiUrl3 = 'http://localhost:8000/service/updatewithoutPhotos/'; 
@@ -22,16 +22,16 @@ export class ServiceService {
 
   constructor(private http: HttpClient) {}
 
-  getServicesByType(type: string, prixMin: number, prixMax: number, page: number = 1, limit: number = 15): Observable<any> {
-    const params = new HttpParams()
-    .set('type', type)
-    .set('prixMin', prixMin.toString())
-    .set('prixMax', prixMax.toString())
-    .set('page', page.toString())
-    .set('limit', limit.toString());
+  // getServicesByType(type: string, prixMin: number, prixMax: number, page: number = 1, limit: number = 15): Observable<any> {
+  //   const params = new HttpParams()
+  //   .set('type', type)
+  //   .set('prixMin', prixMin.toString())
+  //   .set('prixMax', prixMax.toString())
+  //   .set('page', page.toString())
+  //   .set('limit', limit.toString());
   
-    return this.http.get<any>(this.apiUrl, { params });
-  }
+  //   return this.http.get<any>(this.apiUrl, { params });
+  // }
 
   createService(formData: FormData): Observable<any> {
     return this.http.post(`${this.apiUrl1}`, formData, {
@@ -109,5 +109,9 @@ getServices(params: any): Observable<any> {
       return throwError(() => new Error('Service unavailable'));
     })
   );
+}
+getServicesByType(type: string): Observable<any> {
+  const params = { type: type };
+  return this.http.get(`${this.apiUrl}`, { params });
 }
 }

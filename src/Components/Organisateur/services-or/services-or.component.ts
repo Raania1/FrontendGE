@@ -1,10 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, FormControl,AbstractControl  } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { NavbarORComponent } from "../navbar-or/navbar-or.component";
 import { CommonModule } from '@angular/common';
 import { RouterLink, ActivatedRoute } from '@angular/router';
 import { ServiceService } from '../../../Services/service.service';
+import { PrestataireService } from '../../../Services/prestataire.service';
+import { OrganizerService } from '../../../Services/organizer.service';
+import { EventService } from '../../../Services/event.service';
 
 interface Service {
   id: string;
@@ -29,17 +32,14 @@ interface Service {
   styleUrl: './services-or.component.css'
 })
 export class ServicesOrComponent implements OnInit {
-  // Filter state
   filterForm: FormGroup;
   isMobile = false;
   loading = false;
   error: string | null = null;
 
-  // Services data
 
   filteredServices: Service[] = [];
   
-  // Pagination
   pagination = {
     total: 0,
     totalPages: 0,
@@ -47,7 +47,6 @@ export class ServicesOrComponent implements OnInit {
     itemsPerPage: 6
   };
 
-  // Constants
   serviceTypes = [
     { id: "Photographe", label: "Photographe" },
     { id: "Traiteur", label: "Traiteur" },
@@ -61,7 +60,9 @@ export class ServicesOrComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
+    private authService: OrganizerService,
     private servicesService: ServiceService, 
+    private eventService: EventService,
     private route: ActivatedRoute
   ) {
     this.filterForm = this.fb.group({
@@ -81,7 +82,8 @@ export class ServicesOrComponent implements OnInit {
 
   ngOnInit() {
     this.loadServices();
-    
+    this.fetchOrganizerData();  
+  
     this.filterForm.valueChanges.pipe(
       debounceTime(300),
       distinctUntilChanged()
@@ -101,7 +103,7 @@ export class ServicesOrComponent implements OnInit {
   
     this.servicesService.getServices(params).subscribe({
       next: (response) => {
-        this.filteredServices = response.services; // Contient uniquement les services de la page demandée
+        this.filteredServices = response.services;
         this.pagination = {
           total: response.total,
           totalPages: response.totalPages,
@@ -132,7 +134,6 @@ export class ServicesOrComponent implements OnInit {
     };
   }
 
-  // Service card helpers
   getDiscountedPrice(service: Service): number | null {
     return service.promo > 0 
       ? service.prix - (service.prix * service.promo) / 100 
@@ -140,38 +141,35 @@ export class ServicesOrComponent implements OnInit {
   }
 
   formatPrice(price: number): string {
-    if (isNaN(price)) return '0 DT'; // Handle invalid numbers
+    if (isNaN(price)) return '0 DT'; 
     
-    // For whole numbers, don't show decimals
     const isWholeNumber = price % 1 === 0;
     
     return new Intl.NumberFormat('fr-FR', {
-      style: isWholeNumber ? 'decimal' : 'currency', // Use decimal format for whole numbers
+      style: isWholeNumber ? 'decimal' : 'currency', 
       currency: 'TND',
       minimumFractionDigits: 0,
       maximumFractionDigits: isWholeNumber ? 0 : 3
     })
-    .format(price) + (isWholeNumber ? ' DT' : ''); // Append DT for whole numbers
+    .format(price) + (isWholeNumber ? ' DT' : ''); 
   }
 
-  getTypeLabel(type: string): string {
-    console.log(type)
-    const typeMap: Record<string, string> = {
-      Photographe: "Photographe",
-      Traiteur: "Traiteur",
-      Salle_des_fêtes: "Salle des fêtes",
-      Animation: "Animation",
-      Décoration: "Décoration",
-      Music: "Music",
-      Autres: "Autres",
+  // getTypeLabel(type: string): string {
+  //   console.log(type)
+  //   const typeMap: Record<string, string> = {
+  //     Photographe: "Photographe",
+  //     Traiteur: "Traiteur",
+  //     Salle_des_fêtes: "Salle des fêtes",
+  //     Animation: "Animation",
+  //     Décoration: "Décoration",
+  //     Music: "Music",
+  //     Autres: "Autres",
+  //   };
+  //   return typeMap[type] || "Service";
+  // }
 
-    };
-    return typeMap[type] || "Service";
-  }
-
-  // Filter and sort logic
   applyFilters() {
-    this.pagination.currentPage = 1; // Réinitialise à la première page
+    this.pagination.currentPage = 1; 
     this.loadServices();
   }
 
@@ -193,7 +191,7 @@ export class ServicesOrComponent implements OnInit {
     } else {
       this.filterForm.get(key)?.reset();
     }
-    this.applyFilters(); // <-- re-apply filters
+    this.applyFilters(); 
   }
 
   hasActiveFilters(): boolean {
@@ -217,14 +215,14 @@ export class ServicesOrComponent implements OnInit {
   }
 
   getPaginatedServices(): Service[] {
-    return this.filteredServices; // Retourne directement ce que le serveur a envoyé
+    return this.filteredServices; 
   }
 
   handlePageChange(newPage: number) {
     if (newPage < 1 || newPage > this.pagination.totalPages) return;
     
     this.pagination.currentPage = newPage;
-    this.loadServices(); // Recharge les données pour la nouvelle page
+    this.loadServices(); 
   }
 
   handleSortChange(newSortBy: string) {
@@ -296,4 +294,95 @@ export class ServicesOrComponent implements OnInit {
   get hasPromo(): FormControl {
     return this.filterForm.get('hasPromo') as FormControl;
   }
+openMenuId: string | null = null;
+
+toggleMenu(serviceId: string) {
+  this.openMenuId = this.openMenuId === serviceId ? null : serviceId;
+}
+
+isMenuOpen(serviceId: string): boolean {
+  return this.openMenuId === serviceId;
+}
+
+@HostListener('document:click', ['$event'])
+onDocumentClick(event: MouseEvent) {
+  if (!event.target || !this.openMenuId) return;
+  
+  const target = event.target as HTMLElement;
+  if (!target.closest('.menu-container')) {
+    this.openMenuId = null;
+  }
+}
+
+
+showModal = false;
+selectedEventId: string | null = null;
+selectedServiceId: string | null = null;
+userEvents: any[] = []; 
+
+organisateur: any = {}; 
+  
+fetchOrganizerData() {
+  const user = JSON.parse(localStorage.getItem('user') || '{}');  
+  const id = user.Id;  
+
+  if (id) {
+    this.authService.getOrganizerById(id).subscribe(
+      (response) => {
+        this.organisateur = response.organizer;  
+      },
+      (error) => {
+        console.error('Erreur lors de la récupération des données:', error);
+      }
+    );
+  } else {
+    console.error('Utilisateur non trouvé dans le localStorage');
+  }
+}
+openModal(serviceId: string) {
+  this.selectedServiceId = serviceId;
+  this.showModal = true;
+  document.body.classList.add('modal-open');
+  this.loadUserEvents();
+}
+
+closeModal() {
+  this.showModal = false;
+  this.selectedEventId = null;
+  this.selectedServiceId = null;
+  document.body.classList.remove('modal-open');
+
+}
+
+loadUserEvents() {
+  this.userEvents = this.organisateur.Evennements
+}
+
+
+
+addToEvent() {
+  if (this.selectedServiceId && this.selectedEventId) {
+    const payload = {
+      eventId: this.selectedEventId,
+      serviceId: this.selectedServiceId
+    };
+
+    this.eventService.addServiceToEvent(payload).subscribe({
+      next: (response) => {
+        console.log('Service ajouté avec succès à l’événement :', response);
+        alert("Service ajouté avec succès !");
+        this.closeModal();
+      },
+      error: (err) => {
+        console.error('Erreur lors de l’ajout du service :', err);
+        alert("Erreur lors de l’ajout du service à l’événement.");
+      }
+    });
+  }
+}
+
+canConfirm(): boolean {
+  return this.userEvents.length > 0 && !!this.selectedEventId;
+}
+
 }
