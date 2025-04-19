@@ -53,7 +53,7 @@
             class="p-2 hover:bg-custom-gray/10 rounded-lg flex items-center space-x-2 cursor-pointer transition-all duration-300" routerLinkActive="bg-custom-gray"
           >
             <fa-icon [icon]="faCalendarCheck" class="h-5 w-5 text-gray-500"></fa-icon>
-            <span *ngIf="!isSidebarCollapsed">Réservations</span>
+            <span routerLink="/prestataire/reservations" *ngIf="!isSidebarCollapsed">Réservations</span>
           </li>
           <li
             class="p-2 hover:bg-custom-gray/10 rounded-lg flex items-center space-x-2 cursor-pointer transition-all duration-300" routerLinkActive="bg-custom-gray"

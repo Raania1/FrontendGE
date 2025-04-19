@@ -25,6 +25,8 @@ import { ServicesOrComponent } from '../Components/Organisateur/services-or/serv
 import { ServiceDetailsComponent } from '../Components/Organisateur/service-details/service-details.component';
 import { CreatEventComponent } from '../Components/Organisateur/creat-event/creat-event.component';
 import { PresDetailsComponent } from '../Components/Organisateur/pres-details/pres-details.component';
+import { ReservationFormComponent } from '../Components/Organisateur/reservation-form/reservation-form.component';
+import { ReservationPrComponent } from '../Components/Prestataire/reservation-pr/reservation-pr.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -45,6 +47,7 @@ export const routes: Routes = [
     { path: 'seviceDetail/:id', component: ServiceDetailsComponent },
     { path: 'creatEvent', component: CreatEventComponent },
     { path: 'PresDetails/:id', component: PresDetailsComponent },
+    { path: 'reservation/:id', component: ReservationFormComponent },
 
     // { path: 'services', component: ServicesComponent },
 
@@ -62,6 +65,7 @@ export const routes: Routes = [
           { path: 'creatService', component: CreateSComponent },
           { path: 'servicePR', component: ServicesPrComponent },
           { path: 'EditService/:id', component: EditServiceComponent },
+          { path: 'reservations', component: ReservationPrComponent },
 
         ],
       },

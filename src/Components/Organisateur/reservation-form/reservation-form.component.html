@@ -1,0 +1,175 @@
+<app-navbar-or></app-navbar-or>
+<div class="relative py-24" style="background-image: url('https://media.istockphoto.com/id/804893032/fr/photo/flou-des-affaires-conf%C3%A9rence-et-pr%C3%A9sentation-dans-la-salle-de-conf%C3%A9rence.jpg?s=612x612&w=0&k=20&c=t5bT38VU4_N_wq8YWTxmTX7SnxZQRfRqbqXwGV9OziQ='); background-size: cover; background-repeat: no-repeat; background-position: center;">
+    <div class="absolute inset-0 bg-custom-brown/50"></div>
+    
+    <div class="relative max-w-4xl mx-auto text-center px-4">
+      <h2 class="text-4xl font-serif text-white mb-6">Réservation de <span style="text-transform: capitalize;">"{{serviceData.nom}}"</span></h2>
+      <p class="text-xl text-white/90">
+        Complétez le formulaire ci-dessous pour réserver le service de votre choix. Nous vous contacterons pour
+        confirmer votre réservation.      </p>
+    </div>
+  </div>
+ 
+<div class=" bg-custom-gray/20"><br>
+  
+       <main class="container mx-auto py-10 px-4">
+        <button (click)="goBack()" class="flex items-center gap-1 text-gray-500 hover:text-gray-700 mb-6">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 12H5M12 19l-7-7 7-7"/>
+          </svg>
+        </button>
+      <ng-container *ngIf="!submitted; else confirmation">
+        <div class="grid gap-8 md:grid-cols-2">
+          <div>
+            <h2 class="text-3xl font-bold font-serif mb-6 text-custom-black">Réservez votre service</h2>
+            <p class="text-custom-brown mb-8">
+              
+            </p>
+  
+            <div class="space-y-6">
+                <div class="bg-white p-6 rounded-lg shadow-md border border-custom-gray/30">
+                  <h3 class="text-l font-semibold mb-4 text-custom-orangeBold">Service Sélectionné</h3>
+                  <div class="flex items-center gap-4 p-3">
+                    <!-- Remplacez le chemin de l'image par votre vraie image -->
+                    <img
+                    [src]="serviceData.photoCouverture" [alt]="serviceData.nom"
+                      class="w-24 h-24 rounded-lg object-cover"
+                    />
+                    <div>
+                      <h4 class="font-medium text-lg text-custom-black" style="text-transform: capitalize;">{{serviceData.nom}}</h4>
+                      <p class="text-sm text-custom-brown mt-2">
+                        {{serviceData.description}}
+                      </p>
+                      <div>
+                        <span class="font-bold text-custom-orangeBold">Prix :</span>
+                        @if (serviceData.promo > 0){
+                          <div >
+                            <span class="text-custom-brown ml-2">{{formatPrice(getFinalPrice())}}</span>
+                         </div>
+                        }
+                        @else {
+                          <div >
+                            <span class="text-custom-brown ml-2">{{formatPrice(serviceData.prix)}}</span>
+                         </div>
+                        }
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+          </div>
+  
+          <div class="border border-custom-gray/30 rounded-lg overflow-hidden">
+            <div class="bg-custom-orange/5 border-b border-custom-gray/30 p-6">
+              <h2 class="text-xl font-serif font-bold text-custom-orangeBold">Formulaire de réservation</h2>
+              <p class="text-custom-brown mt-2">
+                Remplissez les champs pour réserver votre service
+              </p>
+            </div>
+            <form #reservationForm="ngForm" (ngSubmit)="handleSubmit($event)" class="bg-white" novalidate>
+              <div class="space-y-6 p-6">
+                <div class="space-y-4">
+                  <div class="grid gap-4">
+                    <div class="space-y-2">
+                      <label class="block text-sm font-medium text-custom-orangeBold">Date</label>
+                      <input
+                        type="datetime-local"
+                        [(ngModel)]="date"
+                        name="date"
+                        required
+                        #dateField="ngModel"
+                        class="block w-full rounded-md border border-custom-gray/50 focus:border-custom-orange focus:ring-custom-orange px-3 py-2"
+                      />
+                    </div>
+                    <p *ngIf="dateField.invalid && dateField.touched" class="text-red-600 text-sm mt-1">
+                      La date est requise.
+                    </p>
+                    <p *ngIf="dateConflictError" class="text-red-600 text-sm mt-1">
+                      Ce prestataire est déjà réservé à cette date. Veuillez choisir une autre date.
+                    </p>
+                    <p *ngIf="dateError" class="text-red-600 text-sm mt-1">
+                      La date de réservation ne peut pas être dans le passé                    </p>
+                  </div>
+                </div>
+   
+                <div class="space-y-2">
+                  <label for="comments" class="block text-sm font-medium text-custom-orangeBold">
+                    Commentaire ou Demandes spéciales
+                  </label>
+                  <textarea
+                    id="comments"
+                    name="comments"
+                    required
+                    placeholder="Informations supplémentaires concernant votre réservation"
+                    class="block w-full rounded-md border border-custom-gray/50 focus:border-custom-orange focus:ring-custom-orange px-3 py-2 min-h-[100px]"
+                  ></textarea>
+                </div>
+              </div>
+              <div class="bg-custom-orange/5 border-t border-custom-gray/30 p-6">
+                <button
+                  type="submit"
+                  [disabled]="reservationForm.invalid || isSubmitting"
+                  class="w-full bg-custom-orange hover:bg-custom-orangeBold text-white py-2 px-4 rounded-md disabled:opacity-50 flex items-center justify-center gap-2"
+                >
+                  <ng-container *ngIf="isSubmitting; else normalText">
+                    <svg class="animate-spin h-5 w-5 text-white" viewBox="0 0 24 24">
+                      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                      <path
+                        class="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                      ></path>
+                    </svg>
+                    <span>Réservation en cours...</span>
+                  </ng-container>
+                  <ng-template #normalText>Réserver maintenant</ng-template>
+                </button>
+
+              </div>
+            </form>
+          </div>
+        </div>
+      </ng-container>
+  
+      <ng-template #confirmation>
+        <div class="max-w-md mx-auto border border-custom-gray/30 rounded-lg overflow-hidden">
+          <div class="bg-custom-orange/10 border-b border-custom-gray/30 p-6">
+            <h2 class="text-center text-xl font-bold text-custom-orangeBold">Réservation Confirmée!</h2>
+          </div>
+          <div class="text-center p-6 bg-white">
+            <div class="flex justify-center mb-6">
+              <div class="rounded-full bg-custom-orange/20 p-3">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-10 w-10 text-custom-orangeBold"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+            </div>
+            <p class="mb-4 text-custom-black">
+              Merci pour votre réservation! Nous avons bien reçu votre demande.
+            </p>
+            <p class="text-sm text-custom-brown mb-6">
+              Un email de confirmation vous sera envoyé pour acceptation. Nous vous contacterons prochainement afin de confirmer les détails.
+            </p>
+          </div>
+          <div class="bg-custom-orange/5 border-t border-custom-gray/30 p-6">
+            <button
+              routerLink="/homeOr"
+              class="w-full border border-custom-orange text-custom-orange hover:bg-custom-orange hover:text-white py-2 px-4 rounded-md"
+            >
+              Retour à la page d'acceuil
+            </button>
+          </div>
+        </div>
+      </ng-template>
+    </main>
+    
+  </div>  <hr>
+  <div class="bg-custom-black/80 text-center py-4">
+      <p class="text-custom-gray">© 2025 FLESK EVENT. Tous droits réservés.</p>
+  </div>

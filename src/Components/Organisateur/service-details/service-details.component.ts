@@ -34,7 +34,7 @@ export class ServiceDetailsComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private serviceService: ServiceService ,
-    private prestataireService: PrestataireService// <-- éviter le conflit de noms
+    private prestataireService: PrestataireService
   ) {
     this.serviceId = this.route.snapshot.paramMap.get('id') || '';
   }

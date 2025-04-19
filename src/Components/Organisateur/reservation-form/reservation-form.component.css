@@ -1,0 +1,44 @@
+/* You can add custom styles here if needed */
+.bg-custom-black {
+    background-color: #1a1a1a;
+  }
+  
+  .bg-custom-gray {
+    background-color: #e5e7eb;
+  }
+  
+  .text-custom-brown {
+    color: #6b7280;
+  }
+  
+  .text-custom-orangeBold {
+    color: #c2410c;
+  }
+  
+  .bg-custom-orange {
+    background-color: #ea580c;
+  }
+  
+  .bg-custom-orangeBold {
+    background-color: #c2410c;
+  }
+  
+  .hover\:bg-custom-orangeBold:hover {
+    background-color: #c2410c;
+  }
+  
+  .text-custom-black {
+    color: #1a1a1a;
+  }
+  
+  .border-custom-gray {
+    border-color: #e5e7eb;
+  }
+  
+  .border-custom-orange {
+    border-color: #ea580c;
+  }
+  
+  .focus\:ring-custom-orange:focus {
+    --tw-ring-color: #ea580c;
+  }

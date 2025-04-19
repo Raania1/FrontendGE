@@ -340,7 +340,7 @@
                   
                     <div class="flex items-center gap-2">
                         <abbr title="Réserver">
-                        <div class="bg-gray-100 hover:bg-amber-600/5 rounded-full p-2 transition duration-200 cursor-pointer">
+                        <div [routerLink]="['/reservation', service.id]" class="bg-gray-100 hover:bg-amber-600/5 rounded-full p-2 transition duration-200 cursor-pointer">
                           <svg xmlns="http://www.w3.org/2000/svg" 
                                width="20" height="20" viewBox="0 0 24 24" 
                                fill="none" stroke="currentColor" stroke-width="2" 
@@ -424,7 +424,7 @@
       </div>
     </div>
   </div></div>
-  
+ 
   <hr>
 <div class="bg-custom-black/80 text-center py-4">
     <p class="text-custom-gray">© 2025 FLESK EVENT. Tous droits réservés.</p>
