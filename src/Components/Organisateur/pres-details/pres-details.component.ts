@@ -7,6 +7,8 @@ import { faBell, faUser, faCheck, faBriefcase, faMapMarkerAlt, faInfoCircle, faC
 import { PrestataireService } from '../../../Services/prestataire.service';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { CommonModule,Location } from '@angular/common';
+import { CommentService } from '../../../Services/comment.service';
+import { ReservationService } from '../../../Services/reservation.service';
 interface Service {
   id: number;
   nom: string;
@@ -37,10 +39,13 @@ faBell = faBell;
   presId: string;
   activeTab: string = 'informations';
   expandedReview: number | null = null;
-
+   user = JSON.parse(localStorage.getItem('user') || '{}');  
+   id = this.user.Id;
   constructor(
     private prestataireService: PrestataireService,
     private route: ActivatedRoute,
+    private commentService: CommentService,
+    private reservation: ReservationService,
     private location: Location,
 
   ) {
@@ -89,20 +94,30 @@ faBell = faBell;
 
   prestataire: any = {};
   otherServices: Service[] = [];
+  avis: any[]=[];
+  organisateurs: any = {};
+  reservationCount: number=0;
+
     ngOnInit(): void {
     this.fetchPresData(); 
     this.fetchServicePhotos(); 
   }
   fetchPresData() {
-   
-
     if (this.presId) {
       this.prestataireService.getPrestataireById(this.presId).subscribe(
         (response) => {
           this.prestataire = response.pres; 
           this.otherServices = this.prestataire.Services || []
+          this.avis = this.prestataire.Comments;
+          this.reservation.count(this.presId).subscribe(
+            (response)=>{
+              this.reservationCount = response.count
+            }
+          )
           console.log(this.prestataire)
           console.log(this.otherServices)
+          this.fetchOrganisateursForComments();
+
         },
         (error) => {
           console.error('Erreur lors de la récupération des données:', error);
@@ -112,6 +127,63 @@ faBell = faBell;
       console.error('Utilisateur non trouvé dans le localStorage');
     }
   }
+  fetchOrganisateursForComments() {
+    if (!this.avis || this.avis.length === 0) return;
+
+    this.avis.forEach(comment => {
+      if (comment.organisateurid && !this.organisateurs[comment.organisateurid]) {
+        this.commentService.getCommentById(comment.id).subscribe(
+          (commentWithDetails) => {
+            if (commentWithDetails.Organisateur) {
+              comment.Organisateur = commentWithDetails.Organisateur;
+
+              this.organisateurs[comment.organisateurid] = commentWithDetails.Organisateur;
+              console.log(commentWithDetails.Organisateur)
+            }
+          },
+          (error) => {
+            console.error('Erreur lors de la récupération des détails du commentaire:', error);
+          }
+        );
+      }
+    });}
+    selectedComment: Comment | any = null;
+    isDeleteDialogOpen: boolean = false;
+    openDeleteDialog(comment: Comment): void {
+      this.selectedComment= comment;
+      this.isDeleteDialogOpen = true;
+    }
+    isLoading: boolean = false;
+    successMessage: string = '';
+    errorMessage: string = '';
+deleteComment(): void {
+  if (!this.selectedComment) return;
+
+  const commentId = this.selectedComment.id;
+  this.isLoading = true;
+
+  this.commentService.deleteComment(commentId).subscribe({
+    next: (res) => {
+      this.isLoading = false;
+      this.successMessage = res.message || 'Commentaire supprimé avec succès';
+      
+      this.avis = this.avis.filter(
+        comment => comment.id !== commentId
+      );
+
+      this.isDeleteDialogOpen = false;
+      this.selectedComment = null;
+
+      setTimeout(() => this.successMessage = '', 4000);
+    },
+    error: (err) => {
+      this.isLoading = false;
+      this.errorMessage = err?.error?.error || 'Erreur lors de la suppression';
+      
+      setTimeout(() => this.errorMessage = '', 4000);
+    }
+  });
+}
   setActiveTab(tab: string) {
     this.activeTab = tab;
   }
@@ -287,18 +359,17 @@ faBell = faBell;
     }
     
     formatPrice(price: number): string {
-      if (isNaN(price)) return '0 DT'; // Gère les nombres invalides
+      if (isNaN(price)) return '0 DT';
       
-      // Pour les nombres entiers, ne pas afficher de décimales
       const isWholeNumber = price % 1 === 0;
       
       return new Intl.NumberFormat('fr-FR', {
-        style: isWholeNumber ? 'decimal' : 'currency', // Utilise le format décimal pour les nombres entiers
+        style: isWholeNumber ? 'decimal' : 'currency', 
         currency: 'TND',
         minimumFractionDigits: 0,
         maximumFractionDigits: isWholeNumber ? 0 : 3
       })
-      .format(price) + (isWholeNumber ? ' DT' : ''); // Ajoute DT pour les nombres entiers
+      .format(price) + (isWholeNumber ? ' DT' : ''); 
     }
     updateVisibleCount() {
       if (window.innerWidth >= 1280) this.visibleCount = 4;

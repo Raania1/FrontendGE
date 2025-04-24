@@ -11,6 +11,7 @@ export class ReservationService {
   private apiUrl2 = 'http://localhost:8000/reservation/deleteById/'; 
   private apiUrl3 = 'http://localhost:8000/reservation/confirm/'; 
   private apiUrl4 = 'http://localhost:8000/reservation/cancel/'; 
+  private apiUrl5 = 'http://localhost:8000/reservation/countReservation/'; 
 
   constructor(private http: HttpClient) {}
 
@@ -20,6 +21,9 @@ export class ReservationService {
   getAll(): Observable<any> {
     return this.http.get<any>(`${this.apiUrl1}`);
     }
+  count(Prestataireid: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl5}${Prestataireid}`);
+  }
   deletereservationById(id: string): Observable<any> {
       return this.http.delete<any>(`${this.apiUrl2}${id}`);
     }

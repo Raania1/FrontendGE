@@ -3,7 +3,7 @@ import { Component, HostListener } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink, RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faChartBar, faTools, faBars, faCalendarCheck, faCalendarAlt, faBullhorn, faUser, faCog, faSignOutAlt, faInfoCircle, faChevronRight, faChevronLeft, faBoxOpen, faChartLine, faComments, faFileInvoice, faListAlt, faUserFriends, faUsers, faBell } from '@fortawesome/free-solid-svg-icons';
+import { faChartBar, faTools,faClipboardList, faBars, faCalendarCheck, faCalendarAlt, faBullhorn, faUser, faCog, faSignOutAlt, faInfoCircle, faChevronRight, faChevronLeft, faBoxOpen, faChartLine, faComments, faFileInvoice, faListAlt, faUserFriends, faUsers, faBell } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-sidebar-ad',
@@ -18,7 +18,7 @@ export class SidebarAdComponent {
   faUser = faUser;
   faUsers = faUsers;
   faUserFriends = faUserFriends;
-  faBoxOpen = faBoxOpen;
+  faBoxOpen = faClipboardList;
   faListAlt = faListAlt;
   faComments = faComments;
   faFileInvoice = faFileInvoice;

@@ -5,7 +5,24 @@ import { faBell, faUser,faCheck, faBriefcase, faLaptop, faTools, faUserTie, faEn
 import { CommonModule, DatePipe } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { PrestataireService } from '../../../Services/prestataire.service';
-
+import { CommentService } from '../../../Services/comment.service';
+import { ReservationService } from '../../../Services/reservation.service';
+interface Comment {
+  id: string;
+  content: string;
+  organisateurid: string;
+  prestataireid: string;
+  createdAt: Date;
+  updatedAt: Date;
+  Organisateur?: {
+    id: string;
+    nom: string;
+    prenom: string;
+    email: string;
+    // Ajoutez d'autres propriétés si nécessaire
+  };
+  // Ajoutez d'autres propriétés si nécessaire
+}
 @Component({
   selector: 'app-profile-pr',
   standalone: true,
@@ -29,6 +46,8 @@ export class ProfilePrComponent {
 
   constructor(
     private prestataireService: PrestataireService,
+    private commentService: CommentService,
+    private reservation: ReservationService,
     private route: ActivatedRoute
   ) {}
 
@@ -72,6 +91,9 @@ export class ProfilePrComponent {
   // };
 
   prestataire: any = {};
+  avis: any[]=[];
+  organisateurs: any = {};
+  reservationCount: number=0;
   ngOnInit(): void {
     this.fetchPresData();  
   }
@@ -82,8 +104,18 @@ export class ProfilePrComponent {
     if (id) {
       this.prestataireService.getPrestataireById(id).subscribe(
         (response) => {
-          this.prestataire = response.pres;  
-          console.log(this.prestataire)
+          this.prestataire = response.pres; 
+          this.avis = this.prestataire.Comments;
+          this.reservation.count(id).subscribe(
+            (response)=>{
+              this.reservationCount = response.count
+            }
+          )
+          console.log('Prestataire:', this.prestataire);
+          console.log('Avis:', this.avis);
+          
+          // Récupérer les informations des organisateurs pour chaque commentaire
+          this.fetchOrganisateursForComments();
         },
         (error) => {
           console.error('Erreur lors de la récupération des données:', error);
@@ -93,6 +125,64 @@ export class ProfilePrComponent {
       console.error('Utilisateur non trouvé dans le localStorage');
     }
   }
+  fetchOrganisateursForComments() {
+    if (!this.avis || this.avis.length === 0) return;
+
+    this.avis.forEach(comment => {
+      if (comment.organisateurid && !this.organisateurs[comment.organisateurid]) {
+        this.commentService.getCommentById(comment.id).subscribe(
+          (commentWithDetails) => {
+            if (commentWithDetails.Organisateur) {
+              comment.Organisateur = commentWithDetails.Organisateur;
+
+              this.organisateurs[comment.organisateurid] = commentWithDetails.Organisateur;
+              console.log(commentWithDetails.Organisateur)
+            }
+          },
+          (error) => {
+            console.error('Erreur lors de la récupération des détails du commentaire:', error);
+          }
+        );
+      }
+    });}
+
+    selectedComment: Comment | any = null;
+    isDeleteDialogOpen: boolean = false;
+    openDeleteDialog(comment: Comment): void {
+      this.selectedComment= comment;
+      this.isDeleteDialogOpen = true;
+    }
+    isLoading: boolean = false;
+    successMessage: string = '';
+    errorMessage: string = '';
+deleteComment(): void {
+  if (!this.selectedComment) return;
+
+  const commentId = this.selectedComment.id;
+  this.isLoading = true;
+
+  this.commentService.deleteComment(commentId).subscribe({
+    next: (res) => {
+      this.isLoading = false;
+      this.successMessage = res.message || 'Commentaire supprimé avec succès';
+      
+      this.avis = this.avis.filter(
+        comment => comment.id !== commentId
+      );
+
+      this.isDeleteDialogOpen = false;
+      this.selectedComment = null;
+
+      setTimeout(() => this.successMessage = '', 4000);
+    },
+    error: (err) => {
+      this.isLoading = false;
+      this.errorMessage = err?.error?.error || 'Erreur lors de la suppression';
+      
+      setTimeout(() => this.errorMessage = '', 4000);
+    }
+  });
+}
   setActiveTab(tab: string) {
     this.activeTab = tab;
   }

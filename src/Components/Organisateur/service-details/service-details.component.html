@@ -171,12 +171,12 @@
             <h2 class="text-lg font-semibold mb-3">Prestataire</h2>
         <div class="flex items-center gap-3">
           <div class="w-12 h-12 rounded-full overflow-hidden bg-gray-200">
-            <img [src]="serviceData.Prestataire.pdProfile" [alt]="serviceData.Prestataire.nom" class="w-full h-full object-cover">
+            <img [src]="serviceData.Prestataire.pdProfile" [alt]="serviceData.Prestataire.nom" class="w-full h-full object-cover ">
           </div>
           <div>
             <h3 class="font-medium"  style="text-transform: capitalize;">{{serviceData.Prestataire.nom}} {{serviceData.Prestataire.prenom}}</h3>
             <p class="text-sm text-gray-600">{{serviceData.Prestataire.numTel}}</p>
-            <a  [routerLink]="['/PresDetails', serviceData.Prestataireid]" class="text-blue-600 hover:underline text-sm">Voir le profil</a>
+            <a  [routerLink]="['/PresDetails', serviceData.Prestataireid]" class="text-blue-600 hover:underline text-sm cursor-pointer">Voir le profil</a>
           </div>
         </div>
       </div>

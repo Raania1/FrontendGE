@@ -27,6 +27,7 @@ import { CreatEventComponent } from '../Components/Organisateur/creat-event/crea
 import { PresDetailsComponent } from '../Components/Organisateur/pres-details/pres-details.component';
 import { ReservationFormComponent } from '../Components/Organisateur/reservation-form/reservation-form.component';
 import { ReservationPrComponent } from '../Components/Prestataire/reservation-pr/reservation-pr.component';
+import { ReservationOrComponent } from '../Components/Organisateur/reservation-or/reservation-or.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -48,6 +49,7 @@ export const routes: Routes = [
     { path: 'creatEvent', component: CreatEventComponent },
     { path: 'PresDetails/:id', component: PresDetailsComponent },
     { path: 'reservation/:id', component: ReservationFormComponent },
+    { path: 'reservationsOR', component: ReservationOrComponent },
 
     // { path: 'services', component: ServicesComponent },
 

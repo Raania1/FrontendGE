@@ -301,25 +301,79 @@
                 <!-- <span class="text-gray-500 ml-1">({{ prestataire.stats.avis }} avis)</span> -->
               </div>
             </div>
+            <div *ngIf="avis.length === 0" class="text-center py-12 bg-white rounded-lg border border-gray-200">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+              </svg>
+              <h3 class="mt-4 text-xl font-medium text-gray-900">Aucun avis pour le moment</h3>
+              <p class="mt-2 text-gray-500">Les clients pourront laisser des avis après avoir utilisé les services.</p>
+              <div class="mt-6">
+                <button class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-amber-600 hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500">
+Laissez votres avis                </button>
+              </div>
+            </div>
             <div class="space-y-6">
-              <div *ngFor="let avis of prestataire.avis" class="bg-white rounded-lg border border-gray-200 p-5 hover:shadow-sm transition-shadow">
-                <div class="flex justify-between items-start">
-                  <div>
-                    <!-- <h3 class="font-semibold text-gray-900">{{ avis.nom }}</h3> -->
-                    <div class="flex items-center mt-1">
-                      <!-- <span class="text-gray-500 text-sm">{{ avis.date }}</span> -->
+              <div class="space-y-4">
+                <div *ngFor="let avi of avis" class="bg-white rounded-lg border border-gray-200 p-5 hover:shadow-md transition-shadow duration-200">
+                  <div class="flex items-start gap-4">
+                    
+                    <!-- Avatar -->
+                    <div class="flex-shrink-0">
+                      <img [src]="avi.Organisateur?.pdProfile || 'assets/default-avatar.png'" 
+                           alt="Photo de profil"
+                           class="w-10 h-10 rounded-full object-cover border border-gray-300">
+                    </div>
+            
+                    <!-- Contenu principal -->
+                    <div class="flex-1 min-w-0">
+                      <div class="flex justify-between items-start gap-2">
+                        <div>
+                          <h3 class="font-semibold text-gray-900 text-base" style="text-transform: capitalize;">
+                            {{ avi.Organisateur?.prenom }} {{ avi.Organisateur?.nom }}
+                          </h3>
+                          <div class="flex items-center mt-1 space-x-2">
+                            <span class="text-gray-500 text-xs">
+                              {{ avi.createdAt | date:'dd MMM yyyy' }}
+                            </span>
+                          </div>
+                        </div>
+            
+                        <!-- Bouton supprimer -->
+                        @if(avi?.Organisateur?.id && id && avi.Organisateur.id === id) {
+                          <div class="flex items-center space-x-2">
+                            <button class="text-blue-400 hover:text-blue-500 p-1 rounded hover:bg-blue-50 transition-colors">
+                              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                              </svg>
+                            </button>
+                            
+                            <button class="text-red-400 hover:text-red-500 p-1 rounded hover:bg-red-50 transition-colors"
+                                    (click)="openDeleteDialog(avi)">
+                              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3m-4 0h14" />
+                              </svg>
+                            </button>
+                          </div>
+                        }
+                        
+                      </div>
+            
+                      <!-- Texte de l'avis -->
+                      <div class="mt-3">
+                        <p class="text-gray-700 text-sm leading-relaxed">
+                          "{{ expandedReview === avi.id 
+                              ? avi.content 
+                              : (avi.content | slice:0:150) + (avi.content.length > 150 ? '...' : '') }}"
+                        </p>
+            
+                        <button *ngIf="avi.content.length > 150"
+                                (click)="toggleReview(avi.id)"
+                                class="text-amber-600 hover:text-amber-700 text-sm font-medium mt-2">
+                          {{ expandedReview === avi.id ? 'Voir moins' : 'Voir plus' }}
+                        </button>
+                      </div>
                     </div>
                   </div>
-                  <!-- <span class="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs">{{ avis.evenement }}</span> -->
-                </div>
-  
-                <div class="mt-3">
-                  <!-- <p class="text-gray-700">
-                    {{ expandedReview === avis.id ? avis.commentaire : (avis.commentaire | slice:0:150) + (avis.commentaire.length > 150 ? '...' : '') }}
-                  </p>
-                  <button *ngIf="avis.commentaire.length > 150" (click)="toggleReview(avis.id)" class="text-amber-600 hover:text-amber-700 text-sm font-medium mt-2">
-                    {{ expandedReview === avis.id ? 'Voir moins' : 'Voir plus' }}
-                  </button> -->
                 </div>
               </div>
             </div>
@@ -409,4 +463,49 @@
 <hr>
 <div class="bg-custom-black/80 text-center py-4">
     <p class="text-custom-gray">© 2025 FLESK EVENT. Tous droits réservés.</p>
+</div>
+<div *ngIf="isDeleteDialogOpen" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center p-4 z-50">
+  <div class="bg-white rounded-lg shadow-xl max-w-md w-full">
+    <div class="p-6">
+      <h3 class="text-lg font-bold text-orange-700">Confirmer la suppression</h3>
+      <p class="text-gray-600 mt-2">
+        Êtes-vous sûr de vouloir supprimer ce commentaire ? Cette action est irréversible.
+      </p>
+      <div *ngIf="selectedComment" class="mt-4 p-4 bg-orange-50 border border-gray-300 rounded-md">
+        <p class="font-medium text-gray-900">
+          {{ selectedComment.Organisateur?.nom }} {{ selectedComment.Organisateur?.prenom }}
+        </p>
+        <p class="text-sm text-gray-600">{{ selectedComment.content }}</p>
+        <p class="text-sm text-gray-600">
+          {{ selectedComment.createdAt | date: 'yyyy-MM-dd' }}
+        </p>
+      </div>
+    </div>
+    <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+      <button
+        type="button"
+        class="w-full inline-flex justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-red-700 sm:ml-3 sm:w-auto sm:text-sm"
+        (click)="deleteComment()"
+        [disabled]="isLoading"
+      >
+        <span *ngIf="!isLoading">Supprimer</span>
+        <span *ngIf="isLoading">Suppression en cours...</span>
+      </button>
+      <button
+        type="button"
+        class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+        (click)="isDeleteDialogOpen = false"
+        [disabled]="isLoading"
+      >
+        Annuler
+      </button>
+    </div>
+    <!-- Ajout des messages d'état -->
+    <div *ngIf="successMessage" class="px-6 py-2 bg-green-100 text-green-700 text-sm">
+      {{ successMessage }}
+    </div>
+    <div *ngIf="errorMessage" class="px-6 py-2 bg-red-100 text-red-700 text-sm">
+      {{ errorMessage }}
+    </div>
+  </div>
 </div>

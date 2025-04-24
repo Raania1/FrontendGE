@@ -36,7 +36,7 @@ export class NavbarORComponent {
   navItems = [
     { label: 'Acceuil', url: '/homeOr' },
     { label: 'Evènnements', url: '/creatEvent' },
-    { label: 'Réservations', url: '/orders' },
+    { label: 'Réservations', url: '/reservationsOR' },
     
   ];
   isDropdownOpen = false;

@@ -112,17 +112,16 @@ async fetchservices() {
     this.services = response.services || [];
     
     // Crée un tableau de promesses
-    const prestatairePromises = this.services.map((service:any) => {
+    const prestatairePromises = this.services.map(async (service:any) => {
       if (service.Prestataireid) {
-        return this.prestataireService.getPrestataireById(service.Prestataireid)
-          .toPromise()
-          .then(prestataireResponse => {
-            service.prestataire = prestataireResponse.pres;
-          })
-          .catch(error => {
-            console.error('Erreur prestataire:', error);
-            service.prestataire = {};
-          });
+        try {
+          const prestataireResponse = await this.prestataireService.getPrestataireById(service.Prestataireid)
+            .toPromise();
+          service.prestataire = prestataireResponse.pres;
+        } catch (error) {
+          console.error('Erreur prestataire:', error);
+          service.prestataire = {};
+        }
       }
       return Promise.resolve();
     });
