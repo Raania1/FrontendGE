@@ -69,8 +69,13 @@ export class ServicesPrComponent {
   // Onglets
   tabs = [
     { key: 'tous', label: 'Tous', icon: faLayerGroup },
-    { key: 'acceptés', label: 'Acceptés', icon: faCheckCircle },
-    { key: 'en attente', label: 'En attente', icon: faClock }
+    { key: 'CONFIRMED', label: 'Activés', icon: faCheckCircle },
+    { key: 'PENDING', label: 'En attente', icon: faClock },
+    { key: 'CANCELED', label: 'Réfusés', icon: faClock },
+    { key: 'DISABLED', label: 'Désactivés', icon: faClock },
+
+    
+
   ];
 
   // Filtre les services selon l'onglet actif
@@ -80,14 +85,20 @@ export class ServicesPrComponent {
 
   getFilteredServices(tabKey: string) {
     switch(tabKey) {
-      case 'acceptés':
-        return this.services.filter(s => s.approoved);
-      case 'en attente':
-        return this.services.filter(s => !s.approoved);
+      case 'CONFIRMED':
+        return this.services.filter(s => s.Status === "CONFIRMED");
+      case 'PENDING':
+        return this.services.filter(s => s.Status === "PENDING");
+        case 'CANCELED':
+        return this.services.filter(s => s.Status === "CANCELED");
+        case 'DISABLED':
+        return this.services.filter(s => s.Status === "DISABLED");
+        
       default:
         return this.services;
     }
   }
+  
 
   // Gestion des onglets
   setActiveTab(tabKey: string) {
@@ -125,15 +136,6 @@ export class ServicesPrComponent {
     return this.formatPrice(service.prix);
   }
 
-  // Libellé du type de service
-  // getTypeLabel(type: string) {
-  //   const types: {[key: string]: string} = {
-  //     'premium': 'Premium',
-  //     'standard': 'Standard',
-  //     'default_type': 'Basique'
-  //   };
-  //   return types[type] || type;
-  // }
 
   // Actions
   editService(id: string) {
@@ -148,7 +150,7 @@ export class ServicesPrComponent {
         next: () => {
           this.isLoading = false;
           this.successMessage = 'Service supprimé avec succès';
-          
+          this.fetchPresData()
           setTimeout(() => {
             this.router.navigate(['/services']);
             this.successMessage = '';
@@ -166,4 +168,59 @@ export class ServicesPrComponent {
       });
     }
   }
+
+  isDisableDialogOpen = false;
+  serviceToDisabel: any = null;
+  openDesabelDialog(service: any): void {
+    this.serviceToDisabel = service;
+    this.isDisableDialogOpen = true;
+  }
+  DesabelService(): void {
+    if (!this.serviceToDisabel) return;
+  
+    const id = this.serviceToDisabel.id;
+    this.service.desabelService(id).subscribe({
+      next: (response) => {
+        const updated = this.services.find((s: any) => s.id === id);
+        if (updated) {
+          this.fetchPresData();
+        }
+        console.log('Service refusé :', response);
+        this.isDisableDialogOpen = false;
+        this.serviceToDisabel = null;
+      },
+      error: (err) => {
+        console.error(`Erreur lors de l'approbation du service :`, err);
+        this.isDisableDialogOpen = false;
+      }
+    });
+  }
+
+  isActiveDialogOpen = false;
+  serviceToActivate: any = null;
+  openActivateDialog(service: any): void {
+    this.serviceToActivate = service;
+    this.isActiveDialogOpen = true;
+  }
+  ActivateService(): void {
+    if (!this.serviceToActivate) return;
+  
+    const serviceId = this.serviceToActivate.id;
+    this.service.activateService(serviceId).subscribe({
+      next: (response) => {
+        const updated = this.services.find((s: any) => s.id === serviceId);
+        if (updated) {
+          this.fetchPresData();
+        }
+        console.log('Service refusé :', response);
+        this.isActiveDialogOpen = false;
+        this.serviceToActivate = null;
+      },
+      error: (err) => {
+        console.error(`Erreur lors de l'approbation du service :`, err);
+        this.isActiveDialogOpen = false;
+      }
+    });
+  }
+
 }

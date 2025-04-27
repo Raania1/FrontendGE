@@ -20,7 +20,6 @@
     </div>
   </div>
 <div class="min-h-screen p-6">
-
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
         <div>
             <a routerLink="/prestataire/servicePR" class="flex items-center text-gray-600 hover:text-gray-900 mb-2">
@@ -33,6 +32,7 @@
           <p class="mt-2 text-sm text-gray-500">Modifiez les informations ci-dessous pour mettre à jour ce service</p>
         </div>
         <button
+        *ngIf="currentService.Status === 'CANCELED'"
         (click)="confirmDelete()" 
             [disabled]="isLoading" 
           class=" items-center gap-2 px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors w-full sm:w-auto justify-center"

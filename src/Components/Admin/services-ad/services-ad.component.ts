@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule, NgModel } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faCheck, faTimes, faInfoCircle, faSpinner, faFilter, faSearch, faCheckCircle, faClock, faLayerGroup, faEye, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faTimes, faInfoCircle, faSpinner, faFilter, faSearch, faCheckCircle, faClock, faLayerGroup, faEye, faTrash, faBan, faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 import { ServicesPrComponent } from '../../Prestataire/services-pr/services-pr.component';
 import { ServiceService } from '../../../Services/service.service';
 import { PrestataireService } from '../../../Services/prestataire.service';
@@ -14,7 +14,7 @@ import { PrestataireService } from '../../../Services/prestataire.service';
   templateUrl: './services-ad.component.html',
   styleUrl: './services-ad.component.css'
 })
-export class ServicesAdComponent {
+export class ServicesAdComponent { 
    faClock = faClock;
    faCheckCircle = faCheckCircle;
    faSearch = faSearch;
@@ -25,6 +25,7 @@ export class ServicesAdComponent {
    faLayerGroup =faLayerGroup;
    faEye = faEye;  
    faTrash = faTrash;
+   faBan  = faBan ;
 
   //  services = [
   //   {
@@ -95,8 +96,10 @@ export class ServicesAdComponent {
  
   tabs = [
     { key: 'all', label: 'Tous les services', icon: this.faLayerGroup },
-    { key: 'pending', label: 'En attente', icon: this.faClock },
-    { key: 'approved', label: 'Approuvés', icon: this.faCheckCircle }
+    { key: 'PENDING', label: 'En attente', icon: this.faClock },
+    { key: 'CONFIRMED', label: 'Activés', icon: this.faCheckCircle },
+    { key: 'CANCELED', label: 'Refusées', icon: this.faBan  },
+    { key: 'DISABLED', label: 'Désactivés', icon: this.faBan  }
   ];
   
 activeTab = 'all';
@@ -144,12 +147,18 @@ filterServices(): void {
     // Filtrage par onglet
     let matchesTab = true;
     switch (this.activeTab) {
-      case 'pending':
-        matchesTab = !service.approoved;
+      case 'PENDING':
+        matchesTab = service.Status === 'PENDING';
         break;
-      case 'approved':
-        matchesTab = service.approoved;
+      case 'CONFIRMED':
+        matchesTab = service.Status === 'CONFIRMED';
         break;
+      case 'CANCELED':
+        matchesTab = service.Status === 'CANCELED';
+      break;
+      case 'DISABLED':
+        matchesTab = service.Status === 'DISABLED';
+      break;
     }
     
     return matchesSearch && matchesTab;
@@ -171,51 +180,59 @@ closeModal(): void {
      this.showModal = false;
    }
  
-   // Approuve un service
-   approveService(id: string): void {
-    const confirmation = window.confirm("Es-tu sûr de vouloir approuver ce service ?");
-  
-    if (!confirmation) return;
-  
-    this.service.approveService(id, true).subscribe({
-      next: (response) => {
-        const updated = this.services.find((s: any) => s.id === id);
-        if (updated) {
-          updated.approoved = true;
-          this.filterServices();
-        }
-        console.log('Service approuvé :', response);
-        alert("Service approuvé avec succès.");
-      },
-      error: (err) => {
-        console.error('Erreur lors de l’approbation du service :', err);
-        alert("Une erreur s'est produite.");
-      }
-    });
-  }
-  
-  
- 
-   // Rejette un service
-   rejectService(id: string): void {
-    const confirmation = window.confirm("Es-tu sûr de vouloir supprimer ce service ?");
-    
-    if (!confirmation) return;
+  // Dans la classe ServicesAdComponent
+isApproveDialogOpen = false;
+serviceToApprove: any = null;
+approveService(service: any): void {
+  this.serviceToApprove = service;
+  this.isApproveDialogOpen = true;
+}
 
-    this.service.deleteService(id).subscribe({
-      next: (response) => {
-        console.log('Service supprimé:', response);
-        this.services = this.services.filter((service: any) => service.id !== id);
-        this.filterServices(); 
-        alert("Service supprimé avec succès.");
-      },
-      error: (err) => {
-        console.error('Erreur lors de la suppression du service:', err);
-        alert("Une erreur s'est produite.");
-      }
-    });
-   }
+confirmApprove(): void {
+  if (!this.serviceToApprove) return;
 
+  const id = this.serviceToApprove.id;
+  this.service.approveService(id, true).subscribe({
+    next: (response) => {
+      const updated = this.services.find((s: any) => s.id === id);
+      if (updated) {
+        updated.approoved = true;
+        this.filterServices();
+      }
+      console.log('Service approuvé :', response);
+      this.isApproveDialogOpen = false;
+      this.serviceToApprove = null;
+    },
+    error: (err) => {
+      console.error(`Erreur lors de l'approbation du service :`, err);
+      this.isApproveDialogOpen = false;
+    }
+  });
+}
+isDeleteDialogOpen = false;
+serviceToDelete: any = null;
+rejectService(service: any): void {
+  this.serviceToDelete = service;
+  this.isDeleteDialogOpen = true;
+}
+deleteService(): void {
+  if (!this.serviceToDelete) return;
+
+  const id = this.serviceToDelete.id;
+  this.service.deleteService(id).subscribe({
+    next: (response) => {
+      console.log('Service supprimé:', response);
+      this.services = this.services.filter((service: any) => service.id !== id);
+      this.filterServices();
+      this.isDeleteDialogOpen = false;
+      this.serviceToDelete = null;
+    },
+    error: (err) => {
+      console.error('Erreur lors de la suppression du service:', err);
+      this.isDeleteDialogOpen = false;
+    }
+  });
+}
   formatPrice(price: number): string {
     if (isNaN(price)) return '0 DT';
     
@@ -235,5 +252,32 @@ closeModal(): void {
       return this.formatPrice(service.prix * (1 - service.promo/100));
     }
     return this.formatPrice(service.prix);
+  }
+  isCancelDialogOpen = false;
+  serviceToCanceled: any = null;
+  openCancelDialog(service: any): void {
+    this.serviceToCanceled = service;
+    this.isCancelDialogOpen = true;
+  }
+  
+  cancelService(): void {
+    if (!this.serviceToCanceled) return;
+  
+    const id = this.serviceToCanceled.id;
+    this.service.cancelService(id).subscribe({
+      next: (response) => {
+        const updated = this.services.find((s: any) => s.id === id);
+        if (updated) {
+          this.filterServices();
+        }
+        console.log('Service refusé :', response);
+        this.isCancelDialogOpen = false;
+        this.serviceToCanceled = null;
+      },
+      error: (err) => {
+        console.error(`Erreur lors de l'approbation du service :`, err);
+        this.isCancelDialogOpen = false;
+      }
+    });
   }
 }

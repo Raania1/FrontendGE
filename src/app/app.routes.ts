@@ -68,6 +68,7 @@ export const routes: Routes = [
           { path: 'servicePR', component: ServicesPrComponent },
           { path: 'EditService/:id', component: EditServiceComponent },
           { path: 'reservations', component: ReservationPrComponent },
+          { path: 'calendrier', component: ReservationPrComponent },
 
         ],
       },

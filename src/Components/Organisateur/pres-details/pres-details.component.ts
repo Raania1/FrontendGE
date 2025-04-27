@@ -9,6 +9,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { CommonModule,Location } from '@angular/common';
 import { CommentService } from '../../../Services/comment.service';
 import { ReservationService } from '../../../Services/reservation.service';
+import { FormsModule } from '@angular/forms';
+import { OrganizerService } from '../../../Services/organizer.service';
 interface Service {
   id: number;
   nom: string;
@@ -22,7 +24,7 @@ interface Service {
 @Component({
   selector: 'app-pres-details',
   standalone: true,
-  imports: [NavbarORComponent,FontAwesomeModule,CommonModule,RouterModule],
+  imports: [NavbarORComponent,FontAwesomeModule,CommonModule,RouterModule,FormsModule],
   templateUrl: './pres-details.component.html',
   styleUrl: './pres-details.component.css'
 })
@@ -46,12 +48,14 @@ faBell = faBell;
     private route: ActivatedRoute,
     private commentService: CommentService,
     private reservation: ReservationService,
+    private authService: OrganizerService,
     private location: Location,
 
   ) {
     this.presId = this.route.snapshot.paramMap.get('id') || '';
 
   }
+  
 
   // prestataire = {
   //   nom: "Boujneh Rania",
@@ -101,6 +105,7 @@ faBell = faBell;
     ngOnInit(): void {
     this.fetchPresData(); 
     this.fetchServicePhotos(); 
+    this.fetchOrganizerData()
   }
   fetchPresData() {
     if (this.presId) {
@@ -389,4 +394,125 @@ deleteComment(): void {
     calculateFinalPrice(price: number, discount: number): number {
       return price - (price * discount) / 100;
     }
+    editingReviewId: string | null = null;
+    editedReviewContent: string = '';
+    isSaving: boolean = false;
+    saveSuccess: boolean = false;
+    saveError: string | null = null;
+
+    toggleEditMode(avi: any) {
+      this.editingReviewId = avi.id;
+      this.editedReviewContent = avi.content;
+      this.saveSuccess = false;
+      this.saveError = null;
+    }
+
+    saveEditedReview(avi: any) {
+      if (!this.editedReviewContent.trim()) {
+        this.saveError = "Le commentaire ne peut pas être vide";
+        return;
+      }
+    
+      this.isSaving = true;
+      this.saveError = null;
+    
+      this.commentService.updateComment(avi.id, this.editedReviewContent)
+        .subscribe({
+          next: (updatedComment) => {
+            // Mise à jour locale du commentaire
+            avi.content = this.editedReviewContent;
+            this.editingReviewId = null;
+            this.isSaving = false;
+            this.saveSuccess = true;
+            
+            // Cache le message de succès après 3 secondes
+            setTimeout(() => this.saveSuccess = false, 3000);
+          },
+          error: (error) => {
+            console.error('Failed to update comment:', error);
+            this.isSaving = false;
+            this.saveError = error.error?.message || "Échec de la mise à jour du commentaire";
+          }
+        });
+    }
+    
+    // Méthode pour annuler l'édition
+    cancelEdit() {
+      this.editingReviewId = null;
+      this.editedReviewContent = '';
+      this.saveError = null;
+    }
+
+    isAddingReview = false;
+    newReviewContent = '';
+    currentUserPrenom: string = '';
+currentUserNom: string = '';
+currentUserProfilePicture: string = '';
+
+fetchOrganizerData() {
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  const id = user.Id;
+
+  if (id) {
+    this.authService.getOrganizerById(id).subscribe(
+      (response) => {
+        this.currentUserPrenom = response.organizer?.prenom || '';
+        this.currentUserNom = response.organizer?.nom || '';
+        this.currentUserProfilePicture = response.organizer?.pdProfile || 'assets/default-avatar.png';
+      },
+      (error) => {
+        console.error('Erreur lors de la récupération des données:', error);
+      }
+    );
+  } else {
+    console.error('Utilisateur non trouvé dans le localStorage');
+  }
+}
+
+startAddingReview() {
+  this.isAddingReview = true;
+  this.newReviewContent = '';
+}
+
+cancelAddingReview() {
+  this.isAddingReview = false;
+  this.newReviewContent = '';
+}
+
+saveNewReview() {
+  if (!this.newReviewContent.trim()) {
+    this.saveError = "Le commentaire ne peut pas être vide";
+    return;
+  }
+
+  this.isSaving = true;
+  
+  this.commentService.createComment(
+    this.newReviewContent,
+    this.id, 
+    this.presId 
+  ).subscribe({
+    next: (newComment) => {
+      this.avis.unshift({
+        ...newComment,
+        Organisateur: {
+          id: this.id,
+          prenom: this.currentUserPrenom,
+          nom: this.currentUserNom,
+          pdProfile: this.currentUserProfilePicture
+        }
+      });
+      
+      this.isSaving = false;
+      this.isAddingReview = false;
+      this.newReviewContent = '';
+    },
+    error: (error) => {
+      console.error('Failed to create comment:', error);
+      this.isSaving = false;
+      this.saveError = error.error?.error || "Échec de la création du commentaire";
+    }
+  });
+}
+
 }

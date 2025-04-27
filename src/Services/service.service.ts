@@ -19,6 +19,10 @@ export class ServiceService {
   private apiUrl9 = 'http://localhost:8000/service/approovedService/'; 
   private apiUrl10 = 'http://localhost:8000/service/deleteService/'; 
   private apiUrl11 = 'http://localhost:8000/service/getServices'; 
+  private apiUrl12 = 'http://localhost:8000/service/canceledService/';
+  private apiUrl13 = 'http://localhost:8000/service/disableService/'; 
+  private apiUrl14 = 'http://localhost:8000/service/activateService/'; 
+
 
   constructor(private http: HttpClient) {}
 
@@ -113,5 +117,14 @@ getServices(params: any): Observable<any> {
 getServicesByType(type: string): Observable<any> {
   const params = { type: type };
   return this.http.get(`${this.apiUrl}`, { params });
+}
+cancelService(serviceId: string): Observable<any> {
+  return this.http.put(`${this.apiUrl12}${serviceId}`, {});
+}
+desabelService(id: string): Observable<any> {
+  return this.http.put(`${this.apiUrl13}${id}`, {});
+}
+activateService(serviceId: string): Observable<any> {
+  return this.http.put(`${this.apiUrl14}${serviceId}`, {});
 }
 }

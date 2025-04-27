@@ -3,6 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ReservationService } from '../../../Services/reservation.service'; // adapte le chemin si nécessaire
 import { Observable } from 'rxjs';
+import { faClipboardList } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 type ReservationStatus = 'PENDING' | 'CONFIRMED' | 'CANCELED';
 
@@ -39,11 +41,13 @@ interface Reservation {
 @Component({
   selector: 'app-reservation-pr',
   standalone: true,
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule,FontAwesomeModule],
   templateUrl: './reservation-pr.component.html',
   styleUrl: './reservation-pr.component.css'
 })
 export class ReservationPrComponent implements OnInit {
+  faClipboardList = faClipboardList;
+
   reservations: Reservation[] = [];
   searchTerm: string = '';
   statusFilter: string = 'all';
