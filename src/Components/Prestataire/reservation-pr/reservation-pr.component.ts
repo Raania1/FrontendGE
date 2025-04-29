@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ReservationService } from '../../../Services/reservation.service'; // adapte le chemin si nécessaire
+import { ReservationService } from '../../../Services/reservation.service';
 import { Observable } from 'rxjs';
 import { faClipboardList } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -36,6 +36,8 @@ interface Reservation {
   demande?: string;
   dateDebut: string; 
   Status: ReservationStatus;
+  createdAt: string; 
+  prix: String
 }
 
 @Component({
@@ -64,8 +66,9 @@ export class ReservationPrComponent implements OnInit {
   fetchReservations(): void {
     this.reservation.getAll().subscribe({
       next: (response) => {
-        this.reservations = response.reservations;
-      },
+        this.reservations = response.reservations.sort((a: any, b:any) => 
+           new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );      },
       error: (err) => {
         console.error('Erreur lors du chargement des réservations :', err);
       }
@@ -169,6 +172,12 @@ openConfirmDialog(reservation: Reservation): void {
   this.errorMessage = ''; 
   this.successMessage = '';
 }
+isDetailsDialogOpen: boolean = false;
+openDetailsDialog(reservation: Reservation): void {
+  this.selectedReservation = reservation;
+  this.isDetailsDialogOpen = true;
+}
+
 confirmReservation(): void {
   if (!this.selectedReservation) return;
 

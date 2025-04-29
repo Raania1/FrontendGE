@@ -114,7 +114,6 @@ async fetchservices() {
     const response = await this.service.getAllPres().toPromise();
     this.services = response.services || [];
     
-    // Crée un tableau de promesses
     const prestatairePromises = this.services.map(async (service:any) => {
       if (service.Prestataireid) {
         try {
@@ -129,7 +128,6 @@ async fetchservices() {
       return Promise.resolve();
     });
     
-    // Attend que tous les prestataires soient chargés
     await Promise.all(prestatairePromises);
     this.filterServices();
     
@@ -138,13 +136,11 @@ async fetchservices() {
   }
 }
 
-// Modifiez la méthode filterServices
 filterServices(): void {
   this.filteredServices = this.services.filter((service:any) => {
     const matchesSearch = service.nom.toLowerCase().includes(this.searchTerm.toLowerCase()) || 
                         service.description.toLowerCase().includes(this.searchTerm.toLowerCase());
     
-    // Filtrage par onglet
     let matchesTab = true;
     switch (this.activeTab) {
       case 'PENDING':
@@ -180,7 +176,6 @@ closeModal(): void {
      this.showModal = false;
    }
  
-  // Dans la classe ServicesAdComponent
 isApproveDialogOpen = false;
 serviceToApprove: any = null;
 approveService(service: any): void {

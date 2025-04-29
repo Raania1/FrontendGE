@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter  } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ViewChild, ElementRef, HostListener  } from '@angular/core';
 import { SidebarPRComponent } from "../sidebar-pr/sidebar-pr.component";
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faBell, faUser,faCheck, faBriefcase, faLaptop, faTools, faUserTie, faEnvelope, faMapMarkerAlt, faPhone, faInfoCircle, faChartBar } from '@fortawesome/free-solid-svg-icons';
@@ -95,7 +95,8 @@ export class ProfilePrComponent {
   organisateurs: any = {};
   reservationCount: number=0;
   ngOnInit(): void {
-    this.fetchPresData();  
+    this.fetchPresData(); 
+    this.fetchServicePhotos() 
   }
   fetchPresData() {
     const user = JSON.parse(localStorage.getItem('user') || '{}');  
@@ -114,7 +115,6 @@ export class ProfilePrComponent {
           console.log('Prestataire:', this.prestataire);
           console.log('Avis:', this.avis);
           
-          // Récupérer les informations des organisateurs pour chaque commentaire
           this.fetchOrganisateursForComments();
         },
         (error) => {
@@ -214,4 +214,53 @@ deleteComment(): void {
     formatReviewCount1(count: number): string {
       return count > 999 ? `${(count / 1000).toFixed(1)}k` : count.toString();
     }
+    fetchServicePhotos() {
+      const user = JSON.parse(localStorage.getItem('user') || '{}');  
+    const id = user.Id; 
+      if (id) {
+        this.prestataireService.getServicePhotosByPrestataire(id).subscribe(
+          (response) => {
+            if (response.status === 200) {
+              this.items = response.photos.map((url, index) => ({ id: index + 1, url }));
+              this.totalPhotos = response.photos.length;
+              console.log(this.items)
+            }
+          },
+          (error) => {
+            console.error('Erreur lors de la récupération des photos:', error);
+          }
+        );
+      } else {
+        console.error('ID du prestataire introuvable');
+      }
+    }
+    items: { id: number, url: string }[] = []; 
+    totalPhotos: number | null = null;
+    isOpen = false;
+    selectedItem: any = null;
+
+    @ViewChild('carousel') carouselRef!: ElementRef;
+    
+    openModal(item: any) {
+      this.selectedItem = item;
+      this.isOpen = true;
+      document.body.classList.add('modal-open');
+      document.documentElement.classList.add('modal-open');
+    }
+    closeModal() {
+      this.isOpen = false;
+      document.body.classList.remove('modal-open');
+      document.documentElement.classList.remove('modal-open');
+    }
+    selectItem(item: any) {
+      this.selectedItem = item;
+    }
+      @HostListener('document:keydown.escape', ['$event'])
+        handleEscape(event: KeyboardEvent) {
+          if (this.isOpen) {
+            this.closeModal();
+            event.preventDefault();
+          }
+        }
+
 }

@@ -3,7 +3,7 @@ import { NavbarORComponent } from "../navbar-or/navbar-or.component";
 import { FormGroup, FormBuilder, Validators, ReactiveFormsModule, ValidatorFn, AbstractControl, ValidationErrors, FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { EventService } from '../../../Services/event.service';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 interface Event {
   id: string;
@@ -27,7 +27,7 @@ interface Service {
 @Component({
   selector: 'app-creat-event',
   standalone: true,
-  imports: [NavbarORComponent, ReactiveFormsModule, CommonModule, FormsModule],
+  imports: [NavbarORComponent, ReactiveFormsModule, CommonModule, FormsModule,RouterLink],
   templateUrl: './creat-event.component.html',
   styleUrl: './creat-event.component.css'
 })

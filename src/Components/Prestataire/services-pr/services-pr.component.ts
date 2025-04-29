@@ -141,32 +141,32 @@ export class ServicesPrComponent {
   editService(id: string) {
     this.router.navigate(['/prestataire/EditService', id]);
   }
+  isDeleteDialogOpen = false;
+  serviceToDelete: any = null;
+  openDeleteDialog(service: any): void {
+    this.serviceToDelete = service;
+    this.isDeleteDialogOpen = true;
+  }
 
-  confirmDelete(id: string) {
-    if(confirm('Voulez-vous vraiment supprimer ce service ? Cette action est irréversible.')) {
-      this.isLoading = true;
-      
-      this.service.deleteService(id).subscribe({
-        next: () => {
-          this.isLoading = false;
-          this.successMessage = 'Service supprimé avec succès';
-          this.fetchPresData()
-          setTimeout(() => {
-            this.router.navigate(['/services']);
-            this.successMessage = '';
-          }, 1500);
-        },
-        error: (err) => {
-          this.isLoading = false;
-          this.errorMessage = 'Erreur lors de la suppression du service';
-          console.error('Erreur:', err);
-          
-          setTimeout(() => {
-            this.errorMessage = '';
-          }, 5000);
-        }
-      });
-    }
+
+
+  confirmDelete(): void {
+    if (!this.serviceToDelete) return;
+  
+    const id = this.serviceToDelete.id;
+    this.service.deleteService(id).subscribe({
+      next: (response) => {
+        console.log('Service supprimé:', response);
+        this.services = this.services.filter((service: any) => service.id !== id);
+        this.fetchPresData()
+        this.isDeleteDialogOpen = false;
+        this.serviceToDelete = null;
+      },
+      error: (err) => {
+        console.error('Erreur lors de la suppression du service:', err);
+        this.isDeleteDialogOpen = false;
+      }
+    });
   }
 
   isDisableDialogOpen = false;
@@ -224,3 +224,4 @@ export class ServicesPrComponent {
   }
 
 }
+

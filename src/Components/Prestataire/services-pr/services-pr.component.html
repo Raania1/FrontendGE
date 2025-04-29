@@ -152,8 +152,8 @@
               
                 <!-- Bouton Supprimer (visible seulement si le service est CANCELED) -->
                 <button 
-                  *ngIf="service.Status === 'CANCELED'"
-                  (click)="confirmDelete(service.id)" 
+                  *ngIf="service.Status === 'CANCELED' || service.Status === 'PENDING'"
+                  (click)="openDeleteDialog(service)" 
                   [disabled]="isLoading"
                   class="p-2 text-red-500 hover:text-red-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
                   <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -207,29 +207,69 @@
   </div>
 </div>
 
+<!-- supprimer Model -->
+<div *ngIf="isDeleteDialogOpen" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center p-4 z-50">
+  <div class="bg-white rounded-lg shadow-xl max-w-md w-full">
+    <div class="p-6">
+      <div class="flex justify-center items-center ">
+        <img class="w-10 h-10" src="https://www.citypng.com/public/uploads/preview/download-triangle-exclamation-mark-icon-png-11640519866fjlwawfcae.png" />
+      </div><br>
+            <h3 class="text-lg text-center font-bold text-red-600">Confirmer la Suppression</h3>
+      <p class="text-gray-600 mt-2">
+        Voulez-vous vraiment <strong>supprimer ce service</strong> ? 
+      </p>
+
+      <div *ngIf="serviceToDelete" class="mt-4 p-4 bg-green-50 border border-gray-300 rounded-md">
+        <p class="font-medium text-gray-900">{{ serviceToDelete.nom }}</p>
+        
+      </div>
+    </div>
+
+    <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse rounded-lg sm:px-6">
+      <button
+        type="button"
+        class="w-full inline-flex justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-red-700 sm:ml-3 sm:w-auto sm:text-sm"
+        (click)="confirmDelete()"
+      >
+      <span>Supprimer</span>
+      </button>
+      <button
+        type="button"
+        class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+        (click)="isDeleteDialogOpen = false"
+      >
+        Annuler
+      </button>
+    </div>
+  </div>
+</div>
+
+
 <!-- Désactiver Model -->
 <div *ngIf="isDisableDialogOpen" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center p-4 z-50">
   <div class="bg-white rounded-lg shadow-xl max-w-md w-full">
     <div class="p-6">
-      <h3 class="text-lg font-bold text-yellow-600">Confirmer la Désactivation</h3>
+      <div class="flex justify-center items-center ">
+        <img class="w-10 h-10" src="https://media.istockphoto.com/vectors/yellow-orange-triangle-warning-alert-sign-vector-illustration-caution-vector-id981169248?k=6&m=981169248&s=612x612&w=0&h=LwQqjZfuGXWD1b_qY7ZALj5ZRdZsx_oFOxJW6VtPRSc=" />
+      </div><br>
+            <h3 class="text-lg text-center font-bold text-yellow-600">Confirmer la Désactivation</h3>
       <p class="text-gray-600 mt-2">
         Voulez-vous vraiment <strong>Désactiver ce service</strong> ? Vous pouvez l'activer ultérieurement.
       </p>
 
       <div *ngIf="serviceToDisabel" class="mt-4 p-4 bg-green-50 border border-gray-300 rounded-md">
         <p class="font-medium text-gray-900">{{ serviceToDisabel.nom }}</p>
-        <p class="text-sm text-gray-600">{{ serviceToDisabel.description }}</p>
         
       </div>
     </div>
 
-    <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+    <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse rounded-lg sm:px-6">
       <button
         type="button"
         class="w-full inline-flex justify-center rounded-md border border-transparent bg-yellow-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-yellow-700 sm:ml-3 sm:w-auto sm:text-sm"
-        (click)="  DesabelService()"
+        (click)="DesabelService()"
       >
-      <span>Confirmer la désactivation</span>
+      <span>Désactiver</span>
       </button>
       <button
         type="button"
@@ -245,31 +285,34 @@
 <!-- Réactivé Model -->
 <div *ngIf="isActiveDialogOpen" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center p-4 z-50">
   <div class="bg-white rounded-lg shadow-xl max-w-md w-full">
+    
     <div class="p-6">
-      <h3 class="text-lg font-bold text-green-600">Confirmer la Désactivation</h3>
+      <div class="flex justify-center items-center ">
+        <img class="w-10 h-10" src="https://images.ua.prom.st/1321312659_w640_h2048_galochka_na_100.png?PIMAGE_ID=1321312659" />
+      </div>
+      <h3 class="text-lg font-bold text-center text-green-600">Confirmer l'Activation</h3>
       <p class="text-gray-600 mt-2">
         Voulez-vous vraiment <strong>Réactivé ce service</strong> ? Vous pouvez le désactiver ultérieurement.
       </p>
 
-      <div *ngIf="serviceToDisabel" class="mt-4 p-4 bg-green-50 border border-gray-300 rounded-md">
-        <p class="font-medium text-gray-900">{{ serviceToDisabel.nom }}</p>
-        <p class="text-sm text-gray-600">{{ serviceToDisabel.description }}</p>
+      <div *ngIf="serviceToActivate" class="mt-4 p-4 bg-green-50 border border-gray-300 rounded-md">
+        <p class="font-medium text-gray-900">{{ serviceToActivate.nom }}</p>
         
       </div>
     </div>
 
-    <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+    <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse rounded-lg sm:px-6">
       <button
         type="button"
         class="w-full inline-flex justify-center rounded-md border border-transparent bg-green-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-green-700 sm:ml-3 sm:w-auto sm:text-sm"
         (click)="  ActivateService()"
       >
-      <span>Confirmer l'activation</span>
+      <span>Activer</span>
       </button>
       <button
         type="button"
         class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
-        (click)="isDisableDialogOpen = false"
+        (click)="isActiveDialogOpen = false"
       >
         Annuler
       </button>

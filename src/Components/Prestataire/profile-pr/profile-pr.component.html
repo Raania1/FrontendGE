@@ -379,21 +379,79 @@
           </div>
   
           <!-- Gallery Tab -->
-          <div *ngIf="activeTab === 'galerie'">  
+          <!-- Gallery Tab -->
+          <div *ngIf="activeTab === 'galerie'">
             <div class="mb-8">
-              <h3 class="text-lg font-semibold text-gray-900 mb-4">Photos</h3>
+              <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center justify-between">
+                <span>Photos</span>
+                <span class="bg-amber-500 text-white px-3 py-1 rounded-full text-sm font-medium">
+                  {{ totalPhotos }} Photos
+                </span>
+              </h3>
+                        
+              <!-- Image grid -->
               <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                <!-- <div *ngFor="let photo of prestataire.galerie" class="relative group aspect-square overflow-hidden rounded-lg">
-                  <img [src]="photo" alt="Photo" class="w-full h-full object-cover transition-transform group-hover:scale-105">
-                  <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                    <button class="bg-white/90 p-2 rounded-full">
-                      <i class="fas fa-heart text-amber-600"></i>
-                    </button>
+                <div *ngFor="let item of items" 
+                     (click)="openModal(item)"
+                     class="cursor-zoom-in group">
+                  <img [src]="item.url" 
+                       alt="Galerie photo" 
+                       class="w-full h-48 object-cover rounded-lg shadow-md transition-transform duration-300 group-hover:scale-105">
+                </div>
+              </div>
+          
+              <!-- Modal -->
+              <div *ngIf="isOpen" 
+                   class="fixed inset-0 z-50 overflow-y-auto"
+                   [class.backdrop-blur-sm]="isOpen">
+                <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+                  <!-- Background overlay -->
+                  <div class="fixed inset-0 transition-opacity" 
+                       (click)="closeModal()"
+                       aria-hidden="true">
+                    <div class="absolute inset-0 "></div>
                   </div>
-                </div> -->
+          
+                  <!-- Modal content -->
+                  <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-4xl sm:w-full"
+                       (click)="$event.stopPropagation()">
+                    <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                      <div class="sm:flex sm:items-start">
+                        <div class="mt-3 text-center sm:mt-0 sm:text-left w-full">
+                          <!-- Close button -->
+                          <button (click)="closeModal()"
+                                  class="absolute top-4 right-4 bg-white rounded-full p-2 shadow-md hover:bg-gray-100 focus:outline-none">
+                            <svg class="h-6 w-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                          </button>
+          
+                          <!-- Main image -->
+                          <div class="flex justify-center items-center h-96">
+                            <img [src]="selectedItem?.url" 
+                                 alt="Image sélectionnée"
+                                 class="max-h-full max-w-full object-contain">
+                          </div>
+          
+                          <!-- Thumbnails -->
+                          <div class="mt-4 flex overflow-x-auto py-2 space-x-2">
+                            <div *ngFor="let item of items" 
+                                 (click)="selectItem(item)"
+                                 class="flex-shrink-0 cursor-pointer">
+                              <img [src]="item.url" 
+                                   [class.border-2]="item.id === selectedItem?.id"
+                                   [class.border-amber-500]="item.id === selectedItem?.id"
+                                   class="h-20 w-20 object-cover rounded-md">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>        
+          </div>      
         </div>
       </div>
     </div>

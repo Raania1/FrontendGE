@@ -1,10 +1,13 @@
 <app-navbar-or></app-navbar-or>
-<div class="relative bg-gray-900">
-    <div class="absolute inset-0 overflow-hidden">
-      <img src="https://media.istockphoto.com/id/1443275721/fr/photo/cam%C3%A9ra-de-main-et-ordinateur-de-photographe-sur-le-bureau.jpg?s=612x612&w=0&k=20&c=EcVnZh-44m4DHer-MwT2wvYJ4cHIS2mgt3mRT6nddx4=" 
-           alt="Services professionnels" 
-           class="w-full h-full object-cover opacity-50">
+
+
+<div class="relative bg-white overflow-hidden min-h-[500px]">
+    <div 
+      class="absolute inset-0 bg-cover bg-center transition-opacity duration-1000 ease-in-out"
+      [style.background-image]="'url(' + currentImage + ')'">
+      <div class="absolute inset-0 bg-black bg-opacity-40"></div>
     </div>
+    
     <div class="relative max-w-7xl mx-auto py-24 px-4 sm:py-32 sm:px-6 lg:px-8">
       <h1 class="text-4xl font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl">
         Découvrez nos services exceptionnels
@@ -13,7 +16,8 @@
         Des Prestataires talentueux pour immortaliser chaque instant de votre événement.
     </p>
     </div>
-  </div> 
+</div>
+
 <div *ngIf="loading" class="loading-indicator">
   Chargement en cours...
 </div>
@@ -302,7 +306,7 @@
                         </span>
                       </div>
                   <div class="p-4">
-                    <h3 [routerLink]="['/seviceDetail', service.id]" class="text-lg font-semibold font-serif line-clamp-1 mb-1 "  style="text-transform: capitalize;">{{service.nom}}</h3>
+                    <h3 [routerLink]="['/seviceDetail', service.id]" class="text-lg font-semibold font-serif line-clamp-1 mb-1 cursor-pointer"  style="text-transform: capitalize;">{{service.nom}}</h3>
                     <p class="text-sm text-gray-500 line-clamp-2 mb-3">{{service.description}}</p>
                     <div class="flex items-center justify-between">
                       <div>
@@ -312,7 +316,7 @@
                             <span class="text-sm text-gray-500 line-through">{{getServicePrice(service)}}</span>
                           </div>
                         } @else {
-                          <span class="text-lg  font-bold text-amber-600">{{getServicePrice(service)}}</span>
+                          <span class="text-lg font font-bold text-amber-600">{{getServicePrice(service)}}</span>
                         }
                       </div>
                     </div>
@@ -326,17 +330,20 @@
                     </a>
                   </div> -->
                   <div class="p-4 pt-0 flex justify-between items-center relative menu-container">
-
-                    <div class="flex items-center gap-2">
-                      <div class="flex items-center bg-green-50 text-green-700 px-3 py-1 rounded-full shadow-sm text-sm font-medium">
-                        <svg xmlns="http://www.w3.org/2000/svg" 
-                             class="h-4 w-4 mr-1 text-green-500" fill="none" 
-                             viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                          <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                        </svg>
-                        Réservé par 5 clients
+                    @if(service.reservationCount != 0){
+                      <div  class="flex items-center gap-2">
+                        <div class="flex items-center bg-green-50 text-green-700 px-3 py-1 rounded-full shadow-sm text-sm font-medium">
+                          <svg xmlns="http://www.w3.org/2000/svg" 
+                               class="h-4 w-4 mr-1 text-green-500" fill="none" 
+                               viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                          </svg>
+                          Réservé par {{service.reservationCount}} clients 
+                        </div>
                       </div>
-                    </div>
+                    }
+                    @else{<div  class="flex items-center gap-2"></div>}
+                    
                   
                     <div class="flex items-center gap-2">
                         <abbr title="Réserver">

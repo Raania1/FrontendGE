@@ -236,6 +236,7 @@ deleteComment(): void {
             if (response.status === 200) {
               this.items = response.photos.map((url, index) => ({ id: index + 1, url }));
               this.totalPhotos = response.photos.length;
+              console.log(this.items)
             }
           },
           (error) => {

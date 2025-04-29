@@ -215,15 +215,29 @@
                           {{ formatPrice(service.prix) }}
                         </p>
                       </ng-template>
+                       
                     </div>
               
                     <!-- Bouton de suppression  (click)="removeServiceFromEvent(event.id, service.id)" -->
                     <button 
                     (click)="removeService(event.id, service.id, $event)"
-                      class="absolute top-3 right-3 p-2 text-red-400 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100"
+                      class="absolute bottom-3 right-3 p-2 text-red-400 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100"
                       title="Supprimer ce service">
                       <i class="fas fa-trash-alt"></i>
                     </button>
+                    <abbr title="Réserver">
+                      <div [routerLink]="['/reservation', service.id]" class="bg-gray-100 hover:bg-amber-600/5 rounded-full p-2 transition duration-200 cursor-pointer">
+                        <svg xmlns="http://www.w3.org/2000/svg" 
+                             width="20" height="20" viewBox="0 0 24 24" 
+                             fill="none" stroke="currentColor" stroke-width="2" 
+                             stroke-linecap="round" stroke-linejoin="round" 
+                             class="text-gray-600 hover:text-primary transition duration-200">
+                          <circle cx="8" cy="21" r="1"/>
+                          <circle cx="19" cy="21" r="1"/>
+                          <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/>
+                        </svg>
+                      </div>
+                    </abbr>
                   </div>
                 </div>
                 <ng-template #noServices>

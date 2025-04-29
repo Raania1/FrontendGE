@@ -115,7 +115,7 @@ export class ReservationFormComponent {
         serviceid: this.serviceId,
         organisateurid: organisateurid,
         dateDebut: this.date,
-        prix: this.prix,
+        prix : this.prix,
         demande: (document.getElementById('comments') as HTMLTextAreaElement)?.value || ''
       };
     
