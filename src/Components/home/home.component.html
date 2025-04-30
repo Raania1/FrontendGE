@@ -58,62 +58,29 @@
       </div>
     </div>
   </div><br/>
-  <div class="p-8 bg-gradient-to-r from-custom-gray to-white rounded-lg shadow-xl hover:shadow-2xl transition-shadow duration-300"> 
-    <div class="flex justify-between items-center mb-8">
-      <h2 class="text-3xl font-extralight text-custom-black">Services populaires</h2>
-      <a href="#" class="text-custom-orangeBold hover:text-custom-orangethrow font-semibold transition-colors duration-300 flex items-center space-x-2">
-        <span>Réserver</span>
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-        </svg>
-      </a>
-    </div>
-  
-    <!-- Carrousel -->
-    <div class="relative">
-      <!-- Bouton précédent -->
-      <button class="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white p-3 rounded-full shadow-md hover:shadow-lg transition-shadow duration-300 z-10">
-        <svg class="w-6 h-6 text-custom-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-        </svg>
-      </button>
-  
-      <!-- Contenu du carrousel -->
-      <div class="flex overflow-x-auto space-x-6 scrollbar-hide">
-        <div *ngFor="let category of categories" class="min-w-[240px] bg-white rounded-lg p-6 text-center hover:bg-custom-gray transition-all duration-300 transform hover:-translate-y-2">
-          <img [src]="category.image" [alt]="category.name" class="h-40 w-40 mx-auto mb-4 rounded-full object-cover shadow-md">
-          <p class="font-serif text-custom-black text-lg uppercase">{{ category.name }}</p>
-        </div>
-      </div>
-  
-      <!-- Bouton suivant -->
-      <button class="absolute right-0 top-1/2 transform -translate-y-1/2 bg-white p-3 rounded-full shadow-md hover:shadow-lg transition-shadow duration-300 z-10">
-        <svg class="w-6 h-6 text-custom-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-        </svg>
-      </button>
-    </div>
-  </div><br/>
   <div class="bg-gray-100/50 p-8 rounded-lg shadow-lg text-center">
     <h2 class="text-3xl font-serif text-custom-black mb-6">Ce que nos clients disent</h2>
     <p class="text-gray-700 mb-8 max-w-2xl mx-auto text-lg">Des histoires de réussite et des expériences mémorables</p>
     
-    <div class="relative max-w-2xl mx-auto overflow-hidden">
+    <div *ngIf="testimonials.length > 0" class="relative max-w-2xl mx-auto overflow-hidden">
         <div class="flex transition-transform duration-500 ease-in-out" [style.transform]="'translateX(-' + (currentIndex * 100) + '%)'">
             <div *ngFor="let testimonial of testimonials" class="min-w-full bg-white p-6 rounded-lg shadow-md flex flex-col items-center">
-                <img [src]="testimonial.photo" alt="Photo de {{ testimonial.name }}" class="w-16 h-16 rounded-full mb-4 object-cover">
-                <p class="text-custom-black italic mb-4 text-center">"{{ testimonial.text }}"</p>
+            <!-- <img [src]="testimonial.photo" alt="Photo de {{ testimonial.name }}" class="w-16 h-16 rounded-full mb-4 object-cover"> -->
                 <p class="text-custom-orangeBold font-semibold">{{ testimonial.name }}</p>
-                <p class="text-custom-brown">{{ testimonial.event }}</p>
+                <p class="text-custom-black italic mb-4 text-center">"{{ testimonial.text }}"</p>
             </div>
         </div>
     </div>
-    
-    <div class="flex justify-center mt-4">
+
+    <div *ngIf="testimonials.length > 0" class="flex justify-center mt-4">
         <span *ngFor="let testimonial of testimonials; let i = index" 
               class="w-3 h-3 mx-1 rounded-full cursor-pointer"
               [ngClass]="{'bg-custom-orangeBold': currentIndex === i, 'bg-gray-300': currentIndex !== i}"
               (click)="goToSlide(i)"></span>
+    </div>
+
+    <div *ngIf="testimonials.length === 0" class="text-gray-500">
+        Aucun témoignage public pour le moment.
     </div>
 </div>
 <app-footer></app-footer>

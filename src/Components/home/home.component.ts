@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FooterComponent } from "../footer/footer.component";
 import { NavbarComponent } from "../navbar/navbar.component";
+import { MessageService } from '../../Services/message.service';
 
 
 @Component({
@@ -32,18 +33,68 @@ export class HomeComponent {
     { name: 'Location des matériels', image: 'https://th.bing.com/th/id/R.fea15d913ea6a1f354db11761f006e29?rik=QdvQ10hw190npQ&pid=ImgRaw&r=0' },
     { name: 'Conciergerie ', image: 'https://th.bing.com/th/id/R.7298667305022b5a525dbcc06695d782?rik=kKJDfr%2fx5ex98g&pid=ImgRaw&r=0&sres=1&sresct=1' },
   ];
+
+  // currentIndex = 0;
+  // testimonials = [
+  //   { text: "J'ai trouvée le parfait traiteur pour mon marriage grace a FLESK EVENT. Le processus de réservation était simple et le service était impeccable.", name: "Moulezem Achref", event: "Evennement Mariage", photo: "https://th.bing.com/th/id/OIP.tjUOUBGnthmW762mbRAFdQHaE8?rs=1&pid=ImgDetMain" },
+  //   { text: "En tant que Photographe, cette plateforme m'a permis de dévelloper ma clientèle et de me faire connaitre. Les outils de gestion sont vraiment pratiques.", name: "Boujneh Rania", event: "Photographe professionnelle", photo: "https://www.missnumerique.com/blog/wp-content/uploads/reussir-sa-photo-de-profil-michael-dam.jpg" },
+  //   { text: "Organisation d'un séminaire d'entreprise simplifiée grace a FLESK EVENT. J'ai pu trouver une salle et tous le sprestataires en un seul endroit.", name: "Hamdi Wahyd", event: "Séminaire d'entreprise", photo: "https://androidayuda.com/wp-content/uploads/2023/01/foto-perfil.jpg" }
+  // ];
   
+  // goToSlide(index: number) {
+  //   this.currentIndex = index;
+  // }
+  
+  testimonials: any[] = [];
   currentIndex = 0;
-  testimonials = [
-    { text: "J'ai trouvée le parfait traiteur pour mon marriage grace a FLESK EVENT. Le processus de réservation était simple et le service était impeccable.", name: "Moulezem Achref", event: "Evennement Mariage", photo: "https://th.bing.com/th/id/OIP.tjUOUBGnthmW762mbRAFdQHaE8?rs=1&pid=ImgDetMain" },
-    { text: "En tant que Photographe, cette plateforme m'a permis de dévelloper ma clientèle et de me faire connaitre. Les outils de gestion sont vraiment pratiques.", name: "Boujneh Rania", event: "Photographe professionnelle", photo: "https://www.missnumerique.com/blog/wp-content/uploads/reussir-sa-photo-de-profil-michael-dam.jpg" },
-    { text: "Organisation d'un séminaire d'entreprise simplifiée grace a FLESK EVENT. J'ai pu trouver une salle et tous le sprestataires en un seul endroit.", name: "Hamdi Wahyd", event: "Séminaire d'entreprise", photo: "https://androidayuda.com/wp-content/uploads/2023/01/foto-perfil.jpg" }
-  ];
-  
+  interval: any;
+
+  constructor(
+    private messageService: MessageService
+  ) { }
+
+  ngOnInit(): void {
+    this.loadTestimonials();
+    this.startAutoRotation();
+  }
+
+  loadTestimonials() {
+    this.messageService.getPublicMessages().subscribe({
+      next: (messages) => {
+        this.testimonials = messages.map(msg => ({
+          name: msg.NomComplet,
+          text: msg.Message,
+          // Vous pouvez ajouter d'autres propriétés si nécessaire
+        }));
+      },
+      error: (err) => {
+        console.error('Erreur lors du chargement des témoignages', err);
+      }
+    });
+  }
+
+  startAutoRotation() {
+    this.interval = setInterval(() => {
+      this.nextSlide();
+    }, 5000); // Change toutes les 5 secondes
+  }
+
+  nextSlide() {
+    this.currentIndex = (this.currentIndex + 1) % this.testimonials.length;
+  }
+
   goToSlide(index: number) {
     this.currentIndex = index;
+    // Réinitialiser le timer lors d'un clic manuel
+    clearInterval(this.interval);
+    this.startAutoRotation();
   }
-  
+
+  ngOnDestroy() {
+    if (this.interval) {
+      clearInterval(this.interval);
+    }
+  }
   
 
   
