@@ -135,7 +135,13 @@ async fetchservices() {
     console.error('Erreur services:', error);
   }
 }
+get pendingCount(): number {
+  return this.services.filter((s: any)=> s.Status === 'PENDING').length;
+}
 
+get publicCount(): number {
+  return this.services.filter((s: any) => s.Status === 'CONFIRMED').length;
+}
 filterServices(): void {
   this.filteredServices = this.services.filter((service:any) => {
     const matchesSearch = service.nom.toLowerCase().includes(this.searchTerm.toLowerCase()) || 

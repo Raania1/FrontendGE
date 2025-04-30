@@ -82,6 +82,8 @@ export class MassagesComponent {
       this.replyMode = true;
     }
   }
+  
+  successMessage = '';
 
   sendReply(): void {
     if (!this.selectedMessage) return;
@@ -91,8 +93,11 @@ export class MassagesComponent {
     this.messagesService.replyToMessage(id, this.replySubject, this.replyContent).subscribe({
       next: () => {
         console.log('Réponse envoyée avec succès.');
-        alert('Email envoyé avec succès.');
-        this.replyMode = false;
+        this.successMessage = 'Email envoyé avec succès.';
+        setTimeout(() => {
+          this.successMessage = '';
+          this.replyMode = false;
+        }, 1500);
       },
       error: (err) => {
         console.error('Erreur lors de l’envoi de la réponse :', err);
@@ -105,33 +110,55 @@ export class MassagesComponent {
     this.replyMode = false;
   }
 
+  isActiveDialogOpen = false;
+  messageToActivate: any = null;
+  openActivateDialog(message: Message): void {
+    this.messageToActivate = message;
+    this.isActiveDialogOpen = true;
+  }
+
   markAsPublic(): void {
-    if (!this.selectedMessage) return;
+    if (!this.messageToActivate) return;
   
-    const id = this.selectedMessage.id;
+    const id = this.messageToActivate.id;
   
     this.messagesService.updateStatus(id).subscribe({
       next: (updatedMsg) => {
-        this.selectedMessage!.Status = updatedMsg.Status;
-        console.log('Statut mis à jour avec succès.');
+        const index = this.messages.findIndex(m => m.id === id);
+        if (index !== -1) {
+          this.messages[index].Status = updatedMsg.Status;
+        }
+  
+        this.messageToActivate = null;
+        this.isActiveDialogOpen = false;
+        console.log('Message publié avec succès.');
       },
       error: (err) => {
-        console.error('Erreur lors de la mise à jour du statut :', err);
+        console.error('Erreur lors de la publication du message :', err);
       }
     });
   }
   
+  isDeleteDialogOpen = false;
+  messageToDelete: any = null;
+  openDeleteDialog(message: Message): void {
+    this.messageToDelete = message;
+    this.isDeleteDialogOpen = true;
+  }
+  
+  
 
   deleteMessage(): void {
-    if (!this.selectedMessage) return;
+    if (!this.messageToDelete) return;
   
-    const id = this.selectedMessage.id;
+    const id = this.messageToDelete.id;
   
     this.messagesService.delete(id).subscribe({
       next: () => {
         this.messages = this.messages.filter(m => m.id !== id);
         this.selectedMessage = null;
-        this.replyMode = false;
+        this.messageToDelete = null;
+        this.isDeleteDialogOpen = false;
         console.log('Message supprimé avec succès.');
       },
       error: (err) => {
@@ -139,6 +166,7 @@ export class MassagesComponent {
       }
     });
   }
+  
   
 
   setFilter(filter: 'TOUS' | 'PUBLIC' | 'PRIVATE'): void {
