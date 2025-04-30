@@ -28,6 +28,7 @@ import { PresDetailsComponent } from '../Components/Organisateur/pres-details/pr
 import { ReservationFormComponent } from '../Components/Organisateur/reservation-form/reservation-form.component';
 import { ReservationPrComponent } from '../Components/Prestataire/reservation-pr/reservation-pr.component';
 import { ReservationOrComponent } from '../Components/Organisateur/reservation-or/reservation-or.component';
+import { MassagesComponent } from '../Components/Admin/massages/massages.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -80,6 +81,7 @@ export const routes: Routes = [
           { path: 'ListOr', component: ListOrganisateurComponent },
           { path: 'ListPr', component: ListPrestataireComponent },
           { path: 'serviceAd', component: ServicesAdComponent },
+          { path: 'message', component: MassagesComponent },
 
         ],
       }
