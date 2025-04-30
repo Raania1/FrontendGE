@@ -165,7 +165,7 @@ export class MassagesComponent {
         console.error('Erreur lors de la suppression du message :', err);
       }
     });
-  }
+  } 
   
   
 

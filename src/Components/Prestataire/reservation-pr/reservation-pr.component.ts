@@ -3,8 +3,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ReservationService } from '../../../Services/reservation.service';
 import { Observable } from 'rxjs';
-import { faClipboardList } from '@fortawesome/free-solid-svg-icons';
+import { faBell, faClipboardList } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { PrestataireService } from '../../../Services/prestataire.service';
 
 type ReservationStatus = 'PENDING' | 'CONFIRMED' | 'CANCELED';
 
@@ -49,6 +50,7 @@ interface Reservation {
 })
 export class ReservationPrComponent implements OnInit {
   faClipboardList = faClipboardList;
+  faBell = faBell;
 
   reservations: Reservation[] = [];
   searchTerm: string = '';
@@ -57,12 +59,34 @@ export class ReservationPrComponent implements OnInit {
   isDeleteDialogOpen: boolean = false;
   isConfirmDialogOpen: boolean = false
   isCancelDialogOpen: boolean = false
-  constructor(private reservation: ReservationService) {}
+  constructor(
+    private reservation: ReservationService,   
+    private prestataireService: PrestataireService,
+  ) {}
 
   ngOnInit(): void {
     this.fetchReservations();
+    this.fetchPresData();
   }
+  prestataire: any = {};
 
+  fetchPresData() {
+    const user = JSON.parse(localStorage.getItem('user') || '{}');  
+    const id = user.Id;  
+
+    if (id) {
+      this.prestataireService.getPrestataireById(id).subscribe(
+        (response) => {
+          this.prestataire = response.pres;  
+        },
+        (error) => {
+          console.error('Erreur lors de la récupération des données:', error);
+        }
+      );
+    } else {
+      console.error('Utilisateur non trouvé dans le localStorage');
+    }
+  }
   fetchReservations(): void {
     this.reservation.getAll().subscribe({
       next: (response) => {
@@ -135,7 +159,13 @@ export class ReservationPrComponent implements OnInit {
       }
     });
   }
- 
+  get pendingCount(): number {
+    return this.reservations.filter(m => m.Status === 'PENDING').length;
+  }
+
+  get publicCount(): number {
+    return this.reservations.filter(m => m.Status === 'CONFIRMED').length;
+  }
   openCancelDialog(reservation: Reservation): void {
     this.selectedReservation = reservation;
     this.isCancelDialogOpen = true; 
