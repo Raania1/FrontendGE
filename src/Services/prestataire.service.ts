@@ -14,6 +14,8 @@ export class PrestataireService {
   private apiUrlP ='http://localhost:8000/prestataire/approovedPrestataire/';
   private apiUrlPS ='http://localhost:8000/prestataire/';
 
+  private apiUrl2 ='http://localhost:8000/prestataire/changePass';
+
 
   constructor(private http: HttpClient) { }
   getPrestataireById(id: string): Observable<any> {
@@ -91,6 +93,10 @@ export class PrestataireService {
     if (ville) query += `&ville=${encodeURIComponent(ville)}`;
   
     return this.http.get<any>(`http://localhost:8000/prestataire/presP${query}`);
+  }
+
+  changePassword(id: string, data: any) {
+    return this.http.put<any>(`${this.apiUrl2}/${id}`, data);
   }
   
 }

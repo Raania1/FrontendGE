@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { NavbarORComponent } from '../navbar-or/navbar-or.component';
 import { CommonModule, DatePipe } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
   faInfoCircle,faCalendarAlt,faChartBar,faCog,faTrash 
 } from '@fortawesome/free-solid-svg-icons';
@@ -9,10 +9,11 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { OrganizerService } from '../../../Services/organizer.service';
 import { HttpClientModule } from '@angular/common/http';
 import { AuthService } from '../../../Services/auth.service';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-profile-or',
   standalone: true,
-  imports: [NavbarORComponent,CommonModule,FormsModule,FontAwesomeModule,HttpClientModule],
+  imports: [NavbarORComponent,ReactiveFormsModule,CommonModule,FormsModule,FontAwesomeModule,HttpClientModule],
   providers: [DatePipe],
   templateUrl: './profile-or.component.html',
   styleUrl: './profile-or.component.css'
@@ -30,10 +31,26 @@ export class ProfileOrComponent {
   formData = { ...this.organisateur };
   isEditing = false;
   activeTab = "infos";
-  constructor(private authService: OrganizerService,authServiceA: AuthService) {}
+  constructor(private authService: OrganizerService,
+    authServiceA: AuthService,     
+     private fb: FormBuilder,
+    private router: Router
+  ) {}
 
+    passwordForm!: FormGroup; 
+    submitted = false;
+    loading = false;
+    passwordSuccessMessage: string = '';
+    passwordErrorMessage: string = '';
   ngOnInit(): void {
     this.fetchOrganizerData();  
+    this.passwordForm = this.fb.group({
+          oldPassword: ['', Validators.required],
+          newPassword: ['', [Validators.required, Validators.minLength(8)]],
+          confirmPassword: ['', Validators.required]
+        }, {
+          validators: this.passwordMatchValidator
+        });
   }
   fetchOrganizerData() {
     const user = JSON.parse(localStorage.getItem('user') || '{}');  
@@ -105,18 +122,76 @@ export class ProfileOrComponent {
   newPassword: string = '';
   confirmPassword: string = '';
 
-  onPasswordUpdate() {
-    if (this.newPassword !== this.confirmPassword) {
-      alert('Les mots de passe ne correspondent pas.');
+  onSubmit() {
+    this.submitted = true;
+    this.passwordSuccessMessage = '';
+    this.passwordErrorMessage = '';
+  
+    if (this.passwordForm.invalid) {
       return;
     }
-    console.log('Mot de passe actuel :', this.currentPassword);
-    console.log('Nouveau mot de passe :', this.newPassword);
-  }
-  onDeleteAccount() {
-    if (confirm('Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible.')) {
-      console.log('Suppression du compte...');
+  
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    const id = user.Id;
+  
+    if (!id) {
+      this.passwordErrorMessage = 'Utilisateur non trouvé.';
+      return;
     }
+  
+    const { oldPassword, newPassword } = this.passwordForm.value;
+  
+    this.loading = true;
+    this.authService.changePassword(id, { oldPassword, newPassword }).subscribe(
+      (res) => {
+        this.passwordSuccessMessage = 'Mot de passe modifié avec succès.';
+        this.passwordForm.reset();
+        this.submitted = false;
+        this.loading = false;
+      },
+      (err) => {
+        this.passwordErrorMessage = err.error?.message || 'Erreur inconnue.';
+        this.loading = false;
+      }
+    );
+  }
+  
+  passwordMatchValidator(form: FormGroup) {
+    const newPassword = form.get('newPassword')?.value;
+    const confirmPassword = form.get('confirmPassword')?.value;
+    return newPassword === confirmPassword ? null : { mismatch: true };
+  }
+
+  deleteAccount() {
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    const id = user.Id;
+  
+    if (!id) {
+      this.passwordErrorMessage = 'Utilisateur non trouvé.';
+      this.isDeleteDialogOpen = false;
+      return;
+    }
+  
+    this.loading = true;
+    this.authService.deleteOrganizerById(id).subscribe(
+      (response) => {
+        this.loading = false;
+        this.isDeleteDialogOpen = false;
+        localStorage.removeItem('user');
+        this.router.navigate(['/']);
+      },
+      (error) => {
+        this.loading = false;
+        this.passwordErrorMessage = error.error?.message || 'Une erreur est survenue lors de la suppression de votre compte.';
+        console.error('Erreur lors de la suppression du compte:', error);
+      }
+    );
+  }
+  isDeleteDialogOpen : boolean = false
+  confirmDelete() {
+    this.isDeleteDialogOpen = true;
+    this.passwordSuccessMessage = '';
+    this.passwordErrorMessage = '';
   }
 
 }

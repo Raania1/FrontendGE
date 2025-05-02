@@ -7,6 +7,7 @@ import { ServiceService } from '../../../Services/service.service';
 import { PrestataireService } from '../../../Services/prestataire.service';
 import { ReservationService } from '../../../Services/reservation.service';
 import { RouterLink } from '@angular/router';
+import { PaiementService } from '../../../Services/paiement.service';
 
 interface Reservation {
   id: string;
@@ -37,7 +38,8 @@ export class ReservationOrComponent implements OnInit {
     private organizerService: OrganizerService,
     private serviceService: ServiceService,
     private prestataireService: PrestataireService,
-    private reservation : ReservationService
+    private reservation : ReservationService,
+    private paiementService: PaiementService
   ) {}
 
   ngOnInit(): void {
@@ -160,7 +162,22 @@ export class ReservationOrComponent implements OnInit {
   
 
   payerReservation(reservation: Reservation): void {
-    alert(`Paiement de ${reservation.prix} € pour ${reservation.Service?.nom} confirmé !`);
-    // Ici tu pourras plus tard intégrer un vrai système de paiement
+    if (!reservation || !reservation.id) return;
+  
+    this.paiementService.payerReservation(reservation.id).subscribe({
+      next: (res: any) => {
+        const link = res?.result?.link;
+        if (link) {
+          window.location.href = link; 
+        } else {
+          alert("Erreur : lien de paiement introuvable");
+        }
+      },
+      error: (err) => {
+        console.error('Erreur de paiement Flouci :', err);
+        alert("Erreur lors de la tentative de paiement.");
+      }
+    });
   }
+  
 }

@@ -11,6 +11,7 @@ export class OrganizerService {
   private apiUrl1 = 'http://localhost:8000/organizer/update/';  
   private apiUrlS = 'http://localhost:8000/organizer/deleteorganizer/';  
   private apiUrlA = 'http://localhost:8000/organizer/organizers';  
+  private apiUrlP = 'http://localhost:8000/organizer/changePass';  
 
   constructor(private http: HttpClient) { }
 
@@ -70,6 +71,9 @@ export class OrganizerService {
         $(alertElement).fadeOut(400);
       }, duration);
     }
+  }
+  changePassword(id: string, data: any) {
+    return this.http.put<any>(`${this.apiUrlP}/${id}`, data);
   }
 }
 

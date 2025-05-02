@@ -1,14 +1,15 @@
 import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faBell, faTrash, faUser } from '@fortawesome/free-solid-svg-icons';
 import { PrestataireService } from '../../../Services/prestataire.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-parametre-pr',
   standalone: true,
-  imports: [FontAwesomeModule,FormsModule],
+  imports: [FontAwesomeModule,FormsModule,ReactiveFormsModule,CommonModule],
   templateUrl: './parametre-pr.component.html',
   styleUrl: './parametre-pr.component.css'
 })
@@ -19,13 +20,28 @@ export class ParametrePRComponent {
 
     constructor(
       private prestataireService: PrestataireService,
-      private route: ActivatedRoute
+      private route: ActivatedRoute,
+      private fb: FormBuilder,
+      private router: Router
     ) {}
     prestataire: any = {};
     formData = { ...this.prestataire };
 
+    passwordForm!: FormGroup; 
+        submitted = false;
+        loading = false;
+        passwordSuccessMessage: string = '';
+        passwordErrorMessage: string = '';
+        
   ngOnInit(): void {
     this.fetchPresData();  
+      this.passwordForm = this.fb.group({
+          oldPassword: ['', Validators.required],
+          newPassword: ['', [Validators.required, Validators.minLength(8)]],
+          confirmPassword: ['', Validators.required]
+        }, {
+          validators: this.passwordMatchValidator
+        });
   }
   fetchPresData() {
     const user = JSON.parse(localStorage.getItem('user') || '{}');  
@@ -78,6 +94,76 @@ export class ParametrePRComponent {
         alert('Veuillez télécharger un fichier image valide.');
       }
     }
+  }
+  onSubmit() {
+    this.submitted = true;
+    this.passwordSuccessMessage = '';
+    this.passwordErrorMessage = '';
+  
+    if (this.passwordForm.invalid) {
+      return;
+    }
+  
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    const id = user.Id;
+  
+    if (!id) {
+      this.passwordErrorMessage = 'Utilisateur non trouvé.';
+      return;
+    }
+  
+    const { oldPassword, newPassword } = this.passwordForm.value;
+  
+    this.loading = true;
+    this.prestataireService.changePassword(id, { oldPassword, newPassword }).subscribe(
+      (res) => {
+        this.passwordSuccessMessage = 'Mot de passe modifié avec succès.';
+        this.passwordForm.reset();
+        this.submitted = false;
+        this.loading = false;
+      },
+      (err) => {
+        this.passwordErrorMessage = err.error?.message || 'Erreur inconnue.';
+        this.loading = false;
+      }
+    );
+  }
+  
+  passwordMatchValidator(form: FormGroup) {
+    const newPassword = form.get('newPassword')?.value;
+    const confirmPassword = form.get('confirmPassword')?.value;
+    return newPassword === confirmPassword ? null : { mismatch: true };
+  }
+  deleteAccount() {
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    const id = user.Id;
+  
+    if (!id) {
+      this.passwordErrorMessage = 'Utilisateur non trouvé.';
+      this.isDeleteDialogOpen = false;
+      return;
+    }
+  
+    this.loading = true;
+    this.prestataireService.deletePresById(id).subscribe(
+      (response) => {
+        this.loading = false;
+        this.isDeleteDialogOpen = false;
+        localStorage.removeItem('user');
+        this.router.navigate(['/']);
+      },
+      (error) => {
+        this.loading = false;
+        this.passwordErrorMessage = error.error?.message || 'Une erreur est survenue lors de la suppression de votre compte.';
+        console.error('Erreur lors de la suppression du compte:', error);
+      }
+    );
+  }
+  isDeleteDialogOpen : boolean = false
+  confirmDelete() {
+    this.isDeleteDialogOpen = true;
+    this.passwordSuccessMessage = '';
+    this.passwordErrorMessage = '';
   }
 
 }

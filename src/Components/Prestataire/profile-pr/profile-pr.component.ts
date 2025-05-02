@@ -19,9 +19,7 @@ interface Comment {
     nom: string;
     prenom: string;
     email: string;
-    // Ajoutez d'autres propriétés si nécessaire
   };
-  // Ajoutez d'autres propriétés si nécessaire
 }
 @Component({
   selector: 'app-profile-pr',

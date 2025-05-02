@@ -29,6 +29,8 @@ import { ReservationFormComponent } from '../Components/Organisateur/reservation
 import { ReservationPrComponent } from '../Components/Prestataire/reservation-pr/reservation-pr.component';
 import { ReservationOrComponent } from '../Components/Organisateur/reservation-or/reservation-or.component';
 import { MassagesComponent } from '../Components/Admin/massages/massages.component';
+import { SuccessComponent } from '../Components/Organisateur/success/success.component';
+import { FailComponent } from '../Components/Organisateur/fail/fail.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -51,7 +53,8 @@ export const routes: Routes = [
     { path: 'PresDetails/:id', component: PresDetailsComponent },
     { path: 'reservation/:id', component: ReservationFormComponent },
     { path: 'reservationsOR', component: ReservationOrComponent },
-
+    { path: 'success', component: SuccessComponent },
+    { path: 'fail', component: FailComponent },
     // { path: 'services', component: ServicesComponent },
 
 
