@@ -16,7 +16,7 @@
         <p class="text-3xl font-bold text-yellow-600">{{pendingCount}}</p>
         <p class="text-sm text-gray-500 mt-1">Services à traiter</p>
     </div>
-</div>
+  </div> 
   <div class="bg-white rounded-lg shadow p-4 border border-gray-200">
     <!-- En-tête avec filtres -->
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
@@ -26,20 +26,7 @@
       </div>
       
       <div class="flex flex-col md:flex-row gap-4 w-full md:w-auto order-3 md:order-none">
-        <!-- Sélecteur de statut -->
-        <div class="w-full md:w-48">
-          <select 
-            [(ngModel)]="activeTab"
-            (change)="filterServices()"
-            class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
-          >
-            <option value="all">Tous les services</option>
-            <option value="PENDING">En attente</option>
-            <option value="CONFIRMED">Activés</option>
-            <option value="CANCELED">Refusées</option>
-            <option value="DISABLED">Désactivées</option>
-          </select>
-        </div>
+        
         
         <!-- Barre de recherche -->
         <div class="w-full md:w-64">
@@ -54,6 +41,33 @@
             <fa-icon [icon]="faSearch" class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></fa-icon>
           </div>
         </div>
+        <!-- Sélecteur de statut -->
+        <div class="w-full md:w-48">
+          <select 
+            [(ngModel)]="activeTab"
+            (change)="setActiveTab(activeTab)"
+            class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+          >
+            <option value="all">Tous les services</option>
+            <option value="PENDING">En attente</option>
+            <option value="CONFIRMED">Activés</option>
+            <option value="CANCELED">Refusées</option>
+            <option value="DISABLED">Désactivées</option>
+          </select>
+        </div>
+        <!-- Sélecteur pour le nombre de services par page -->
+        <div class="w-full md:w-48">
+          <select 
+            [(ngModel)]="itemsPerPage"
+            (change)="onItemsPerPageChange()"
+            class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+          >
+            <option [value]="10">10 par page</option>
+            <option [value]="20">20 par page</option>
+            <option [value]="50">50 par page</option>
+            <option [value]="100">100 par page</option>
+          </select>
+        </div>
       </div>
     </div>    
     <!-- Message si aucun service -->
@@ -63,7 +77,7 @@
 
     <!-- Liste des services en cartes -->
     <div *ngIf="filteredServices.length > 0" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-      <div *ngFor="let service of filteredServices" class="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition-shadow">
+      <div *ngFor="let service of paginatedServices" class="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition-shadow">
         <!-- Photo de couverture -->
         <div class="h-48 w-full overflow-hidden">
           <img 
@@ -91,7 +105,6 @@
               'Inconnu'
             }}
             </span>
-            
           </div>
           
           <p class="text-gray-600 text-sm mt-1 line-clamp-2">{{ service.description }}</p>
@@ -144,8 +157,6 @@
             
             <!-- Actions -->
             <div class="flex justify-start gap-2">
-             
-            
               <!-- Boutons conditionnels pour statut PENDING -->
               <ng-container *ngIf="service.Status === 'PENDING'">
                 <button
@@ -161,164 +172,198 @@
                   Refuser
                 </button>
               </ng-container>
-            
-            
             </div>
           </div>
         </div>
       </div>
     </div>
+
+    <!-- Pagination Controls -->
+    <div *ngIf="filteredServices.length > 0" class="mt-6 flex justify-between items-center">
+      <div class="text-sm text-gray-600">
+        Affichage {{ (currentPage - 1) * itemsPerPage + 1 }} - 
+        {{ currentPage * itemsPerPage > filteredServices.length ? filteredServices.length : currentPage * itemsPerPage }} 
+        sur {{ filteredServices.length }} services
+      </div>
+      <div class="flex gap-2">
+        <button 
+          (click)="setPage(currentPage - 1)"
+          [disabled]="currentPage === 1"
+          class="px-3 py-1 border border-gray-300 rounded-md text-sm hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          <fa-icon [icon]="faChevronLeft"></fa-icon>
+        </button>
+        <button 
+          *ngFor="let page of getPageNumbers()"
+          (click)="setPage(page)"
+          class="px-3 py-1 border border-gray-300 rounded-md text-sm"
+          [ngClass]="{'bg-orange-500 text-white': page === currentPage, 'hover:bg-gray-100': page !== currentPage}"
+        >
+          {{ page }}
+        </button>
+        <button 
+          (click)="setPage(currentPage + 1)"
+          [disabled]="currentPage === totalPages"
+          class="px-3 py-1 border border-gray-300 rounded-md text-sm hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          <fa-icon [icon]="faChevronRight"></fa-icon>
+        </button>
+      </div>
+    </div>
   </div>
-  
 </div>
 
-  
-  <!-- Modal Tailwind CSS -->
-  <div *ngIf="showModal" class="fixed inset-0 z-50 overflow-y-auto">
-    <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-      <!-- Fond overlay -->
-      <div class="fixed inset-0 transition-opacity overlay" aria-hidden="true">
-        <div class="absolute inset-0 bg-gray-500 bg-opacity-75" (click)="closeModal()"></div>
-      </div>
-  
-      <!-- Contenu du modal -->
-      <div class="inline-block align-bottom bg-white rounded-lg overflow-hidden shadow-xl transform transition-all modal-card sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">        <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-          <div class="sm:flex sm:items-start">
-            <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
-              <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">
-                Détails du service
-              </h3>
+<!-- Modal Tailwind CSS -->
+<div *ngIf="showModal" class="fixed inset-0 z-50 overflow-y-auto">
+  <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+    <!-- Fond overlay -->
+    <div class="fixed inset-0 transition-opacity overlay" aria-hidden="true">
+      <div class="absolute inset-0 bg-gray-500 bg-opacity-75" (click)="closeModal()"></div>
+    </div>
+
+    <!-- Contenu du modal -->
+    <div class="inline-block align-bottom bg-white rounded-lg overflow-hidden shadow-xl transform transition-all modal-card sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+      <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+        <div class="sm:flex sm:items-start">
+          <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
+            <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">
+              Détails du service
+            </h3>
+            
+            <div *ngIf="selectedService" class="space-y-4">
+              <div class="relative h-64 w-full rounded-lg overflow-hidden gallery-container">
+                <img 
+                  [src]="selectedService.Photos[selectedImageIndex]" 
+                  [alt]="'Photo ' + (selectedImageIndex + 1) + ' - ' + selectedService.nom"
+                  class="h-full w-full object-cover gallery-image">                    
+                <!-- Navigation entre photos -->
+                <button 
+                    (click)="prevImage(); $event.stopPropagation()"
+                    class="absolute left-2 top-1/2 -translate-y-1/2 gallery-nav-button">
+                    &lt;
+                </button>
+                <button 
+                    (click)="nextImage(); $event.stopPropagation()"
+                    class="absolute right-2 top-1/2 -translate-y-1/2 gallery-nav-button">
+                    &gt;
+                </button>
+                
+                <!-- Indicateur de position -->
+                <div class="absolute bottom-2 left-1/2 -translate-x-1/2 gallery-indicator">
+                    {{ selectedImageIndex + 1 }} / {{ selectedService.Photos.length }}
+                  </div>
+              </div>
               
-              <div *ngIf="selectedService" class="space-y-4">
-                <div class="relative h-64 w-full rounded-lg overflow-hidden gallery-container">                    <img 
-                      [src]="selectedService.Photos[selectedImageIndex]" 
-                      [alt]="'Photo ' + (selectedImageIndex + 1) + ' - ' + selectedService.nom"
-                      class="h-full w-full object-cover gallery-image">                    
-                    <!-- Navigation entre photos -->
-                    <button 
-                        (click)="prevImage(); $event.stopPropagation()"
-                        class="absolute left-2 top-1/2 -translate-y-1/2 gallery-nav-button">
-                        &lt;
-                    </button>
-                    <button 
-                        (click)="nextImage(); $event.stopPropagation()"
-                        class="absolute right-2 top-1/2 -translate-y-1/2 gallery-nav-button">
-                        &gt;
-                    </button>
-                    
-                    <!-- Indicateur de position -->
-                    <div class="absolute bottom-2 left-1/2 -translate-x-1/2 gallery-indicator">
-                        {{ selectedImageIndex + 1 }} / {{ selectedService.Photos.length }}
-                      </div>
-                  </div>
-                  
-                  <!-- Vignettes de l'album -->
-                  <div class="flex space-x-2 overflow-x-auto py-2 thumbnails-container">
-                    <div 
-                      *ngFor="let photo of selectedService.Photos; let i = index"
-                      (click)="selectImage(i)"
-                      [class.thumbnail-active]="i === selectedImageIndex"
-                      class="flex-shrink-0 h-16 w-16 cursor-pointer thumbnail">
-                      <img 
-                        [src]="photo" 
-                        [alt]="'Miniature ' + (i + 1)"
-                        class="h-full w-full object-cover">
-                    </div>
-                  </div>
+              <!-- Vignettes de l'album -->
+              <div class="flex space-x-2 overflow-x-auto py-2 thumbnails-container">
+                <div 
+                  *ngFor="let photo of selectedService.Photos; let i = index"
+                  (click)="selectImage(i)"
+                  [class.thumbnail-active]="i === selectedImageIndex"
+                  class="flex-shrink-0 h-16 w-16 cursor-pointer thumbnail">
+                  <img 
+                    [src]="photo" 
+                    [alt]="'Miniature ' + (i + 1)"
+                    class="h-full w-full object-cover">
+                </div>
+              </div>
+              <div>
+                <h4 class="font-bold">{{ selectedService.nom }}</h4>
+                <p class="text-gray-600">{{ selectedService.description }}</p>
+              </div>
+              
+              <div class="grid grid-cols-2 gap-4">
                 <div>
-                  <h4 class="font-bold">{{ selectedService.nom }}</h4>
-                  <p class="text-gray-600">{{ selectedService.description }}</p>
+                  <p class="text-sm text-gray-500">Type</p>
+                  <p>{{selectedService.type}}</p>
                 </div>
-                
-                <div class="grid grid-cols-2 gap-4">
-                  <div>
-                    <p class="text-sm text-gray-500">Type</p>
-                    <p>{{selectedService.type}}</p>
-                  </div>
-                  <div class="price-container">
-                    <span *ngIf="selectedService.promo > 0" class="price-original">
-                      {{ formatPrice(selectedService.prix)}}
-                    </span>
-                    <span class="price-discounted">
-                      {{ calculateDiscountedPrice(selectedService) }} 
-                    </span>
-                  </div>
-                  <div>
-                    <p class="text-sm text-gray-500">Statut</p>
-                    <span class="status-badge"
-                    [ngClass]="{
-                      'status-badge-approved': selectedService.Status === 'CONFIRMED',
-                      'status-badge-pending': selectedService.Status === 'PENDING'
-                    }">
-                    {{ selectedService.Status === 'CONFIRMED' ? 'Acceptée' : 'En attente' }}
+                <div class="price-container">
+                  <span *ngIf="selectedService.promo > 0" class="price-original">
+                    {{ formatPrice(selectedService.prix)}}
                   </span>
-                  </div>
-                  <div>
-                    <p class="text-sm text-gray-500">Date création</p>
-                    <p>{{ selectedService.createdAt | date:'dd/MM/yyyy' }}</p>
-                  </div>
+                  <span class="price-discounted">
+                    {{ calculateDiscountedPrice(selectedService) }} 
+                  </span>
                 </div>
-                
-                <div class="pt-4 border-t">
-                  <h5 class="font-semibold mb-2">Prestataire</h5>
-                  <p>{{ selectedService.prestataire.nom }} {{ selectedService.prestataire.prenom }}</p>
-                  <p class="text-blue-600">{{ selectedService.prestataire.email }}</p>
+                <div>
+                  <p class="text-sm text-gray-500">Statut</p>
+                  <span class="status-badge"
+                  [ngClass]="{
+                    'status-badge-approved': selectedService.Status === 'CONFIRMED',
+                    'status-badge-pending': selectedService.Status === 'PENDING'
+                  }">
+                  {{ selectedService.Status === 'CONFIRMED' ? 'Acceptée' : 'En attente' }}
+                </span>
                 </div>
+                <div>
+                  <p class="text-sm text-gray-500">Date création</p>
+                  <p>{{ selectedService.createdAt | date:'dd/MM/yyyy' }}</p>
+                </div>
+              </div>
+              
+              <div class="pt-4 border-t">
+                <h5 class="font-semibold mb-2">Prestataire</h5>
+                <p>{{ selectedService.prestataire.nom }} {{ selectedService.prestataire.prenom }}</p>
+                <p class="text-blue-600">{{ selectedService.prestataire.email }}</p>
               </div>
             </div>
           </div>
         </div>
-        
-        <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-          <button *ngIf="selectedService?.Status === 'PENDING'"
-                  type="button"
-                  (click)="approveService(selectedService)"
-                  class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none sm:ml-3 sm:w-auto sm:text-sm">
-            Approuver
-          </button>
-          <button type="button"
-                  (click)="closeModal()"
-                  class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
-            Fermer
-          </button>
-        </div>
+      </div>
+      
+      <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+        <button *ngIf="selectedService?.Status === 'PENDING'"
+                type="button"
+                (click)="approveService(selectedService)"
+                class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none sm:ml-3 sm:w-auto sm:text-sm">
+          Approuver
+        </button>
+        <button type="button"
+                (click)="closeModal()"
+                class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+          Fermer
+        </button>
       </div>
     </div>
   </div>
+</div>
 
-  <div *ngIf="isDeleteDialogOpen" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center p-4 z-50">
-    <div class="bg-white rounded-lg shadow-xl max-w-md w-full">
-      <div class="p-6">
-        <h3 class="text-lg font-bold text-orange-700">Confirmer la suppression</h3>
-        <p class="text-gray-600 mt-2">
-          Êtes-vous sûr de vouloir supprimer ce service ? Cette action est irréversible.
+<!-- Delete Confirmation Dialog -->
+<div *ngIf="isDeleteDialogOpen" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center p-4 z-50">
+  <div class="bg-white rounded-lg shadow-xl max-w-md w-full">
+    <div class="p-6">
+      <h3 class="text-lg font-bold text-orange-700">Confirmer la suppression</h3>
+      <p class="text-gray-600 mt-2">
+        Êtes-vous sûr de vouloir supprimer ce service ? Cette action est irréversible.
+      </p>
+      <div *ngIf="serviceToDelete" class="mt-4 p-4 bg-orange-50 border border-gray-300 rounded-md">
+        <p class="font-medium text-gray-900">{{ serviceToDelete.nom }}</p>
+        <p class="text-sm text-gray-600">{{ serviceToDelete.description }}</p>
+        <p class="text-sm text-gray-600">
+          <span class="font-medium">Prestataire: </span>{{ serviceToDelete.prestataire?.nom }} {{ serviceToDelete.prestataire?.prenom }}
         </p>
-        <div *ngIf="serviceToDelete" class="mt-4 p-4 bg-orange-50 border border-gray-300 rounded-md">
-          <p class="font-medium text-gray-900">{{ serviceToDelete.nom }}</p>
-          <p class="text-sm text-gray-600">{{ serviceToDelete.description }}</p>
-          <p class="text-sm text-gray-600">
-            <span class="font-medium">Prestataire: </span>{{ serviceToDelete.prestataire?.nom }} {{ serviceToDelete.prestataire?.prenom }}
-          </p>
-        </div>
-      </div>
-      <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-        <button
-          type="button"
-          class="w-full inline-flex justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-red-700 sm:ml-3 sm:w-auto sm:text-sm"
-          (click)="deleteService()"
-        >
-          Supprimer
-        </button>
-        <button
-          type="button"
-          class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
-          (click)="isDeleteDialogOpen = false; serviceToDelete = null"
-        >
-          Annuler
-        </button>
       </div>
     </div>
+    <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+      <button
+        type="button"
+        class="w-full inline-flex justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-red-700 sm:ml-3 sm:w-auto sm:text-sm"
+        (click)="deleteService()"
+      >
+        Supprimer
+      </button>
+      <button
+        type="button"
+        class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+        (click)="isDeleteDialogOpen = false; serviceToDelete = null"
+      >
+        Annuler
+      </button>
+    </div>
   </div>
+</div>
+
+<!-- Approve Confirmation Dialog -->
 <div *ngIf="isApproveDialogOpen" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center p-4 z-50">
   <div class="bg-white rounded-lg shadow-xl max-w-md w-full">
     <div class="p-6">
@@ -352,6 +397,8 @@
     </div>
   </div>
 </div>
+
+<!-- Cancel Confirmation Dialog -->
 <div *ngIf="isCancelDialogOpen" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center p-4 z-50">
   <div class="bg-white rounded-lg shadow-xl max-w-md w-full">
     <div class="p-6">
@@ -359,7 +406,6 @@
       <p class="text-gray-600 mt-2">
         Voulez-vous vraiment <strong>annuler ce service</strong> ? Cette action notifiera le client.
       </p>
-
       <div *ngIf="serviceToCanceled" class="mt-4 p-4 bg-green-50 border border-gray-300 rounded-md">
         <p class="font-medium text-gray-900">{{ serviceToCanceled.nom }}</p>
         <p class="text-sm text-gray-600">{{ serviceToCanceled.description }}</p>
@@ -368,14 +414,13 @@
         </p>
       </div>
     </div>
-
     <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
       <button
         type="button"
         class="w-full inline-flex justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-red-700 sm:ml-3 sm:w-auto sm:text-sm"
         (click)="cancelService()"
       >
-      <span>Confirmer l'annulation</span>
+        <span>Confirmer l'annulation</span>
       </button>
       <button
         type="button"
@@ -387,5 +432,3 @@
     </div>
   </div>
 </div>
-    
-  

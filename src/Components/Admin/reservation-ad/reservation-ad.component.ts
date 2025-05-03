@@ -17,6 +17,12 @@ interface Service {
   promo: number;
   type: string;
   photoCouverture: string;
+  Prestataire: {
+    nom: string;
+    prenom: string;
+    email: string;
+    numTel: string;
+  };
 }
 
 interface Organisateur {
@@ -42,17 +48,17 @@ interface Reservation {
 }
 
 @Component({
-  selector: 'app-reservation-pr',
+  selector: 'app-reservation-ad',
   standalone: true,
   imports: [FormsModule, CommonModule, FontAwesomeModule],
-  templateUrl: './reservation-pr.component.html',
-  styleUrl: './reservation-pr.component.css'
+  templateUrl: './reservation-ad.component.html',
+  styleUrl: './reservation-ad.component.css'
 })
-export class ReservationPrComponent implements OnInit {
-  faClipboardList = faClipboardList;
+export class ReservationAdComponent implements OnInit{
+faClipboardList = faClipboardList;
   faBell = faBell;
   Math = Math;
-  faChevronRight = faChevronRight;
+  faChevronRight=faChevronRight;
   faChevronLeft = faChevronLeft;
   reservations: Reservation[] = [];
   searchTerm: string = '';
@@ -68,7 +74,7 @@ export class ReservationPrComponent implements OnInit {
   
   // Pagination properties
   currentPage: number = 1;
-  itemsPerPage: number = 10; // Valeur par défaut
+  itemsPerPage: number = 10; 
 
   constructor(
     private reservation: ReservationService,   
@@ -162,7 +168,7 @@ export class ReservationPrComponent implements OnInit {
   }
 
   onItemsPerPageChange(): void {
-    this.currentPage = 1; // Revenir à la première page
+    this.currentPage = 1; 
   }
 
   getPages(): (number | string)[] {
@@ -203,40 +209,6 @@ export class ReservationPrComponent implements OnInit {
     );
   }
 
-  openDeleteDialog(reservation: Reservation): void {
-    this.selectedReservation = reservation;
-    this.isDeleteDialogOpen = true;
-  }
-
-  deleteReservation(): void {
-    if (!this.selectedReservation) return;
-  
-    const reservationId = this.selectedReservation.id;
-    this.isLoading = true;
-  
-    this.reservation.deletereservationById(reservationId).subscribe({
-      next: (res) => {
-        this.isLoading = false;
-        this.successMessage = res.message || 'Réservation supprimée avec succès';
-        
-        this.reservations = this.reservations.filter(
-          res => res.id !== reservationId
-        );
-  
-        this.isDeleteDialogOpen = false;
-        this.selectedReservation = null;
-  
-        setTimeout(() => this.successMessage = '', 4000);
-      },
-      error: (err) => {
-        this.isLoading = false;
-        this.errorMessage = err?.error?.error || 'Erreur lors de la suppression';
-        
-        setTimeout(() => this.errorMessage = '', 4000);
-      }
-    });
-  }
-
   get pendingCount(): number {
     return this.reservations.filter(m => m.Status === 'PENDING').length;
   }
@@ -244,66 +216,15 @@ export class ReservationPrComponent implements OnInit {
   get publicCount(): number {
     return this.reservations.filter(m => m.Status === 'CONFIRMED').length;
   }
-
-  openCancelDialog(reservation: Reservation): void {
-    this.selectedReservation = reservation;
-    this.isCancelDialogOpen = true; 
-    this.errorMessage = '';
-    this.successMessage = '';
+  
+  getPageNumbers(): number[] {
+    const pages: number[] = [];
+    for (let i = 1; i <= this.totalPages; i++) {
+      pages.push(i);
+    }
+    return pages;
   }
 
-  cancelReservation(): void {
-    if (!this.selectedReservation) return;
-
-    const reservationId = this.selectedReservation.id;
-    this.isLoading = true;
-
-    this.reservation.cancelReservation(reservationId).subscribe({
-      next: (res) => {
-        this.isLoading = false;
-        this.successMessage = res.message || 'Réservation annulée avec succès';
-        this.fetchReservations(); 
-        this.isCancelDialogOpen = false;
-        this.selectedReservation = null;
-        setTimeout(() => this.successMessage = '', 4000);
-      },
-      error: (err) => {
-        this.isLoading = false;
-        this.errorMessage = err?.error?.error || 'Erreur lors de l\'annulation';
-        setTimeout(() => this.errorMessage = '', 4000);
-      }
-    });
-  }
-
-  openConfirmDialog(reservation: Reservation): void {
-    this.selectedReservation = reservation;
-    this.isConfirmDialogOpen = true;
-    this.errorMessage = ''; 
-    this.successMessage = '';
-  }
-
-  confirmReservation(): void {
-    if (!this.selectedReservation) return;
-
-    const reservationId = this.selectedReservation.id;
-    this.isLoading = true;
-
-    this.reservation.confirmReservation(reservationId).subscribe({
-      next: (res) => {
-        this.isLoading = false;
-        this.successMessage = res.message || 'Réservation confirmée avec succès';
-        this.fetchReservations(); 
-        this.isConfirmDialogOpen = false;
-        this.selectedReservation = null;
-        setTimeout(() => this.successMessage = '', 4000);
-      },
-      error: (err) => {
-        this.isLoading = false;
-        this.errorMessage = err?.error?.error || 'Erreur lors de la confirmation';
-        setTimeout(() => this.errorMessage = '', 4000);
-      }
-    });
-  }
 
   openDetailsDialog(reservation: Reservation): void {
     this.selectedReservation = reservation;

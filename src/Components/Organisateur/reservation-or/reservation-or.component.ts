@@ -20,7 +20,6 @@ interface Reservation {
 
 interface Organizer {
   Reservations: Reservation[];
-  // ... other organizer fields
 }
 
 @Component({
@@ -91,6 +90,8 @@ export class ReservationOrComponent implements OnInit {
         return 'Acceptée';
       case 'CANCELED':
         return 'Refusée';
+      case 'PAID':
+        return 'Payée';
       default:
         return 'Inconnu';
     }
@@ -104,6 +105,8 @@ export class ReservationOrComponent implements OnInit {
         return 'bg-green-100 text-green-800';
       case 'CANCELED':
         return 'bg-red-100 text-red-800';
+      case 'PAID':
+        return 'bg-blue-100 text-blue-800';
       default:
         return 'bg-gray-100 text-gray-800';
     }
@@ -149,7 +152,6 @@ export class ReservationOrComponent implements OnInit {
   searchQuery: string = '';
   selectedStatus: string = 'all';
   
-  // Ajoute cette méthode si tu veux que le nombre de réservations trouvées soit dynamique
   get filteredReservations(): Reservation[] {
     return this.mesReservations.filter(res => {
       const matchesStatus =

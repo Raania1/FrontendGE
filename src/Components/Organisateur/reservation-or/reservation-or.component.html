@@ -65,9 +65,10 @@
 
     <div class="flex justify-between items-start mb-3"> 
         <div class="mb-3">
-            @if(reservation.Status === 'CONFIRMED'){
+            @if(reservation.Status === 'CONFIRMED' || reservation.Status === 'PAID'){
                 <span class="status-badge absolute top-2 right-2 " [ngClass]="{
                     'status-approved': reservation.Status === 'CONFIRMED',
+                    'status-paid': reservation.Status === 'PAID'
                   }">
                     {{ getStatusText(reservation.Status) }}
                   </span>
@@ -80,11 +81,12 @@
                     </svg>
                     Payer
                   </button>
-            }
+            } 
             @else{
                 <span class="status-badge absolute" [ngClass]="{
                     'status-pending': reservation.Status === 'PENDING',
-                    'status-rejected': reservation.Status === 'CANCELED' 
+                    'status-rejected': reservation.Status === 'CANCELED' ,
+                    'status-paid': reservation.Status === 'PAID' 
                   }">
                     {{ getStatusText(reservation.Status) }}
                   </span>
@@ -92,7 +94,7 @@
         </div>
       
         <button class="delete-button" 
-        *ngIf="reservation.Status !== 'CONFIRMED'"                     
+        *ngIf="reservation.Status !== 'CONFIRMED' && reservation.Status !== 'PAID'"                     
          (click)="openDeleteDialog(reservation)"
         > 
           <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
