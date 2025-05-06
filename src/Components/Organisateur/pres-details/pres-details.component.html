@@ -25,11 +25,13 @@
               <!-- Note et membre depuis -->
               <div class="flex flex-wrap items-center mt-2 gap-4">
                 <!-- Note -->
-                <!-- <div class="flex items-center">
-                  <span *ngFor="let star of renderStars(prestataire.stats.note)" class="text-amber-400">{{ star }}</span>
-                  <span class="ml-2 text-gray-900 font-medium">{{ prestataire.stats.note }}</span>
-                  <span class="ml-1 text-gray-500">({{ formatReviewCount(prestataire.stats.avis) }})</span>
-                </div> -->
+                <div class="flex items-center">
+                  <span *ngFor="let star of renderStars()" class="text-amber-400 text-lg" [class.opacity-60]="star === '☆'" [class.text-amber-300]="star === '⯨'">{{ star }}</span>
+                  <span class="ml-2 text-gray-900 font-medium">{{ prestataire.averageRating | number:'1.1-1' }}</span>
+                  @if(prestataire.Ratings.length > 0){
+                    <span class="ml-1 text-gray-500">({{ prestataire.Ratings.length }})</span>
+                  }
+                </div>
                 <div class="flex items-center text-gray-600" style="text-transform: capitalize;">
                   <i class="fas fa-briefcase text-amber-500 mr-2"></i>
                   <span>{{ prestataire.travail }}</span>
@@ -247,7 +249,7 @@
                       <span class="text-xs text-gray-600">Réservations</span>
                     </div>
                     <div class="bg-amber-50 rounded-lg p-3 text-center">
-                      <span class="block text-2xl font-bold text-amber-700">4.8</span>
+                      <span class="block text-2xl font-bold text-amber-700">{{prestataire.averageRating || 0}}</span>
                       <span class="text-xs text-gray-600">Note moyenne</span>
                     </div>
                     <div class="bg-amber-50 rounded-lg p-3 text-center">

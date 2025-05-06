@@ -16,7 +16,7 @@ interface Service {
   nom: string;
   description: string;
   prix: number;
-  promo: number; // Optional (discount)
+  promo: number; 
   photoCouverture: string;
   type: string;
 }
@@ -197,8 +197,24 @@ deleteComment(): void {
     this.expandedReview = this.expandedReview === id ? null : id;
   }
 
-  renderStars(note: number) {
-    return Array(5).fill(0).map((_, i) => i < Math.floor(note) ? '★' : '☆');
+  renderStars(): string[] {
+    const rating = this.prestataire.averageRating || 0;
+    const fullStars = Math.floor(rating);
+    const decimalPart = rating - fullStars;
+    const stars: string[] = [];
+    for (let i = 0; i < fullStars; i++) {
+      stars.push('★');
+    }
+    if (decimalPart >= 0.3 && decimalPart <= 0.7) {
+      stars.push('⯨');
+    } else if (decimalPart > 0.7) {
+      stars.push('★');
+    }
+    while (stars.length < 5) {
+      stars.push('☆');
+    }
+
+    return stars;
   }
 
   formatReviewCount(count: number) {

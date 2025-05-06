@@ -7,6 +7,7 @@ import { ActivatedRoute } from '@angular/router';
 import { PrestataireService } from '../../../Services/prestataire.service';
 import { CommentService } from '../../../Services/comment.service';
 import { ReservationService } from '../../../Services/reservation.service';
+import { RatingService } from '../../../Services/rating.service';
 interface Comment {
   id: string;
   content: string;
@@ -19,6 +20,17 @@ interface Comment {
     nom: string;
     prenom: string;
     email: string;
+  };
+}
+interface Rating {
+  id: string;
+  value: number;
+  organisateurid: string;
+  prestataireid: string;
+  createdAt: Date;
+  Organisateur?: {
+    nom: string;
+    prenom: string;
   };
 }
 @Component({
@@ -41,7 +53,7 @@ export class ProfilePrComponent {
   faEnvelope = faEnvelope;
   activeTab: string = 'informations';
   expandedReview: number | null = null;
-
+ 
   constructor(
     private prestataireService: PrestataireService,
     private commentService: CommentService,
@@ -94,7 +106,7 @@ export class ProfilePrComponent {
   reservationCount: number=0;
   ngOnInit(): void {
     this.fetchPresData(); 
-    this.fetchServicePhotos() 
+    this.fetchServicePhotos() ;
   }
   fetchPresData() {
     const user = JSON.parse(localStorage.getItem('user') || '{}');  
@@ -123,6 +135,7 @@ export class ProfilePrComponent {
       console.error('Utilisateur non trouvé dans le localStorage');
     }
   }
+
   fetchOrganisateursForComments() {
     if (!this.avis || this.avis.length === 0) return;
 
@@ -188,9 +201,25 @@ deleteComment(): void {
   toggleReview(id: number) {
     this.expandedReview = this.expandedReview === id ? null : id;
   }
+ 
+  renderStars(): string[] {
+    const rating = this.prestataire.averageRating || 0;
+    const fullStars = Math.floor(rating);
+    const decimalPart = rating - fullStars;
+    const stars: string[] = [];
+    for (let i = 0; i < fullStars; i++) {
+      stars.push('★');
+    }
+    if (decimalPart >= 0.3 && decimalPart <= 0.7) {
+      stars.push('⯨');
+    } else if (decimalPart > 0.7) {
+      stars.push('★');
+    }
+    while (stars.length < 5) {
+      stars.push('☆');
+    }
 
-  renderStars(note: number) {
-    return Array(5).fill(0).map((_, i) => i < Math.floor(note) ? '★' : '☆');
+    return stars;
   }
 
   formatReviewCount(count: number) {
