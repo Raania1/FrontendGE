@@ -6,9 +6,11 @@ import { Observable } from 'rxjs';
 import { faBell, faChevronLeft, faChevronRight, faClipboardList } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { PrestataireService } from '../../../Services/prestataire.service';
+import { ContractService } from '../../../Services/contrat.service';
+import { PaiementService } from '../../../Services/paiement.service';
 
 type ReservationStatus = 'PENDING' | 'CONFIRMED' | 'CANCELED' | 'PAID';
-
+ 
 interface Service {
   id: string;
   nom: string;
@@ -18,7 +20,9 @@ interface Service {
   type: string;
   photoCouverture: string;
 }
-
+interface Payment {
+  id: string;
+}
 interface Organisateur {
   id: string;
   nom: string;
@@ -39,6 +43,7 @@ interface Reservation {
   Status: ReservationStatus;
   createdAt: string; 
   prix: string;
+  payment: Payment;
 }
 
 @Component({
@@ -66,13 +71,14 @@ export class ReservationPrComponent implements OnInit {
   successMessage: string = '';
   errorMessage: string = '';
   
-  // Pagination properties
   currentPage: number = 1;
-  itemsPerPage: number = 10; // Valeur par défaut
+  itemsPerPage: number = 10; 
 
   constructor(
     private reservation: ReservationService,   
     private prestataireService: PrestataireService,
+    private contractService: ContractService,
+    private paiementService: PaiementService
   ) {}
 
   ngOnInit(): void {
@@ -103,9 +109,22 @@ export class ReservationPrComponent implements OnInit {
   fetchReservations(): void {
     this.reservation.getAll().subscribe({
       next: (response) => {
-        this.reservations = response.reservations.sort((a: any, b:any) => 
-           new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        this.reservations = response.reservations.sort((a: any, b: any) => 
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
         );
+        
+        this.reservations.forEach(reservation => {
+          if (reservation.Status === 'PAID') {
+            this.paiementService.getPaymentByReservationId(reservation.id).subscribe(
+              (paymentResponse: any) => {
+                reservation.payment = paymentResponse.payment;
+              },
+              (paymentError: any) => {
+                console.error('Erreur lors de la récupération du paiement:', paymentError);
+              }
+            );
+          }
+        });
       },
       error: (err) => {
         console.error('Erreur lors du chargement des réservations :', err);
@@ -338,5 +357,24 @@ export class ReservationPrComponent implements OnInit {
       default:
         return status;
     }
+  }
+  downloadContract(paymentId: string): void {
+    this.contractService.downloadContract(paymentId).subscribe({
+      next: (blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `contract-${paymentId}.pdf`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+      },
+      error: (err) => {
+        console.error('Download error:', err);
+        this.errorMessage = 'Erreur lors du téléchargement du contrat.';
+        setTimeout(() => this.errorMessage = '', 4000);
+      }
+    });
   }
 }

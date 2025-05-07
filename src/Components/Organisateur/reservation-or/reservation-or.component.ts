@@ -8,6 +8,9 @@ import { PrestataireService } from '../../../Services/prestataire.service';
 import { ReservationService } from '../../../Services/reservation.service';
 import { RouterLink } from '@angular/router';
 import { PaiementService } from '../../../Services/paiement.service';
+import { ContractService } from '../../../Services/contrat.service';
+import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 interface Reservation {
   id: string;
@@ -15,7 +18,28 @@ interface Reservation {
   dateDebut: string;
   prix: number;
   Status: string;
-  Service?: any;
+  Service: Service;
+  payment: Payment;
+}
+
+interface Service {
+  id: string;
+  nom: string;
+  Prestataireid: string;
+  Prestataire: Prestataire;
+  photoCouverture: string;
+}
+
+interface Prestataire {
+  id: string;
+  nom: string;
+  prenom: string;
+  email: string;
+  numTel: string;
+}
+
+interface Payment {
+  id: string;
 }
 
 interface Organizer {
@@ -25,25 +49,33 @@ interface Organizer {
 @Component({
   selector: 'app-reservation-or',
   standalone: true,
-  imports: [NavbarORComponent, FormsModule, CommonModule,RouterLink],
+  imports: [NavbarORComponent, FormsModule, CommonModule, RouterLink, FontAwesomeModule],
   templateUrl: './reservation-or.component.html',
   styleUrls: ['./reservation-or.component.css']
 })
 export class ReservationOrComponent implements OnInit {
   mesReservations: Reservation[] = [];
   organisateur: Organizer | null = null;
+  currentPage: number = 1;
+  itemsPerPage: number = 10;
+  
+  pageSizeOptions: number[] = [10, 20, 50];
+  faChevronRight = faChevronRight;
+  faChevronLeft = faChevronLeft;
 
   constructor(
     private organizerService: OrganizerService,
     private serviceService: ServiceService,
     private prestataireService: PrestataireService,
-    private reservation : ReservationService,
+    private reservation: ReservationService,
+    private contractService: ContractService,
     private paiementService: PaiementService
   ) {}
 
   ngOnInit(): void {
     this.fetchOrganizerData();
   }
+
   fetchOrganizerData(): void {
     const user = JSON.parse(localStorage.getItem('user') || '{}');
     const id = user.Id as number | undefined;
@@ -57,16 +89,26 @@ export class ReservationOrComponent implements OnInit {
           this.mesReservations.forEach((reservation: Reservation) => {
             this.serviceService.getServiceById(reservation.serviceid.toString()).subscribe(
               (serviceResponse: any) => {
-                reservation.Service = serviceResponse.service ;
-
+                reservation.Service = serviceResponse.service;
                 this.prestataireService.getPrestataireById(reservation.Service!.Prestataireid).subscribe(
                   (prestResponse: any) => {
-                    reservation.Service!.Prestataire = prestResponse.pres; 
-                  console.log("Prestataire:",reservation.Service.Prestataire)                 },
+                    reservation.Service!.Prestataire = prestResponse.pres;
+                    console.log("Prestataire:", reservation.Service.Prestataire);
+                  },
                   (prestError: any) => {
                     console.error('Erreur lors de la récupération du prestataire:', prestError);
                   }
                 );
+                if (reservation.Status === 'PAID') {
+                  this.paiementService.getPaymentByReservationId(reservation.id).subscribe(
+                    (paymentResponse: any) => {
+                      reservation.payment = paymentResponse.payment;
+                    },
+                    (paymentError: any) => {
+                      console.error('Erreur lors de la récupération du paiement:', paymentError);
+                    }
+                  );
+                }
               },
               (serviceError: any) => {
                 console.error('Erreur lors de la récupération du service:', serviceError);
@@ -82,6 +124,7 @@ export class ReservationOrComponent implements OnInit {
       console.error('Utilisateur non trouvé dans le localStorage');
     }
   }
+
   getStatusText(Status: string): string {
     switch (Status) {
       case 'PENDING':
@@ -111,21 +154,25 @@ export class ReservationOrComponent implements OnInit {
         return 'bg-gray-100 text-gray-800';
     }
   }
+
   selectedReservation: Reservation | null = null;
   isDeleteDialogOpen: boolean = false;
+
   openDeleteDialog(reservation: Reservation): void {
     this.selectedReservation = reservation;
     this.isDeleteDialogOpen = true;
   }
+
   isLoading: boolean = false;
   successMessage: string = '';
   errorMessage: string = '';
+
   deleteReservation(): void {
     if (!this.selectedReservation) return;
-  
+
     const reservationId = this.selectedReservation.id;
     this.isLoading = true;
-  
+
     this.reservation.deletereservationById(reservationId).subscribe({
       next: (res) => {
         this.isLoading = false;
@@ -135,9 +182,15 @@ export class ReservationOrComponent implements OnInit {
           res => res.id !== reservationId
         );
         
+        if (this.totalPages === 0) {
+          this.currentPage = 1;
+        } else if (this.currentPage > this.totalPages) {
+          this.currentPage = this.totalPages;
+        }
+
         this.isDeleteDialogOpen = false;
         this.selectedReservation = null;
-  
+
         setTimeout(() => this.successMessage = '', 4000);
       },
       error: (err) => {
@@ -151,7 +204,7 @@ export class ReservationOrComponent implements OnInit {
 
   searchQuery: string = '';
   selectedStatus: string = 'all';
-  
+
   get filteredReservations(): Reservation[] {
     return this.mesReservations.filter(res => {
       const matchesStatus =
@@ -161,16 +214,73 @@ export class ReservationOrComponent implements OnInit {
       return matchesStatus && matchesSearch;
     });
   }
-  
+
+  get paginatedReservations(): Reservation[] {
+    const start = (this.currentPage - 1) * this.itemsPerPage;
+    const end = start + this.itemsPerPage;
+    return this.filteredReservations.slice(start, end);
+  }
+
+  get totalPages(): number {
+    return Math.ceil(this.filteredReservations.length / this.itemsPerPage);
+  }
+
+  previousPage(): void {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+    }
+  }
+
+  nextPage(): void {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+    }
+  }
+
+  getPages(): (number | string)[] {
+    const pages: (number | string)[] = [];
+    const total = this.totalPages;
+    const current = this.currentPage;
+    const delta = 2;
+
+    if (total <= 7) {
+      for (let i = 1; i <= total; i++) {
+        pages.push(i);
+      }
+    } else {
+      pages.push(1);
+      if (current > delta + 2) {
+        pages.push('...');
+      }
+      const start = Math.max(2, current - delta);
+      const end = Math.min(total - 1, current + delta);
+      for (let i = start; i <= end; i++) {
+        pages.push(i);
+      }
+      if (current < total - delta - 1) {
+        pages.push('...');
+      }
+      pages.push(total);
+    }
+    return pages;
+  }
+
+  goToPage(page: number | string): void {
+    if (typeof page === 'number') {
+      if (page >= 1 && page <= this.totalPages) {
+        this.currentPage = page;
+      }
+    }
+  }
 
   payerReservation(reservation: Reservation): void {
     if (!reservation || !reservation.id) return;
-  
+
     this.paiementService.payerReservation(reservation.id).subscribe({
       next: (res: any) => {
         const link = res?.result?.link;
         if (link) {
-          window.location.href = link; 
+          window.location.href = link;
         } else {
           alert("Erreur : lien de paiement introuvable");
         }
@@ -181,5 +291,33 @@ export class ReservationOrComponent implements OnInit {
       }
     });
   }
-  
+
+  downloadContract(paymentId: string): void {
+    this.contractService.downloadContract(paymentId).subscribe({
+      next: (blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `contract-${paymentId}.pdf`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+      },
+      error: (err) => {
+        console.error('Download error:', err);
+        this.errorMessage = 'Erreur lors du téléchargement du contrat.';
+        setTimeout(() => this.errorMessage = '', 4000);
+      }
+    });
+  }
+
+  onPageSizeChange(event: Event): void {
+    const selectElement = event.target as HTMLSelectElement;
+    this.itemsPerPage = parseInt(selectElement.value, 10);
+    this.currentPage = 1; 
+  }
+  onItemsPerPageChange(): void {
+    this.currentPage = 1; 
+  }
 }

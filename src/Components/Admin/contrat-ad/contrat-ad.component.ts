@@ -1,11 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ReservationService } from '../../../Services/reservation.service';
-import { Observable } from 'rxjs';
-import { faBell, faChevronLeft, faChevronRight, faClipboardList } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faClipboardList, faBell, faChevronRight, faChevronLeft } from '@fortawesome/free-solid-svg-icons';
 import { PrestataireService } from '../../../Services/prestataire.service';
+import { ReservationService } from '../../../Services/reservation.service';
 
 type ReservationStatus = 'PENDING' | 'CONFIRMED' | 'CANCELED' | 'PAID';
 
@@ -48,31 +47,26 @@ interface Reservation {
 }
 
 @Component({
-  selector: 'app-reservation-ad',
+  selector: 'app-contrat-ad',
   standalone: true,
   imports: [FormsModule, CommonModule, FontAwesomeModule],
-  templateUrl: './reservation-ad.component.html',
-  styleUrl: './reservation-ad.component.css'
+  templateUrl: './contrat-ad.component.html',
+  styleUrl: './contrat-ad.component.css'
 })
-export class ReservationAdComponent implements OnInit{
-faClipboardList = faClipboardList;
+export class ContratAdComponent implements OnInit {
+  faClipboardList = faClipboardList;
   faBell = faBell;
   Math = Math;
-  faChevronRight=faChevronRight;
+  faChevronRight = faChevronRight;
   faChevronLeft = faChevronLeft;
   reservations: Reservation[] = [];
   searchTerm: string = '';
-  statusFilter: string = 'all';
+  statusFilter: string = 'PAID';
   selectedReservation: Reservation | null = null;
-  isDeleteDialogOpen: boolean = false;
-  isConfirmDialogOpen: boolean = false;
-  isCancelDialogOpen: boolean = false;
-  isDetailsDialogOpen: boolean = false;
   isLoading: boolean = false;
   successMessage: string = '';
   errorMessage: string = '';
   
-  // Pagination properties
   currentPage: number = 1;
   itemsPerPage: number = 10; 
 
@@ -109,9 +103,11 @@ faClipboardList = faClipboardList;
   fetchReservations(): void {
     this.reservation.getAll().subscribe({
       next: (response) => {
-        this.reservations = response.reservations.sort((a: any, b:any) => 
-           new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-        );
+        this.reservations = response.reservations
+          .filter((reservation: Reservation) => reservation.Status === 'PAID')
+          .sort((a: any, b: any) => 
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          );
       },
       error: (err) => {
         console.error('Erreur lors du chargement des réservations :', err);
@@ -130,8 +126,7 @@ faClipboardList = faClipboardList;
         (org?.prenom?.toLowerCase().includes(this.searchTerm.toLowerCase()) ?? false) ||
         (serv?.nom?.toLowerCase().includes(this.searchTerm.toLowerCase()) ?? false);
   
-      const matchesStatus =
-        this.statusFilter === 'all' || reservation.Status === this.statusFilter;
+      const matchesStatus = reservation.Status === 'PAID';
   
       return matchesSearch && matchesStatus;
     });
@@ -209,14 +204,10 @@ faClipboardList = faClipboardList;
     );
   }
 
-  get pendingCount(): number {
-    return this.reservations.filter(m => m.Status === 'PENDING').length;
+  get paidCount(): number {
+    return this.reservations.length;
   }
 
-  get publicCount(): number {
-    return this.reservations.filter(m => m.Status === 'CONFIRMED').length;
-  }
-  
   getPageNumbers(): number[] {
     const pages: number[] = [];
     for (let i = 1; i <= this.totalPages; i++) {
@@ -226,11 +217,6 @@ faClipboardList = faClipboardList;
   }
 
 
-  openDetailsDialog(reservation: Reservation): void {
-    this.selectedReservation = reservation;
-    this.isDetailsDialogOpen = true;
-  }
-
   getStatusBadgeClass(status: ReservationStatus): string {
     switch (status) {
       case 'PENDING':
@@ -239,8 +225,8 @@ faClipboardList = faClipboardList;
         return 'bg-green-600 text-white';
       case 'CANCELED':
         return 'bg-gray-800 text-white';
-     case 'PAID':
-      return 'bg-blue-100 text-blue-800';
+      case 'PAID':
+        return 'bg-blue-100 text-blue-800';
       default:
         return 'bg-gray-300 text-gray-800';
     }
@@ -260,4 +246,33 @@ faClipboardList = faClipboardList;
         return status;
     }
   }
+  // Compteur pour le nombre total de réservations payées
+get paidReservationsCount(): number {
+  return this.reservations.filter(reservation => reservation.Status === 'PAID').length;
+}
+
+// Calcul du total des paiements (somme des prix en millimes)
+get totalPayments(): number {
+  return this.reservations
+    .filter(reservation => reservation.Status === 'PAID')
+    .reduce((sum, reservation) => {
+      const prixString = reservation.prix || '0'; // Gérer les cas où prix est undefined
+      const prix = parseFloat(prixString.replace(' DT', '')) || 0; // Supprimer ' DT' et convertir en nombre
+      const amountInMillimes = Math.round(prix * 1000); // Convertir en millimes
+      return sum + amountInMillimes;
+    }, 0);
+}
+
+// Calcul de la commission (20% de chaque prix en millimes, puis somme)
+get commission(): number {
+  const commissionRate = 0.2; // 20% de commission
+  return this.reservations
+    .filter(reservation => reservation.Status === 'PAID')
+    .reduce((sum, reservation) => {
+      const prixString = reservation.prix || '0'; // Gérer les cas où prix est undefined
+      const prix = parseFloat(prixString.replace(' DT', '')) || 0; // Supprimer ' DT' et convertir en nombre
+      const amountInMillimes = Math.round(prix * 1000); // Convertir en millimes
+      return sum + (amountInMillimes * commissionRate);
+    }, 0);
+}
 }

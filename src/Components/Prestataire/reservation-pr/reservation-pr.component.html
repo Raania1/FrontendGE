@@ -193,6 +193,14 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </button>
+                <button 
+              *ngIf="reservation.Status === 'PAID' && reservation.payment"
+              [disabled]="isLoading"
+              (click)="downloadContract(reservation.payment.id)"
+              class="px-3 py-1 border border-green-600 text-green-600 rounded-md text-sm hover:bg-green-600 hover:text-white transition-colors"
+            >
+              Télécharger contrat
+            </button>
               </div>
             </td>
           </tr>
