@@ -13,6 +13,9 @@ export class PrestataireService {
   private apiUrlN ='http://localhost:8000/prestataire/notProovided';
   private apiUrlP ='http://localhost:8000/prestataire/approovedPrestataire/';
   private apiUrlPS ='http://localhost:8000/prestataire/';
+  private apiUrlC ='http://localhost:8000/prestataire/refusePrestataire/';
+  private apiUrlD ='http://localhost:8000/prestataire/disablePrestataire/';
+  private apiUrlc ='http://localhost:8000/prestataire/ActivPrestataire/';
 
   private apiUrl2 ='http://localhost:8000/prestataire/changePass';
 
@@ -63,11 +66,27 @@ export class PrestataireService {
 
     return this.http.get<any>(`${this.apiUrlN}`, { headers });
   }
-  approoved(prestataireId: string,approoved: boolean): Observable<any> {
+  approoved(prestataireId: string): Observable<any> {
     const token = localStorage.getItem('token');  
     const headers = { Authorization: `Bearer ${token}` };
-    return this.http.put<any>(`${this.apiUrlP}${prestataireId}`, {approoved},{ headers });
+    return this.http.put<any>(`${this.apiUrlP}${prestataireId}`,{},{ headers });
   }
+  disabl(prestataireId: string): Observable<any> {
+    const token = localStorage.getItem('token');  
+    const headers = { Authorization: `Bearer ${token}` };
+    return this.http.put<any>(`${this.apiUrlD}${prestataireId}`,{},{ headers });
+  }
+  activate(prestataireId: string): Observable<any> {
+    const token = localStorage.getItem('token');  
+    const headers = { Authorization: `Bearer ${token}` };
+    return this.http.put<any>(`${this.apiUrlc}${prestataireId}`,{},{ headers });
+  }
+
+  refusePrestataire(id: string): Observable<any> {
+    const token = localStorage.getItem('token');  
+    const headers = { Authorization: `Bearer ${token}` };
+    return this.http.delete(`${this.apiUrlC}${id}`,{ headers });
+}
   getServicePhotosByPrestataire(id: string) {
     return this.http.get<{ status: number; photos: string[] }>(`${this.apiUrlPS}/${id}/service-photos`);
   }
