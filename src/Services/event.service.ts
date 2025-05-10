@@ -29,4 +29,7 @@ removeServiceFromEvent(eventId: string, serviceId: string) {
 deleteEvent(eventId: string) {
   return this.http.delete(`${this.apiUrl}/delete/${eventId}`);
 }
+  getOrganizerEvents(organizerId: string): Observable<any> {
+  return this.http.get<any>(`${this.apiUrl}/countEvents/${organizerId}`);
+}
 }

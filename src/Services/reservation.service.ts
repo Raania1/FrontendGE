@@ -13,6 +13,8 @@ export class ReservationService {
   private apiUrl4 = 'http://localhost:8000/reservation/cancel/'; 
   private apiUrl5 = 'http://localhost:8000/reservation/countReservation/'; 
   private apiUrl6 = 'http://localhost:8000/reservation/countReservationS/'; 
+  private apiUrl7 = 'http://localhost:8000/reservation/countReservations'; 
+  private apiUrl8 = 'http://localhost:8000/reservation/countPaidReservations'; 
 
   constructor(private http: HttpClient) {}
 
@@ -38,4 +40,13 @@ export class ReservationService {
   cancelReservation(reservationId: string): Observable<any> {
     return this.http.put(`${this.apiUrl4}${reservationId}`, {});
   }
+
+
+
+getOrganizerReservations(organizerId: string): Observable<any> {
+  return this.http.get(`${this.apiUrl7}/${organizerId}`);
+}
+getcountPaidReservations(organizerId: string): Observable<any> {
+  return this.http.get(`${this.apiUrl8}/${organizerId}`);
+}
 }
