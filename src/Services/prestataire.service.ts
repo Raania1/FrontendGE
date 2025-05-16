@@ -16,6 +16,9 @@ export class PrestataireService {
   private apiUrlC ='http://localhost:8000/prestataire/refusePrestataire/';
   private apiUrlD ='http://localhost:8000/prestataire/disablePrestataire/';
   private apiUrlc ='http://localhost:8000/prestataire/ActivPrestataire/';
+  private apiUrl3 ='http://localhost:8000/pack/create';
+  private apiUrl4 ='http://localhost:8000/pack/getById';
+    private apiUrl5 ='http://localhost:8000/pack/update';
 
   private apiUrl2 ='http://localhost:8000/prestataire/changePass';
 
@@ -117,5 +120,32 @@ export class PrestataireService {
   changePassword(id: string, data: any) {
     return this.http.put<any>(`${this.apiUrl2}/${id}`, data);
   }
+  createPack(formData: FormData) {
+  return this.http.post(`${this.apiUrl3}`, formData);
+}
+
+
+getPackById(id: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl4}/${id}`);
+  }
+updatePack(packId: string, packData: any, coverPhoto?: File): Observable<any> {
+  const formData = new FormData();
   
+  Object.keys(packData).forEach(key => {
+    formData.append(key, packData[key]);
+  });
+  
+  if (coverPhoto) {
+    formData.append('coverPhotoUrl', coverPhoto);
+  }
+
+  return this.http.put(`${this.apiUrl5}/${packId}`, formData);
+}
+deleteServiceFromPack(serviceId: string): Observable<any> {
+  return this.http.delete(`http://localhost:8000/pack/services/${serviceId}`);
+}
+addServiceToPack(packId: string, serviceData: { name: string, description: string }): Observable<any> {
+  return this.http.post(`http://localhost:8000/pack/servicesAdd/${packId}`, serviceData);
+}
+
 }

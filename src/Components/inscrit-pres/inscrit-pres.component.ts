@@ -6,7 +6,7 @@ import { NavbarComponent } from "../navbar/navbar.component";
 import { AuthService } from '../../Services/auth.service'; 
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-
+ 
 @Component({
   selector: 'app-inscrit-pres',
   standalone: true,

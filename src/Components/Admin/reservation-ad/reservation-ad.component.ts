@@ -8,7 +8,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { PrestataireService } from '../../../Services/prestataire.service';
 
 type ReservationStatus = 'PENDING' | 'CONFIRMED' | 'CANCELED' | 'PAID';
-
+ 
 interface Service {
   id: string;
   nom: string;

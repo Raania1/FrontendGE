@@ -191,21 +191,38 @@ export class ListPrestataireComponent {
     return this.pres.filter(p => p.Status === 'DISABLED').length;
   }
 
-  // Actions
-  deletePres(id: string) {
-    if (confirm('Êtes-vous sûr de vouloir supprimer ce prestataire ?')) {
-      this.presService.deletePresById(id).subscribe(
-        (response) => {
-          alert('Prestataire supprimé avec succès !');
-          this.fetchPres();
-          this.fetchPresN();
-        },
-        (error) => {
-          console.error('Erreur lors de la suppression:', error);
-        }
-      );
-    }
+  // Ajoutez ces propriétés à votre classe
+prestataireToDelete: any = null;
+isDeleteDialogOpen: boolean = false;
+
+// Modifiez la méthode deletePres existante pour utiliser la modale
+deletePres(id: string) {
+  this.prestataireToDelete = this.pres.find(p => p.id === id) || this.presA.find(p => p.id === id);
+  if (this.prestataireToDelete) {
+    this.isDeleteDialogOpen = true;
+  } else {
+    alert('Prestataire non trouvé.');
   }
+}
+
+// Ajoutez cette nouvelle méthode pour confirmer la suppression
+confirmDelete() {
+  if (this.prestataireToDelete) {
+    this.presService.deletePresById(this.prestataireToDelete.id).subscribe(
+      (response) => {
+        this.fetchPres();
+        this.fetchPresN();
+        this.isDeleteDialogOpen = false;
+        this.prestataireToDelete = null;
+      },
+      (error) => {
+        console.error('Erreur lors de la suppression:', error);
+        this.isDeleteDialogOpen = false;
+        this.prestataireToDelete = null;
+      }
+    );
+  }
+}
 
   prestataireToApprove: any = null;
   isApproveDialogOpen: boolean = false;
@@ -341,7 +358,7 @@ export class ListPrestataireComponent {
     this.currentPage = 1;
     this.updatePagination();
   }
-
+ 
   showPendingPrestataires() {
     this.showAll = false;
     this.currentFilter = 'PENDING';

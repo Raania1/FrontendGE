@@ -7,7 +7,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { EventService } from '../../../Services/event.service';
 import { ReservationService } from '../../../Services/reservation.service';
-
+ 
 @Component({
   selector: 'app-list-organisateur',
   standalone: true,
@@ -32,7 +32,6 @@ export class ListOrganisateurComponent {
   selectedOrganizer: any = null; // Track selected organizer
   isProfileModalOpen: boolean = false; // Track modal state
 
-  // Pagination properties
   currentPage: number = 1;
   itemsPerPage: number = 10;
   totalPages: number = 1;
@@ -57,7 +56,6 @@ export class ListOrganisateurComponent {
 eventsCount: number = 0;
 ReservationsCount: number = 0;
 paidReservationsCount: number = 0;
-  // Modal methods
   openProfileModal(organizer: any) {
     this.selectedOrganizer = organizer;
     this.isProfileModalOpen = true;
@@ -160,19 +158,36 @@ paidReservationsCount: number = 0;
     ).length;
   }
 
-  deleteOrganizer(id: string) {
-    if (confirm('Êtes-vous sûr de vouloir supprimer cet organisateur ?')) {
-      this.organizerService.deleteOrganizerById(id).subscribe(
-        (response) => {
-          alert('Organisateur supprimé avec succès !');
-          this.fetchOrganizers();
-        },
-        (error) => {
-          console.error('Erreur:', error);
-        }
-      );
-    }
+organizerToDelete: any = null;
+isDeleteDialogOpen: boolean = false;
+
+deleteOrganizer(id: string) {
+  this.organizerToDelete = this.users.find(u => u.id === id);
+  if (this.organizerToDelete) {
+    this.isDeleteDialogOpen = true;
+  } else {
+    alert('Organisateur non trouvé.');
   }
+}
+confirmDelete() {
+  if (this.organizerToDelete) {
+    this.organizerService.deleteOrganizerById(this.organizerToDelete.id).subscribe(
+      () => {
+        // Supprimer localement sans refaire un appel au backend
+        this.users = this.users.filter(u => u.id !== this.organizerToDelete.id);
+        this.updatePagination();
+        this.isDeleteDialogOpen = false;
+        this.organizerToDelete = null;
+      },
+      (error) => {
+        console.error('Erreur lors de la suppression:', error);
+        this.isDeleteDialogOpen = false;
+        this.organizerToDelete = null;
+      }
+    );
+  }
+}
+
 
   getFileName(fileUrl: string): string {
     return fileUrl.split('/').pop() || 'Fichier PDF';

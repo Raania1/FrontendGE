@@ -3,7 +3,7 @@ import { Component, HostListener } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink, RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faChartBar, faTools, faBars, faCalendarCheck, faCalendarAlt, faBullhorn, faUser, faCog, faSignOutAlt, faInfoCircle, faChevronRight, faChevronLeft } from '@fortawesome/free-solid-svg-icons';
+import { faChartBar, faTools, faBars, faCalendarCheck, faCalendarAlt, faBullhorn, faUser, faCog, faSignOutAlt, faInfoCircle, faChevronRight, faChevronLeft, faBoxOpen } from '@fortawesome/free-solid-svg-icons';
 import { PrestataireService } from '../../../Services/prestataire.service';
 
 @Component({
@@ -15,6 +15,7 @@ import { PrestataireService } from '../../../Services/prestataire.service';
 })
 export class SidebarPRComponent {
   faChartBar = faChartBar;
+  faBoxOpen = faBoxOpen;
   faTools = faTools;
   faCalendarCheck = faCalendarCheck;
   faCalendarAlt = faCalendarAlt;

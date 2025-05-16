@@ -8,7 +8,7 @@ import { ServiceService } from '../../../Services/service.service';
 import { PrestataireService } from '../../../Services/prestataire.service';
 import { firstValueFrom } from 'rxjs'; 
 
-interface ServiceInfo {
+interface ServiceInfo { 
   icon: string;
   title: string;
   value: string;

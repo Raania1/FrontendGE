@@ -12,7 +12,7 @@ import { CommonModule } from '@angular/common';
   imports: [FontAwesomeModule,FormsModule,ReactiveFormsModule,CommonModule],
   templateUrl: './parametre-pr.component.html',
   styleUrl: './parametre-pr.component.css'
-})
+}) 
 export class ParametrePRComponent {
   faBell = faBell;
   faUser = faUser;
@@ -165,5 +165,4 @@ export class ParametrePRComponent {
     this.passwordSuccessMessage = '';
     this.passwordErrorMessage = '';
   }
-
 }

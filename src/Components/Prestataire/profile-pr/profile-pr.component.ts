@@ -196,7 +196,7 @@ deleteComment(): void {
 }
   setActiveTab(tab: string) {
     this.activeTab = tab;
-  }
+  } 
 
   toggleReview(id: number) {
     this.expandedReview = this.expandedReview === id ? null : id;

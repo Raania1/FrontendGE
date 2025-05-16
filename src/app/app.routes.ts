@@ -33,6 +33,11 @@ import { SuccessComponent } from '../Components/Organisateur/success/success.com
 import { FailComponent } from '../Components/Organisateur/fail/fail.component';
 import { ReservationAdComponent } from '../Components/Admin/reservation-ad/reservation-ad.component';
 import { ContratAdComponent } from '../Components/Admin/contrat-ad/contrat-ad.component';
+import { PackFormComponent } from '../Components/Prestataire/pack-form/pack-form.component';
+import { PacksPrComponent } from '../Components/Prestataire/packs-pr/packs-pr.component';
+import { DetailsPackComponent } from '../Components/Prestataire/details-pack/details-pack.component';
+import { PublicitePrComponent } from '../Components/Prestataire/publicite-pr/publicite-pr.component';
+import { PubliciteAdComponent } from '../Components/Admin/publicite-ad/publicite-ad.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -75,11 +80,14 @@ export const routes: Routes = [
           { path: 'EditService/:id', component: EditServiceComponent },
           { path: 'reservations', component: ReservationPrComponent },
           { path: 'calendrier', component: ReservationPrComponent },
-
+          { path: 'packForm', component: PackFormComponent },
+          { path: 'packPr', component: PacksPrComponent },
+          { path: 'EditPack/:id', component: DetailsPackComponent },
+          { path: 'publicitePr', component: PublicitePrComponent },
         ],
       },
       {
-        path: 'administrateur',
+        path: 'administrateur', 
         component: SidebarAdComponent, 
         children: [
           { path: 'profile', component: ProfileAComponent },
@@ -89,6 +97,7 @@ export const routes: Routes = [
           { path: 'message', component: MassagesComponent },
           { path: 'reservations', component: ReservationAdComponent },
           { path: 'contrat', component: ContratAdComponent },
+          { path: 'publiciteAd', component: PubliciteAdComponent },
 
         ],
       }
