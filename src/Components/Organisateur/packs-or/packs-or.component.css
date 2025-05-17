@@ -1,0 +1,152 @@
+.container {
+  max-width: 1200px;
+  margin: auto;
+  padding: 20px;
+}
+
+.search-bar {
+  width: 100%;
+  padding: 10px 15px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-size: 16px;
+}
+
+.category-filter {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 30px;
+}
+
+.category-filter button {
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  background: #f2f2f2;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.category-filter .active {
+  background: #f57c00;
+  color: white;
+}
+
+.pack-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 30px;
+}
+
+.pack-card {
+  border-radius: 15px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+  display: flex;
+  flex-direction: column;
+}
+
+.image-wrapper {
+  position: relative;
+}
+
+.image-wrapper img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.discount-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: #f57c00;
+  color: white;
+  font-size: 14px;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
+.pack-info {
+  padding: 20px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.pack-info h3 {
+  font-size: 18px;
+  margin: 0 0 10px;
+}
+
+.pack-info .provider {
+  font-weight: normal;
+  font-size: 14px;
+  color: #666;
+}
+
+.pack-info p {
+  flex: 1;
+  font-size: 14px;
+  margin-bottom: 15px;
+}
+
+.price {
+  margin-bottom: 15px;
+}
+
+.new-price {
+  font-size: 20px;
+  font-weight: bold;
+  color: #f57c00;
+  margin-right: 10px;
+}
+
+.old-price {
+  text-decoration: line-through;
+  color: #999;
+  font-size: 14px;
+}
+
+.buttons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.btn-primary {
+  background: linear-gradient(to right, #f57c00, #fca311);
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.details-link {
+  color: #f57c00;
+  text-decoration: none;
+  font-weight: bold;
+}
+.details {
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+.details h4 {
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.details ul {
+  list-style: none;
+  padding: 0;
+}
+
+.details li {
+  margin-bottom: 10px;
+  padding-left: 10px;
+}

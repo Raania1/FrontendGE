@@ -1,14 +1,13 @@
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { PaiementService } from '../../../Services/paiement.service';
-import { CommonModule } from '@angular/common';
-import { ContractService } from '../../../Services/contrat.service';
 
 @Component({
-  selector: 'app-success',
+  selector: 'app-success-pr',
   standalone: true,
   imports: [CommonModule,RouterLink],
-  template: `
+    template: `
 <div class="flex items-center justify-center min-h-screen p-4">
   <div class="max-w-md w-full mx-auto border border-custom-gray/30 rounded-lg overflow-hidden">
     <div class="bg-green-100 border-b border-custom-gray/30 p-6">
@@ -29,37 +28,28 @@ import { ContractService } from '../../../Services/contrat.service';
         </div>
       </div>
       <p *ngIf="message" class="mb-4 text-gray-600">{{ message }}</p>
-      <button
-        *ngIf="contractCreated"
-        (click)="downloadContract()"
-        class="mt-4 border border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white py-2 px-4 rounded-md"
-      >
-        Télécharger le contrat
-      </button>
+    
     </div>
     <div class="bg-green-50 border-t border-custom-gray/30 p-6">
       <button 
-        routerLink="/homeOr"
+        routerLink="/prestataire/publicitePr"
         class="w-full border border-green-500 text-green-500 hover:bg-green-500 hover:text-white py-2 px-4 rounded-md"
       >
-        Retour à la page d'accueil
+        Retour à mon espace
       </button>
     </div>
   </div>
 </div>
 `
-
-
 })
-export class SuccessComponent {
-  message: string = '';
+export class SuccessPrComponent {
+message: string = '';
   contractCreated: boolean = false;
   paymentId: string | null = null;
 
   constructor(
     private route: ActivatedRoute,
     private paiementService: PaiementService,
-    private contractService: ContractService
   ) {}
 
   ngOnInit(): void {
@@ -67,14 +57,12 @@ export class SuccessComponent {
     console.log('Payment ID from URL:', this.paymentId);
 
     if (this.paymentId) {
-      this.paiementService.verifierPaiement(this.paymentId).subscribe({
+      this.paiementService.verifyPayementPub(this.paymentId).subscribe({
         next: (res: any) => {
           this.message = res.success ? 'Paiement confirmé avec succès.' : 'Le paiement a échoué';
-          if (res.success) {
-            this.createContract(this.paymentId!);
-          }
+        
         },
-        error: (err) => {
+        error: (err: any) => {
           console.error('Verification error:', err);
           this.message = "Erreur lors de la vérification du paiement.";
         }
@@ -85,38 +73,7 @@ export class SuccessComponent {
     }
   }
 
-  private createContract(paymentId: string): void {
-    this.contractService.createContract(paymentId).subscribe({
-      next: (response: any) => {
-        console.log('Contract created:', response);
-        this.contractCreated = true;
-        this.message = 'Paiement confirmé et contrat généré avec succès.';
-      },
-      error: (err) => {
-        console.error('Contract creation error:', err);
-        this.message = 'Erreur lors de la création du contrat.';
-      }
-    });
-  }
 
-  downloadContract(): void {
-    if (this.paymentId) {
-      this.contractService.downloadContract(this.paymentId).subscribe({
-        next: (blob) => {
-          const url = window.URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = `contract-${this.paymentId}.pdf`;
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
-          window.URL.revokeObjectURL(url);
-        },
-        error: (err) => {
-          console.error('Download error:', err);
-          this.message = 'Erreur lors du téléchargement du contrat.';
-        }
-      });
-    }
-  }
+
+ 
 }

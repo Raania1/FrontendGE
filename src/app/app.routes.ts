@@ -38,6 +38,9 @@ import { PacksPrComponent } from '../Components/Prestataire/packs-pr/packs-pr.co
 import { DetailsPackComponent } from '../Components/Prestataire/details-pack/details-pack.component';
 import { PublicitePrComponent } from '../Components/Prestataire/publicite-pr/publicite-pr.component';
 import { PubliciteAdComponent } from '../Components/Admin/publicite-ad/publicite-ad.component';
+import { FailPrComponent } from '../Components/Prestataire/fail-pr/fail-pr.component';
+import { SuccessPrComponent } from '../Components/Prestataire/success-pr/success-pr.component';
+import { PacksORComponent } from '../Components/Organisateur/packs-or/packs-or.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -62,7 +65,7 @@ export const routes: Routes = [
     { path: 'reservationsOR', component: ReservationOrComponent },
     { path: 'success', component: SuccessComponent },
     { path: 'fail', component: FailComponent },
-    // { path: 'services', component: ServicesComponent },
+    { path: 'packsOR', component: PacksORComponent },
 
 
 
@@ -84,6 +87,8 @@ export const routes: Routes = [
           { path: 'packPr', component: PacksPrComponent },
           { path: 'EditPack/:id', component: DetailsPackComponent },
           { path: 'publicitePr', component: PublicitePrComponent },
+          { path: 'successPr', component: SuccessPrComponent },
+          { path: 'failPr', component: FailPrComponent },
         ],
       },
       {

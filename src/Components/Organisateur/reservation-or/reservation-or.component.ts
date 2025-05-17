@@ -271,7 +271,7 @@ export class ReservationOrComponent implements OnInit {
         this.currentPage = page;
       }
     }
-  }
+  } 
 
   payerReservation(reservation: Reservation): void {
     if (!reservation || !reservation.id) return;

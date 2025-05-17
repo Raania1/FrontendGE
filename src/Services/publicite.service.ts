@@ -15,4 +15,15 @@ constructor(private http: HttpClient) { }
  getAll(): Observable<any> {
     return this.http.get<any>(`${this.baseUrl}pubs`);
     }
+
+    acceptAdvertisement(id: string): Observable<any> {
+    return this.http.put<any>(`${this.baseUrl}confirmer/${id}`, {});
+  }
+
+  refuseAdvertisement(id: string): Observable<any> {
+    return this.http.put<any>(`${this.baseUrl}annuler/${id}`, {});
+  }
+  deleteAdvertisement(id: string): Observable<any> {
+    return this.http.delete(`${this.baseUrl}delete/${id}`);
+  }
 }

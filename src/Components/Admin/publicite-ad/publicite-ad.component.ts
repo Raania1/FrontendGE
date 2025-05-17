@@ -1,13 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faBell, faChevronLeft, faChevronRight, faClipboardList } from '@fortawesome/free-solid-svg-icons';
-import { PrestataireService } from '../../../Services/prestataire.service';
-import { RouterLink } from '@angular/router';
 import { PubliciteService } from '../../../Services/publicite.service';
 
-type AdvertisementStatus = 'EN ATTENTE' | 'CONFIRMED' | 'TERMINEE';
+type AdvertisementStatus = 'En attente' | 'Acceptée' | 'Terminée' | 'CANCELED';
 
 interface Service {
   id: string;
@@ -47,9 +45,9 @@ interface PublicitePack {
 @Component({
   selector: 'app-publicite-ad',
   standalone: true,
-  imports: [FormsModule, CommonModule, FontAwesomeModule, RouterLink],
+  imports: [FormsModule, CommonModule, FontAwesomeModule],
   templateUrl: './publicite-ad.component.html',
-  styleUrl: './publicite-ad.component.css'
+  styleUrls: ['./publicite-ad.component.css']
 })
 export class PubliciteAdComponent implements OnInit {
   faClipboardList = faClipboardList;
@@ -62,6 +60,12 @@ export class PubliciteAdComponent implements OnInit {
   statusFilter: string = 'all';
   selectedAdvertisement: PublicitePack | null = null;
   isDetailsDialogOpen: boolean = false;
+  isApproveDialogOpen: boolean = false;
+  isRefuseDialogOpen: boolean = false;
+  isDeleteDialogOpen: boolean = false;
+  advertisementToApprove: PublicitePack | null = null;
+  advertisementToRefuse: PublicitePack | null = null;
+  advertisementToDelete: PublicitePack | null = null;
   isLoading: boolean = false;
   successMessage: string = '';
   errorMessage: string = '';
@@ -69,7 +73,7 @@ export class PubliciteAdComponent implements OnInit {
   currentPage: number = 1;
   itemsPerPage: number = 10;
 
-  constructor(private pubService: PubliciteService) {}
+  constructor(private pubService: PubliciteService, private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     this.fetchAdvertisements();
@@ -78,31 +82,32 @@ export class PubliciteAdComponent implements OnInit {
   fetchAdvertisements(): void {
     this.isLoading = true;
     this.pubService.getAll().subscribe({
-  next: (response: PublicitePack[]) => {
-    this.advertisements = response.sort((a, b) =>
-      new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-    );
-    this.isLoading = false;
-  },
-  error: (error) => {
-    this.errorMessage = 'Erreur lors de la récupération des publicités.';
-    console.error('Erreur:', error);
-    this.isLoading = false;
-  }
-});
-
+      next: (response: PublicitePack[]) => {
+        this.advertisements = response.sort((a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
+        this.isLoading = false;
+      },
+      error: (error) => {
+        this.errorMessage = 'Erreur lors de la récupération des publicités.';
+        console.error('Erreur:', error);
+        this.isLoading = false;
+      }
+    });
   }
 
   mapStatus(backendStatus: string): AdvertisementStatus {
     switch (backendStatus) {
       case 'PENDING':
-        return 'EN ATTENTE';
+        return 'En attente';
       case 'CONFIRMED':
-        return 'CONFIRMED';
+        return 'Acceptée';
       case 'TERMINEE':
-        return 'TERMINEE';
+        return 'Terminée';
+      case 'CANCELED':
+        return 'CANCELED';
       default:
-        return 'EN ATTENTE';
+        return 'En attente';
     }
   }
 
@@ -193,14 +198,16 @@ export class PubliciteAdComponent implements OnInit {
   getStatusBadgeClass(status: string): string {
     const mappedStatus = this.mapStatus(status);
     switch (mappedStatus) {
-      case 'EN ATTENTE':
-        return 'bg-orange-500 text-white';
-      case 'CONFIRMED':
-        return 'bg-green-600 text-white';
-      case 'TERMINEE':
+      case 'En attente':
+        return 'bg-yellow-100 text-yellow-800';
+      case 'Acceptée':
+        return 'bg-green-100 text-green-800';
+      case 'Terminée':
         return 'bg-gray-800 text-white';
+      case 'CANCELED':
+        return 'bg-red-100 text-red-800';
       default:
-        return 'bg-gray-300 text-gray-800';
+        return 'bg-gray-100 text-gray-800';
     }
   }
 
@@ -209,10 +216,131 @@ export class PubliciteAdComponent implements OnInit {
   }
 
   get pendingCount(): number {
-    return this.advertisements.filter(ad => this.mapStatus(ad.Status) === 'EN ATTENTE').length;
+    return this.advertisements.filter(ad => this.mapStatus(ad.Status) === 'En attente').length;
   }
 
   get publicCount(): number {
-    return this.advertisements.filter(ad => this.mapStatus(ad.Status) === 'CONFIRMED').length;
+    return this.advertisements.filter(ad => this.mapStatus(ad.Status) === 'Acceptée').length;
+  }
+
+  openApproveDialog(advertisement: PublicitePack): void {
+    this.advertisementToApprove = advertisement;
+    this.isApproveDialogOpen = true;
+  }
+
+  openRefuseDialog(advertisement: PublicitePack): void {
+    this.advertisementToRefuse = advertisement;
+    this.isRefuseDialogOpen = true;
+  }
+
+  openDeleteDialog(advertisement: PublicitePack): void {
+    this.advertisementToDelete = advertisement;
+    this.isDeleteDialogOpen = true;
+  }
+
+  confirmApprove(): void {
+    if (!this.advertisementToApprove) return;
+
+    this.isLoading = true;
+    this.pubService.acceptAdvertisement(this.advertisementToApprove.id).subscribe({
+      next: () => {
+        this.successMessage = 'Publicité approuvée avec succès.';
+        const adToUpdate = this.advertisements.find(ad => ad.id === this.advertisementToApprove!.id);
+        if (adToUpdate) {
+          adToUpdate.Status = 'CONFIRMED';
+        } else {
+          console.warn('Publicité non trouvée:', this.advertisementToApprove!.id);
+        }
+        this.isLoading = false;
+        this.isApproveDialogOpen = false;
+        this.advertisementToApprove = null;
+        this.cdr.markForCheck();
+        setTimeout(() => {
+          this.successMessage = '';
+          this.cdr.markForCheck();
+        }, 3000);
+      },
+      error: (error) => {
+        this.errorMessage = 'Erreur lors de l\'approbation de la publicité';
+        console.error('Erreur:', error);
+        this.isLoading = false;
+        this.cdr.markForCheck();
+        setTimeout(() => {
+          this.errorMessage = '';
+          this.cdr.markForCheck();
+        }, 3000);
+      }
+    });
+  }
+
+  confirmRefuse(): void {
+    if (!this.advertisementToRefuse) return;
+
+    this.isLoading = true;
+    this.pubService.refuseAdvertisement(this.advertisementToRefuse.id).subscribe({
+      next: () => {
+        this.successMessage = 'Publicité refusée avec succès.';
+        const adToUpdate = this.advertisements.find(ad => ad.id === this.advertisementToRefuse!.id);
+        if (adToUpdate) {
+          adToUpdate.Status = 'CANCELED';
+        } else {
+          console.warn('Publicité non trouvée:', this.advertisementToRefuse!.id);
+        }
+        this.isLoading = false;
+        this.isRefuseDialogOpen = false;
+        this.advertisementToRefuse = null;
+        this.cdr.markForCheck();
+        setTimeout(() => {
+          this.successMessage = '';
+          this.cdr.markForCheck();
+        }, 3000);
+      },
+      error: (error) => {
+        this.errorMessage = 'Erreur lors du refus de la publicité';
+        console.error('Erreur:', error);
+        this.isLoading = false;
+        this.cdr.markForCheck();
+        setTimeout(() => {
+          this.errorMessage = '';
+          this.cdr.markForCheck();
+        }, 3000);
+      }
+    });
+  }
+
+  confirmDelete(): void {
+    if (!this.advertisementToDelete) return;
+
+    this.isLoading = true;
+    this.pubService.deleteAdvertisement(this.advertisementToDelete.id).subscribe({
+      next: () => {
+        this.successMessage = 'Publicité supprimée avec succès.';
+        this.advertisements = this.advertisements.filter(ad => ad.id !== this.advertisementToDelete!.id);
+        this.isLoading = false;
+        this.isDeleteDialogOpen = false;
+        this.advertisementToDelete = null;
+        this.cdr.markForCheck();
+        setTimeout(() => {
+          this.successMessage = '';
+          this.cdr.markForCheck();
+        }, 3000);
+      },
+      error: (error) => {
+        this.errorMessage = error.message === 'Publicité non trouvée' ? 'Publicité non trouvée.' : 'Erreur lors de la suppression de la publicité.';
+        console.error('Erreur:', error);
+        this.isLoading = false;
+        this.cdr.markForCheck();
+        setTimeout(() => {
+          this.errorMessage = '';
+          this.cdr.markForCheck();
+        }, 3000);
+      }
+    });
+  }
+
+  closeMessage(): void {
+    this.successMessage = '';
+    this.errorMessage = '';
+    this.cdr.markForCheck();
   }
 }

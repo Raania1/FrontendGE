@@ -35,9 +35,10 @@
           (change)="resetPagination()"
         >
           <option value="all">Toutes les publicités</option>
-          <option value="EN ATTENTE">En attente</option>
-          <option value="CONFIRMED">Confirmées</option>
-          <option value="TERMINEE">Terminées</option>
+          <option value="En attente">En attente</option>
+          <option value="Acceptée">Confirmées</option>
+          <option value="Terminée">Terminées</option>
+          <option value="CANCELED">Refusées</option>
         </select>
         <select
           class="border border-gray-300 rounded-md h-10 px-3 py-2 w-32 sm:w-44 md:w-52 bg-white"
@@ -52,6 +53,22 @@
       </div>
     </div><br>
     <hr class="mb-6">
+    <div *ngIf="successMessage" class="fixed top-4 right-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded z-50 flex justify-between items-center">
+      <span>{{ successMessage }}</span>
+      <button (click)="closeMessage()" class="ml-4 text-green-700 hover:text-green-900">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+        </svg>
+      </button>
+    </div>
+    <div *ngIf="errorMessage" class="fixed top-4 right-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded z-50 flex justify-between items-center">
+      <span>{{ errorMessage }}</span>
+      <button (click)="closeMessage()" class="ml-4 text-red-700 hover:text-red-900">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+        </svg>
+      </button>
+    </div>
     <!-- Cartes mobiles -->
     <div class="md:hidden space-y-4">
       <div *ngIf="paginatedAdvertisements.length === 0" class="flex flex-col items-center justify-center py-16">
@@ -82,22 +99,24 @@
           </span>
         </div>
         <div class="flex gap-2 justify-end mt-2">
-          <ng-container *ngIf="mapStatus(advertisement.Status) === 'EN ATTENTE'">
-                    <button
-                      *ngIf="!advertisement.paid"
-                      class="px-3 py-1 border border-blue-600 text-blue-600 rounded-md text-sm hover:bg-blue-600 hover:text-white"
-                    >
-                      Refuser
-                    </button>
-                    <button
-                      class="px-3 py-1 border border-green-600 text-green-600 rounded-md text-sm hover:bg-green-600 hover:text-white"
-                    >
-                      Accepter
-                    </button>
-                   
-                  </ng-container>
+          <ng-container *ngIf="mapStatus(advertisement.Status) === 'En attente'">
+            <button
+              *ngIf="!advertisement.paid"
+              class="px-3 py-1 border border-blue-600 text-blue-600 rounded-md text-sm hover:bg-blue-600 hover:text-white"
+              (click)="openRefuseDialog(advertisement)"
+            >
+              Refuser
+            </button>
+            <button
+              class="px-3 py-1 border border-green-600 text-green-600 rounded-md text-sm hover:bg-green-600 hover:text-white"
+              (click)="openApproveDialog(advertisement)"
+            >
+              Accepter
+            </button>
+          </ng-container>
           <button
-            *ngIf="mapStatus(advertisement.Status) !== 'CONFIRMED'"
+            *ngIf="mapStatus(advertisement.Status) === 'CANCELED'"
+            (click)="openDeleteDialog(advertisement)"
             class="p-2 text-red-500 hover:text-red-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -124,7 +143,7 @@
               <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Pack</th>
               <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Prestataire</th>
               <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Prix</th>
-             <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Statut</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Statut</th>
               <th class="px-6 py-3 text-right text-xs font-medium text-gray-600 uppercase tracking-wider">Actions</th>
             </tr>
           </thead>
@@ -139,30 +158,32 @@
                 <p class="text-sm text-gray-600">{{ advertisement.Pack.Prestataire.email }}</p>
                 <p class="text-xs text-gray-600">{{ advertisement.Pack.Prestataire.numTel }}</p>
               </td>
-              <td class="px-6 py-4 text-gray-900">{{ advertisement.prix }}</td>
+              <td class="px-6 py-4 text-gray-900">{{ advertisement.prix }} DT</td>
               <td class="px-6 py-4">
-                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ getStatusBadgeClass(advertisement.Status) }}">
+                <span class="inline-block text-xs font-semibold px-2 py-1 rounded-full {{ getStatusBadgeClass(advertisement.Status) }}">
                   {{ getStatusText(advertisement.Status) }}
                 </span>
               </td>
               <td class="px-6 py-4 text-right">
                 <div class="flex justify-end gap-2">
-                  <ng-container *ngIf="mapStatus(advertisement.Status) === 'EN ATTENTE'">
+                  <ng-container *ngIf="mapStatus(advertisement.Status) === 'En attente'">
                     <button
                       *ngIf="!advertisement.paid"
                       class="px-3 py-1 border border-blue-600 text-blue-600 rounded-md text-sm hover:bg-blue-600 hover:text-white"
+                      (click)="openRefuseDialog(advertisement)"
                     >
                       Refuser
                     </button>
                     <button
                       class="px-3 py-1 border border-green-600 text-green-600 rounded-md text-sm hover:bg-green-600 hover:text-white"
+                      (click)="openApproveDialog(advertisement)"
                     >
                       Accepter
                     </button>
-                   
                   </ng-container>
                   <button
-                    *ngIf="mapStatus(advertisement.Status) !== 'CONFIRMED'"
+                    *ngIf="mapStatus(advertisement.Status) === 'CANCELED'"
+                    (click)="openDeleteDialog(advertisement)"
                     class="p-2 text-red-500 hover:text-red-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -379,4 +400,104 @@
       </div>
     </div>
   </div>
+  <!-- Approve Dialog -->
+  <div *ngIf="isApproveDialogOpen" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center p-4 z-50">
+    <div class="bg-white rounded-lg shadow-xl max-w-md w-full">
+      <div class="p-6">
+        <h3 class="text-lg font-bold text-green-700">Confirmer l'approbation</h3>
+        <p class="text-gray-600 mt-2">
+          Êtes-vous sûr de vouloir approuver cette publicité ? Le prestataire sera notifié.
+        </p>
+        <div *Var="advertisementToApprove as ad" class="mt-4 p-4 bg-green-50 border border-gray-300 rounded-md">
+          <p class="font-medium text-gray-900">{{ ad.Pack.title }}</p>
+          <p class="text-sm text-gray-600">Prestataire: {{ ad.Pack.Prestataire.nom }} {{ ad.Pack.Prestataire.prenom }}</p>
+          <p class="text-sm text-gray-600">Email: {{ ad.Pack.Prestataire.email }}</p>
+          <p class="text-sm text-gray-600">Prix: {{ ad.prix }} DT</p>
+        </div>
+      </div>
+      <div class="bg-gray-50 px-4 py-3 sm:flex rounded-full sm:flex-row-reverse sm:px-6">
+        <button
+          type="button"
+          class="w-full inline-flex justify-center rounded-md border border-transparent bg-green-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-green-700 sm:ml-3 sm:w-auto sm:text-sm"
+          (click)="confirmApprove()"
+        >
+          Approuver
+        </button>
+        <button
+          type="button"
+          class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+          (click)="isApproveDialogOpen = false; advertisementToApprove = null"
+        >
+          Annuler
+        </button>
+      </div>
+    </div>
+  </div>
+  <!-- Refuse Dialog -->
+  <div *ngIf="isRefuseDialogOpen" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center p-4 z-50">
+    <div class="bg-white rounded-lg shadow-xl max-w-md w-full">
+      <div class="p-6">
+        <h3 class="text-lg font-bold text-red-700">Confirmer le refus</h3>
+        <p class="text-gray-600 mt-2">
+          Êtes-vous sûr de vouloir refuser cette publicité ? Le prestataire sera notifié.
+        </p>
+        <div *Var="advertisementToRefuse as ad" class="mt-4 p-4 bg-red-50 border border-gray-300 rounded-md">
+          <p class="font-medium text-gray-900">{{ ad.Pack.title }}</p>
+          <p
+
+ class="text-sm text-gray-600">Prestataire: {{ ad.Pack.Prestataire.nom }} {{ ad.Pack.Prestataire.prenom }}</p>
+          <p class="text-sm text-gray-600">Email: {{ ad.Pack.Prestataire.email }}</p>
+          <p class="text-sm text-gray-600">Prix: {{ ad.prix }} DT</p>
+        </div>
+      </div>
+      <div class="bg-gray-50 px-4 py-3 rounded-full sm:flex sm:flex-row-reverse sm:px-6">
+        <button
+          type="button"
+          class="w-full inline-flex justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-red-700 sm:ml-3 sm:w-auto sm:text-sm"
+          (click)="confirmRefuse()"
+        >
+          Refuser
+        </button>
+        <button
+          type="button"
+          class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+          (click)="isRefuseDialogOpen = false; advertisementToRefuse = null"
+        >
+          Annuler
+        </button>
+      </div>
+    </div>
+  </div>
 </div>
+  <div *ngIf="isDeleteDialogOpen" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center p-4 z-50">
+    <div class="bg-white rounded-lg shadow-xl max-w-md w-full">
+      <div class="p-6">
+        <h3 class="text-lg font-bold text-red-700">Confirmer la suppression</h3>
+        <p class="text-gray-600 mt-2">
+          Êtes-vous sûr de vouloir supprimer cette publicité ? Cette action est irréversible.
+        </p>
+        <div *ngIf="advertisementToDelete as ad" class="mt-4 p-4 bg-red-50 border border-gray-300 rounded-md">
+          <p class="font-medium text-gray-900">{{ ad.Pack.title }}</p>
+          <p class="text-sm text-gray-600">Prestataire: {{ ad.Pack.Prestataire.nom }} {{ ad.Pack.Prestataire.prenom }}</p>
+          <p class="text-sm text-gray-600">Email: {{ ad.Pack.Prestataire.email }}</p>
+          <p class="text-sm text-gray-600">Prix: {{ ad.prix }} DT</p>
+        </div>
+      </div>
+      <div class="bg-gray-50 px-4 py-3 rounded-full sm:flex sm:flex-row-reverse sm:px-6">
+        <button
+          type="button"
+          class="w-full inline-flex justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-red-700 sm:ml-3 sm:w-auto sm:text-sm"
+          (click)="confirmDelete()"
+        >
+          Supprimer
+        </button>
+        <button
+          type="button"
+          class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+          (click)="isDeleteDialogOpen = false; advertisementToDelete = null"
+        >
+          Annuler
+        </button>
+      </div>
+    </div>
+  </div>

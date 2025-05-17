@@ -2,10 +2,10 @@ import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 @Component({
-  selector: 'app-fail',
+  selector: 'app-fail-pr',
   standalone: true,
   imports: [RouterLink],
-  template: `
+    template: `
 <div class="flex items-center justify-center min-h-screen p-4">
   <div class="max-w-md w-full mx-auto border border-custom-gray/30 rounded-lg overflow-hidden">
     <div class="bg-red-100 border-b border-custom-gray/30 p-6">
@@ -35,16 +35,17 @@ import { RouterLink } from '@angular/router';
         Réessayer le paiement 
       </button>
       <button
-        routerLink="/homeOr"
+        routerLink="/prestataire/publicitePr"
         class="w-full mt-3 border border-gray-500 text-gray-500 hover:bg-gray-500 hover:text-white py-2 px-4 rounded-md"
       >
-        Retour à l'accueil
+        Retour à mon espace
       </button>
     </div>
   </div>
 </div>
 `
 })
-export class FailComponent {
+export class FailPrComponent {
 
 }
+ 

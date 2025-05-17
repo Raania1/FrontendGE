@@ -15,8 +15,15 @@ export class PaiementService {
   }
   verifierPaiement(payment_id: string) {
     return this.http.post(`${this.baseUrl}/verify/${payment_id}`, {});
-}
+  }
 getPaymentByReservationId(reservationId: string): Observable<any> {
   return this.http.get(`${this.baseUrl}/getByIdreservation/${reservationId}`);
 }
+ // paiement pub
+  payerPub(pubId: string) {
+    return this.http.post(`${this.baseUrl}/addPB`, { pubId });
+  }
+ verifyPayementPub(payment_id: string) {
+    return this.http.post(`${this.baseUrl}/verifyPub/${payment_id}`, {});
+  }
 }

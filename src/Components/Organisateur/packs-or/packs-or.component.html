@@ -1,0 +1,55 @@
+<app-navbar-or></app-navbar-or>
+<div class="container">
+  <input type="text" placeholder="Rechercher un pack..." [(ngModel)]="search" class="search-bar" />
+
+  <div class="category-filter">
+    <button
+      *ngFor="let cat of categories"
+      (click)="selectedCategory = cat"
+      [ngClass]="{ 'active': selectedCategory === cat }"
+    >
+      {{ cat }}
+    </button>
+  </div>
+
+  <h2>Offres Spéciales</h2>
+
+  <div class="pack-grid">
+    <div class="pack-card" *ngFor="let pack of filteredPacks">
+      <div class="image-wrapper">
+        <img [src]="pack.imageUrl" [alt]="pack.title" />
+        <div class="discount-badge">-{{ pack.discount }}%</div>
+      </div>
+
+
+      <div class="pack-info">
+  <h3>{{ pack.title }} <span class="provider">par {{ pack.provider }}</span></h3>
+  <p>{{ pack.description }}</p>
+
+  <!-- DETAILS: déplace ici -->
+  <div *ngIf="pack.showDetails" class="details">
+    <h4>Services inclus :</h4>
+    <ul>
+      <li *ngFor="let service of pack.services">
+        ✅ <strong>{{ service.title }}</strong><br />
+        <small>{{ service.description }}</small>
+      </li>
+    </ul>
+  </div>
+
+  <div class="price">
+    <span class="new-price">{{ pack.price | currency:'EUR' }}</span>
+    <span class="old-price">{{ pack.oldPrice | currency:'EUR' }}</span>
+  </div>
+
+  <div class="buttons">
+    <button class="btn-primary">Réserver ce pack</button>
+    <a href="#" class="details-link" (click)="pack.showDetails = !pack.showDetails; $event.preventDefault()">
+      {{ pack.showDetails ? 'Masquer' : 'Détails' }} <span [innerHTML]="pack.showDetails ? '↓' : '→'"></span>
+    </a>
+  </div>
+</div>
+
+    </div>
+  </div>
+</div>

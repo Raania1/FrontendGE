@@ -1,12 +1,15 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faBell, faChevronLeft, faChevronRight, faClipboardList } from '@fortawesome/free-solid-svg-icons';
 import { PrestataireService } from '../../../Services/prestataire.service';
 import { RouterLink } from '@angular/router';
+import { PubliciteService } from '../../../Services/publicite.service';
+import { PaiementService } from '../../../Services/paiement.service';
 
-type AdvertisementStatus = 'EN ATTENTE' | 'CONFIRMED' | 'TERMINEE';
+type AdvertisementStatus = 'En attente' | 'Acceptée' | 'Terminée' | 'Refusée';
+
 
 interface Service {
   id: string;
@@ -84,7 +87,9 @@ export class PublicitePrComponent implements OnInit {
     pdProfile: ''
   };
 
-  constructor(private prestataireService: PrestataireService) {}
+  constructor(private prestataireService: PrestataireService,private pubService: PubliciteService,
+    private cdr: ChangeDetectorRef,    private paiementService: PaiementService
+    ) {}
 
   ngOnInit(): void {
     this.fetchPrestataireData();
@@ -123,14 +128,16 @@ export class PublicitePrComponent implements OnInit {
 
   mapStatus(backendStatus: string): AdvertisementStatus {
     switch (backendStatus) {
-      case 'PENDING':
-        return 'EN ATTENTE';
+       case 'PENDING':
+        return 'En attente';
       case 'CONFIRMED':
-        return 'CONFIRMED';
+        return 'Acceptée';
       case 'TERMINEE':
-        return 'TERMINEE';
+        return 'Terminée';
+      case 'CANCELED':
+        return 'Refusée';
       default:
-        return 'EN ATTENTE'; 
+        return 'En attente';
     }
   }
 
@@ -210,20 +217,18 @@ export class PublicitePrComponent implements OnInit {
     return pages;
   }
 
-  openDetailsDialog(advertisement: PublicitePack): void {
-    this.selectedAdvertisement = advertisement;
-    this.isDetailsDialogOpen = true;
-  }
 
   getStatusBadgeClass(status: string): string {
     const mappedStatus = this.mapStatus(status);
     switch (mappedStatus) {
-      case 'EN ATTENTE':
-        return 'bg-orange-500 text-white';
-      case 'CONFIRMED':
-        return 'bg-green-600 text-white';
-      case 'TERMINEE':
+      case 'En attente':
+        return 'bg-yellow-100 text-yellow-800';
+      case 'Acceptée':
+        return 'bg-green-100 text-green-800';
+      case 'Terminée':
         return 'bg-gray-800 text-white';
+      case 'Refusée':
+        return 'bg-red-100 text-red-800';
       default:
         return 'bg-gray-300 text-gray-800';
     }
@@ -231,5 +236,67 @@ export class PublicitePrComponent implements OnInit {
 
   getStatusText(status: string): string {
     return this.mapStatus(status);
+  }
+  isDeleteDialogOpen: boolean = false;
+  advertisementToDelete: PublicitePack | null = null;
+  openDeleteDialog(advertisement: PublicitePack): void {
+  this.advertisementToDelete = advertisement;
+  this.isDeleteDialogOpen = true;
+}
+  openDetailsDialog(advertisement: PublicitePack): void {
+    this.selectedAdvertisement = advertisement;
+    this.isDetailsDialogOpen = true;
+  }
+ confirmDelete(): void {
+  if (!this.advertisementToDelete) return;
+
+  this.isLoading = true;
+  this.pubService.deleteAdvertisement(this.advertisementToDelete.id).subscribe({
+    next: () => {
+      this.successMessage = 'Publicité supprimée avec succès.';
+      this.advertisements = this.advertisements.filter(ad => ad.id !== this.advertisementToDelete!.id);
+      this.isLoading = false;
+      this.isDeleteDialogOpen = false;
+      this.advertisementToDelete = null;
+      this.cdr.markForCheck();
+      setTimeout(() => {
+        this.successMessage = '';
+        this.cdr.markForCheck();
+      }, 3000);
+    },
+    error: (error) => {
+      this.errorMessage = error.message === 'Publicité non trouvée' ? 'Publicité non trouvée.' : 'Erreur lors de la suppression de la publicité.';
+      console.error('Erreur:', error);
+      this.isLoading = false;
+      this.cdr.markForCheck();
+      setTimeout(() => {
+        this.errorMessage = '';
+        this.cdr.markForCheck();
+      }, 3000);
+    }
+  });
+}
+  closeMessage(): void {
+    this.successMessage = '';
+    this.errorMessage = '';
+    this.cdr.markForCheck();
+  }
+  payerPub(advertisement: PublicitePack): void {
+    if (!advertisement || !advertisement.id) return;
+
+    this.paiementService.payerPub(advertisement.id).subscribe({
+      next: (res: any) => {
+        const link = res?.result?.link;
+        if (link) {
+          window.location.href = link;
+        } else {
+          alert("Erreur : lien de paiement introuvable");
+        }
+      },
+      error: (err) => {
+        console.error('Erreur de paiement Flouci :', err);
+        alert("Erreur lors de la tentative de paiement.");
+      }
+    });
   }
 }
