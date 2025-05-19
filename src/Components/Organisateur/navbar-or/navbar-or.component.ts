@@ -37,7 +37,7 @@ export class NavbarORComponent {
     { label: 'Acceuil', url: '/homeOr' },
     { label: 'Evènnements', url: '/creatEvent' },
     { label: 'Réservations', url: '/reservationsOR' },
-    { label: 'Packs Sponsorisés', url: '/packsOR' },
+    { label: 'Packs Publicitaires', url: '/packsOR' },
 
   ];
   isDropdownOpen = false;

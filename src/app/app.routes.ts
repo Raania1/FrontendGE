@@ -41,6 +41,7 @@ import { PubliciteAdComponent } from '../Components/Admin/publicite-ad/publicite
 import { FailPrComponent } from '../Components/Prestataire/fail-pr/fail-pr.component';
 import { SuccessPrComponent } from '../Components/Prestataire/success-pr/success-pr.component';
 import { PacksORComponent } from '../Components/Organisateur/packs-or/packs-or.component';
+import { ReservationFormPackComponent } from '../Components/Organisateur/reservation-form-pack/reservation-form-pack.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -62,6 +63,7 @@ export const routes: Routes = [
     { path: 'creatEvent', component: CreatEventComponent },
     { path: 'PresDetails/:id', component: PresDetailsComponent },
     { path: 'reservation/:id', component: ReservationFormComponent },
+    { path: 'reservationPack/:id', component: ReservationFormPackComponent},
     { path: 'reservationsOR', component: ReservationOrComponent },
     { path: 'success', component: SuccessComponent },
     { path: 'fail', component: FailComponent },

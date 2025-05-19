@@ -1,55 +1,237 @@
 <app-navbar-or></app-navbar-or>
-<div class="container">
-  <input type="text" placeholder="Rechercher un pack..." [(ngModel)]="search" class="search-bar" />
-
-  <div class="category-filter">
-    <button
-      *ngFor="let cat of categories"
-      (click)="selectedCategory = cat"
-      [ngClass]="{ 'active': selectedCategory === cat }"
-    >
-      {{ cat }}
-    </button>
-  </div>
-
-  <h2>Offres Spéciales</h2>
-
-  <div class="pack-grid">
-    <div class="pack-card" *ngFor="let pack of filteredPacks">
-      <div class="image-wrapper">
-        <img [src]="pack.imageUrl" [alt]="pack.title" />
-        <div class="discount-badge">-{{ pack.discount }}%</div>
-      </div>
-
-
-      <div class="pack-info">
-  <h3>{{ pack.title }} <span class="provider">par {{ pack.provider }}</span></h3>
-  <p>{{ pack.description }}</p>
-
-  <!-- DETAILS: déplace ici -->
-  <div *ngIf="pack.showDetails" class="details">
-    <h4>Services inclus :</h4>
-    <ul>
-      <li *ngFor="let service of pack.services">
-        ✅ <strong>{{ service.title }}</strong><br />
-        <small>{{ service.description }}</small>
-      </li>
-    </ul>
-  </div>
-
-  <div class="price">
-    <span class="new-price">{{ pack.price | currency:'EUR' }}</span>
-    <span class="old-price">{{ pack.oldPrice | currency:'EUR' }}</span>
-  </div>
-
-  <div class="buttons">
-    <button class="btn-primary">Réserver ce pack</button>
-    <a href="#" class="details-link" (click)="pack.showDetails = !pack.showDetails; $event.preventDefault()">
-      {{ pack.showDetails ? 'Masquer' : 'Détails' }} <span [innerHTML]="pack.showDetails ? '↓' : '→'"></span>
-    </a>
+<div
+  class="relative py-24"
+  style="background-image: url('https://media.istockphoto.com/id/804893032/fr/photo/flou-des-affaires-conf%C3%A9rence-et-pr%C3%A9sentation-dans-la-salle-de-conf%C3%A9rence.jpg?s=612x612&w=0&k=20&c=t5bT38VU4_N_wq8YWTxmTX7SnxZQRfRqbqXwGV9OziQ='); background-size: cover; background-repeat: no-repeat; background-position: center;"
+>
+  <div class="absolute inset-0 bg-custom-brown/50"></div>
+  <div class="relative max-w-4xl mx-auto text-center px-4">
+    <h2 class="text-4xl font-serif text-white mb-6">Découvrez nos "Packs Publicitaires"</h2>
+    <p class="text-xl text-white/90">
+      Des services professionnels pour valoriser votre Evènnement.
+    </p>
   </div>
 </div>
+<br />
+<div class="max-w-6xl mx-auto px-5">
+  <div class="flex justify-end gap-3 mb-6 items-center max-md:flex-col">
+    <input
+      type="text"
+      placeholder="Rechercher un pack..."
+      [(ngModel)]="search"
+      class="w-60 px-2 py-1.5 border border-gray-300 rounded-md text-sm max-md:w-full"
+    />
+    <select
+      [(ngModel)]="selectedSort"
+      class="w-60 px-2 py-1.5 border border-gray-300 rounded-md text-sm bg-white cursor-pointer max-md:w-full"
+    >
+      <option value="plusRecents">Plus récents</option>
+      <option value="plusAnciens">Plus anciens</option>
+      <option value="plusCher">Plus cher</option>
+      <option value="moinsCher">Moins cher</option>
+    </select>
+  </div>
 
+  <div class="mb-[30px]">
+    <ng-container *ngIf="currentSlide.length; else noPacks">
+      <div
+        class="grid grid-cols-3 gap-[30px] px-[15px] max-md:grid-cols-1 max-md:gap-5 max-md:px-[10px]"
+      >
+        <div
+          class="rounded-2xl overflow-hidden bg-white shadow-[0_4px_20px_rgba(0,0,0,0.05)] flex flex-col"
+          *ngFor="let pack of currentSlide"
+        >
+          <div class="relative">
+            <img
+              [src]="pack.coverPhotoUrl"
+              [alt]="pack.title"
+              class="w-full h-[200px] object-cover"
+            />
+            <div
+              class="absolute top-2.5 right-2.5 bg-rose-500 hover:bg-rose-600 text-white text-sm px-2 py-1 rounded-md"
+              *ngIf="pack.promo"
+            >
+              -{{ ((pack.price - pack.promo) / pack.price * 100).toFixed(0) }}%
+            </div>
+          </div>
+          <div class="p-5 flex-1 flex flex-col">
+            <h3 class="text-lg mb-2.5 font-serif font-bold">
+              {{ pack.title }}
+              <p class="font-normal text-sm text-gray-600">par {{ pack.prestataire.prenom }} {{ pack.prestataire.nom }}</p>
+            </h3>
+            <p class="flex-1 text-sm mb-[15px]">
+              {{ pack.showFullDescription ? pack.description : truncateDescription(pack.description) }}
+              <a
+                href="#"
+                class="text-orange-500 no-underline text-sm ml-2"
+                (click)="
+                  pack.showFullDescription = !pack.showFullDescription;
+                  $event.preventDefault()
+                "
+                >{{ pack.showFullDescription ? 'Voir moins' : 'Voir plus' }}</a
+              >
+            </p>
+            <div *ngIf="pack.showDetails" class="mt-2.5 text-sm">
+              <h4 class="mb-1.5 font-bold">Services inclus :</h4>
+              <ul class="list-none p-0">
+                <li
+                  *ngFor="let service of pack.services"
+                  class="mb-2.5 pl-2.5 relative pl-6"
+                >
+                  <span
+                    class="absolute left-0 top-1.5 w-2 h-2 bg-orange-500 rounded-full"
+                  ></span>
+                  <strong>{{ service.name }}</strong><br />
+                  <small>{{ service.description }}</small>
+                </li>
+              </ul>
+            </div>
+
+            <div class="mb-[15px]">
+              <span class="text-xl font-bold text-amber-600 mr-2.5">
+                {{ pack.promo || pack.price }} DT
+              </span>
+              <span class="line-through text-gray-500 text-sm" *ngIf="pack.promo">
+                {{ pack.price }} DT
+              </span>
+            </div>
+            <div class="flex justify-between items-center">
+              <abbr title="Réserver ce pack">
+                <div [routerLink]="['/reservationPack', pack.id]"
+                  class="bg-gray-100 hover:bg-amber-600/5 rounded-full p-2 transition duration-200 cursor-pointer"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="text-gray-600 hover:text-primary transition duration-200"
+                  >
+                    <circle cx="8" cy="21" r="1" />
+                    <circle cx="19" cy="21" r="1" />
+                    <path
+                      d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"
+                    />
+                  </svg>
+                </div>
+              </abbr>
+              <!-- <button class="bg-custom-orange hover:bg-orange-600 text-white border-none py-2.5 px-[15px] rounded-lg font-medium cursor-pointer">Réserver ce pack</button> -->
+              <a
+                href="#"
+                class="text-orange-500 no-underline text-sm"
+                (click)="pack.showDetails = !pack.showDetails; $event.preventDefault()"
+                >{{ pack.showDetails ? 'Voir moins' : 'Voir plus' }}</a
+              >
+            </div>
+            <p class="text-sm text-gray-500 mt-1">
+              Publié depuis le {{ pack.DatePublic | date:'longDate' }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+
+    <ng-template #noPacks>
+      <p class="text-center text-gray-500 text-lg py-20">
+        Aucun pack publicitaire disponible pour le moment. Merci de revenir plus
+        tard !
+      </p>
+    </ng-template>
+  </div>
+
+  <div
+    class="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6 mt-4"
+    *ngIf="slides.length > 1"
+  >
+    <!-- Mobile View -->
+    <div class="flex flex-1 justify-between sm:hidden">
+      <button
+        (click)="previousPage()"
+        [disabled]="currentPage === 0"
+        class="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        Précédent
+      </button>
+      <button
+        (click)="nextPage()"
+        [disabled]="currentPage === totalPages - 1"
+        class="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        Suivant
+      </button>
+    </div>
+
+    <!-- Desktop View -->
+    <div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
+      <div>
+        <p class="text-sm text-gray-700">
+          Affichage de
+          <span class="font-medium">{{ (currentPage * itemsPerPage) + 1 }}</span> à
+          <span class="font-medium">{{
+            (currentPage + 1) * itemsPerPage > filteredPacks.length
+              ? filteredPacks.length
+              : (currentPage + 1) * itemsPerPage
+          }}</span>
+          sur <span class="font-medium">{{ filteredPacks.length }}</span> résultats
+        </p>
+      </div>
+      <div>
+        <nav
+          class="isolate inline-flex -space-x-px rounded-md shadow-sm"
+          aria-label="Pagination"
+        >
+          <button
+            (click)="previousPage()"
+            [disabled]="currentPage === 0"
+            class="px-3 py-1 border border-gray-300 rounded-md text-sm hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <fa-icon [icon]="faChevronLeft"></fa-icon>
+          </button>
+
+          <ng-container *ngFor="let page of getPages()">
+            <button
+              *ngIf="page === -1"
+              disabled
+              class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-300 focus:outline-offset-0"
+            >
+              ...
+            </button>
+            <button
+              *ngIf="page !== -1"
+              (click)="goToPage(page)"
+              class="px-3 py-1 border border-gray-300 rounded-md text-sm"
+              [ngClass]="{
+                'bg-custom-orange text-white': page === currentPage,
+                'text-gray-900 hover:bg-gray-100': page !== currentPage
+              }"
+            >
+              {{ page + 1 }}
+            </button>
+          </ng-container>
+
+          <button
+            (click)="nextPage()"
+            [disabled]="currentPage === totalPages - 1"
+            class="px-3 py-1 border border-gray-300 rounded-md text-sm hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <fa-icon [icon]="faChevronRight"></fa-icon>
+          </button>
+        </nav>
+      </div>
     </div>
   </div>
 </div>
+<hr />
+<div class="bg-custom-black/80 text-center py-4">
+  <p class="text-custom-gray">© 2025 FLESK EVENT. Tous droits réservés.</p>
+</div>
+
+<style>
+  .shadow-\[0_4px_20px_rgba\(0\,0\,0\,0\.05\)\] {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  }
+</style>

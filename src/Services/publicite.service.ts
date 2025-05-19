@@ -26,4 +26,7 @@ constructor(private http: HttpClient) { }
   deleteAdvertisement(id: string): Observable<any> {
     return this.http.delete(`${this.baseUrl}delete/${id}`);
   }
+   getAllPublicites(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}pubC`)
+  }
 }
