@@ -27,6 +27,7 @@ export class SidebarPRComponent {
   faChevronRight = faChevronRight;
   faInfoCircle = faInfoCircle;
   faBars = faBars; 
+  
 
   isSidebarOpen: boolean = false; 
   isSidebarCollapsed: boolean = false;
@@ -89,4 +90,10 @@ export class SidebarPRComponent {
       this.isSidebarCollapsed = false; 
     }
   }
+  showReservationSubMenu: boolean = false;
+
+toggleReservationSubMenu() {
+  this.showReservationSubMenu = !this.showReservationSubMenu;
+}
+
 }

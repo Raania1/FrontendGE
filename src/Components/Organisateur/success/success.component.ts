@@ -116,7 +116,7 @@ export class SuccessComponent {
           console.error('Download error:', err);
           this.message = 'Erreur lors du téléchargement du contrat.';
         }
-      });
+      }); 
     }
   }
 }

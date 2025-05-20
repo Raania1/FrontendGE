@@ -1,72 +1,113 @@
 <nav class="sticky-nav bg-custom-orange/5 backdrop-blur-md shadow-md py-4 px-8 border-b border-custom-gray transition-all">
-    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-      <div class="flex h-16 items-center justify-between">
-        <div class="flex items-center">
-          <button (click)="toggleMobileMenu()" class="md:hidden p-2 text-gray-700 hover:bg-gray-100 rounded-full">
-            <fa-icon [icon]="faBars" class="h-6 w-6"></fa-icon>
-          </button>
-  
-          <div class="flex-shrink-0 md:flex-shrink md:mx-auto">
-            <img class="h-12 w-auto" src="/assets/FE11.png" alt="Logo">
-          </div>
-   
-          <div class="hidden md:block">
-            <div class="ml-10 flex items-baseline space-x-4">
-              @for (item of navItems; track item.label) {
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div class="flex h-16 items-center justify-between">
+      <div class="flex items-center">
+        <!-- Mobile menu toggle button -->
+        <button (click)="toggleMobileMenu()" class="md:hidden p-2 text-gray-700 hover:bg-gray-100 rounded-full">
+          <fa-icon [icon]="faBars" class="h-6 w-6"></fa-icon>
+        </button>
+
+        <!-- Logo -->
+        <div class="flex-shrink-0 md:flex-shrink md:mx-auto">
+          <img class="h-12 w-auto" src="/assets/FE11.png" alt="Logo">
+        </div>
+
+        <!-- Desktop Menu -->
+        <div class="hidden md:block">
+          <div class="ml-10 flex items-baseline space-x-4">
+            @for (item of navItems; track item.label) {
+              @if (item.children) {
+                <!-- Dropdown parent -->
+                <div class="relative">
+                  <button (click)="toggleSubMenu(item.label)" class="rounded-md px-3 py-2 text-sm font-medium text-custom-black hover:border-b-2 hover:border-white transition-all duration-300 transform hover:-translate-y-1">
+                    {{ item.label }}
+                  </button>
+                  <!-- Dropdown items -->
+                  @if (openSubMenu === item.label) {
+                    <div class="absolute left-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-10">
+                      <div class="py-1">
+                        @for (child of item.children; track child.label) {
+                          <a [routerLink]="child.url" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                            {{ child.label }}
+                          </a>
+                        }
+                      </div>
+                    </div>
+                  }
+                </div>
+              } @else {
+                <!-- Simple link -->
                 <a [routerLink]="item.url" class="rounded-md px-3 py-2 text-sm font-medium text-custom-black hover:border-b-2 hover:border-white transition-all duration-300 transform hover:-translate-y-1">
                   {{ item.label }}
                 </a>
               }
-            </div>
-          </div>
-        </div>
-  
-        <!-- Dropdown and Icons -->
-        <div class="flex items-center">
-          
-          <button class="p-2 text-gray-700 hover:bg-gray-100 rounded-full">
-          </button>
-          <div class="relative ml-3">
-           <button (click)="toggleDropdown()" class="flex items-center text-sm rounded-full focus:outline-none hover:bg-gray-100 px-3 py-1 transition-colors">
-          <img class="h-8 w-8 rounded-full" [src]="organisateur.pdProfile" alt="Photo de profil">
-          <span class="flex flex-col items-start ml-2">
-            <span class="font-medium text-gray-900">{{organisateur.nom}} {{organisateur.prenom}}</span>
-            <span class="text-xs text-gray-500">Organisateur</span>
-          </span>
-        </button>
-            @if (isDropdownOpen) {
-              <div class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
-                <div class="py-1">
-                  <a routerLink="/profileOR" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                    <fa-icon [icon]="faUser" class="mr-2"></fa-icon>
-                    Profil
-                  </a>
-                  <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                    <fa-icon [icon]="faCog" class="mr-2"></fa-icon>
-                    Paramètres
-                  </a>
-                  <button (click)="logout()" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                    <fa-icon [icon]="faSignOutAlt" class="mr-2"></fa-icon>
-                    Déconnexion
-                  </button>
-                </div>
-              </div>
             }
           </div>
         </div>
       </div>
+
+      <!-- Profile and Dropdown -->
+      <div class="flex items-center">
+        <div class="relative ml-3">
+          <button (click)="toggleDropdown()" class="flex items-center text-sm rounded-full focus:outline-none hover:bg-gray-100 px-3 py-1 transition-colors">
+            <img class="h-8 w-8 rounded-full" [src]="organisateur.pdProfile" alt="Photo de profil">
+            <span class="flex flex-col items-start ml-2">
+              <span class="font-medium text-gray-900">{{organisateur.nom}} {{organisateur.prenom}}</span>
+              <span class="text-xs text-gray-500">Organisateur</span>
+            </span>
+          </button>
+
+          <!-- Profile Dropdown -->
+          @if (isDropdownOpen) {
+            <div class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-20">
+              <div class="py-1">
+                <a routerLink="/profileOR" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                  <fa-icon [icon]="faUser" class="mr-2"></fa-icon>
+                  Profil
+                </a>
+                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                  <fa-icon [icon]="faCog" class="mr-2"></fa-icon>
+                  Paramètres
+                </a>
+                <button (click)="logout()" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                  <fa-icon [icon]="faSignOutAlt" class="mr-2"></fa-icon>
+                  Déconnexion
+                </button>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
     </div>
-  
-    <!-- Menu mobile -->
-    @if (isMobileMenuOpen) {
-      <div class="md:hidden">
-        <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-          @for (item of navItems; track item.label) {
+  </div>
+
+  <!-- Mobile Menu -->
+  @if (isMobileMenuOpen) {
+    <div class="md:hidden">
+      <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+        @for (item of navItems; track item.label) {
+          @if (item.children) {
+            <div>
+              <div (click)="toggleSubMenu(item.label)" class="block rounded-md px-3 py-2 text-base font-medium text-custom-black cursor-pointer">
+                {{ item.label }}
+              </div>
+              @if (openSubMenu === item.label) {
+                <div class="ml-4">
+                  @for (child of item.children; track child.label) {
+                    <a [routerLink]="child.url" class="block rounded-md px-3 py-2 text-sm text-custom-black hover:bg-gray-100">
+                      {{ child.label }}
+                    </a>
+                  }
+                </div>
+              }
+            </div>
+          } @else {
             <a [routerLink]="item.url" class="block rounded-md px-3 py-2 text-base font-medium text-custom-black hover:bg-gray-100">
               {{ item.label }}
             </a>
           }
-        </div>
+        }
       </div>
-    }
-  </nav>
+    </div>
+  }
+</nav>

@@ -42,6 +42,9 @@ import { FailPrComponent } from '../Components/Prestataire/fail-pr/fail-pr.compo
 import { SuccessPrComponent } from '../Components/Prestataire/success-pr/success-pr.component';
 import { PacksORComponent } from '../Components/Organisateur/packs-or/packs-or.component';
 import { ReservationFormPackComponent } from '../Components/Organisateur/reservation-form-pack/reservation-form-pack.component';
+import { ReservationPackComponent } from '../Components/Prestataire/reservation-pack/reservation-pack.component';
+import { ReservationPackAdComponent } from '../Components/Admin/reservation-pack-ad/reservation-pack-ad.component';
+import { ReservationPKORComponent } from '../Components/Organisateur/reservation-pkor/reservation-pkor.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -65,11 +68,10 @@ export const routes: Routes = [
     { path: 'reservation/:id', component: ReservationFormComponent },
     { path: 'reservationPack/:id', component: ReservationFormPackComponent},
     { path: 'reservationsOR', component: ReservationOrComponent },
+    { path: 'reservationsORP', component: ReservationPKORComponent },
     { path: 'success', component: SuccessComponent },
     { path: 'fail', component: FailComponent },
     { path: 'packsOR', component: PacksORComponent },
-
-
 
     // espace prestataire
     // {path: 'sidePr',component:SidebarPRComponent},
@@ -84,6 +86,7 @@ export const routes: Routes = [
           { path: 'servicePR', component: ServicesPrComponent },
           { path: 'EditService/:id', component: EditServiceComponent },
           { path: 'reservations', component: ReservationPrComponent },
+          { path: 'reservationsP', component: ReservationPackComponent },
           { path: 'calendrier', component: ReservationPrComponent },
           { path: 'packForm', component: PackFormComponent },
           { path: 'packPr', component: PacksPrComponent },
@@ -103,6 +106,7 @@ export const routes: Routes = [
           { path: 'serviceAd', component: ServicesAdComponent },
           { path: 'message', component: MassagesComponent },
           { path: 'reservations', component: ReservationAdComponent },
+          { path: 'reservationsP', component: ReservationPackAdComponent },
           { path: 'contrat', component: ContratAdComponent },
           { path: 'publiciteAd', component: PubliciteAdComponent },
 

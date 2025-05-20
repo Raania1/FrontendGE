@@ -32,7 +32,11 @@ export class SidebarAdComponent {
   isSidebarCollapsed: boolean = false;
   isDesktop: boolean = window.innerWidth >= 768; 
   constructor(private router: Router) {}
+ showReservationSubMenu: boolean = false;
 
+toggleReservationSubMenu() {
+  this.showReservationSubMenu = !this.showReservationSubMenu;
+}
   logout() {
     localStorage.removeItem('user');
     localStorage.removeItem('token');

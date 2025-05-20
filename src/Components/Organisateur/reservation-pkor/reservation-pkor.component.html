@@ -1,32 +1,31 @@
 <app-navbar-or></app-navbar-or>
 <div class="">
-    <div class="container mx-auto px-4 py-6">
-      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <div>
-          <h1 class="text-2xl md:text-3xl font-bold font-serif">Réservations Services</h1>
-          <p class="text-custom-brown mt-1">Gérez vos réservations de services en un seul endroit</p>
-        </div>
-  
-        <div class="flex items-center gap-3">
-          <div class="flex items-center justify-between mt-4">
-            <div *ngIf="filteredReservations.length > 0" class="flex items-end">
-              <select
-                id="itemsPerPage"
-                class="border border-gray-300 rounded-md h-10 px-3 py-2 w-32 sm:w-44 md:w-52 bg-white"
-                [(ngModel)]="itemsPerPage"
-                (change)="onItemsPerPageChange()"
-              >
-                <option [value]="10">10 par page</option>
-                <option [value]="20">20 par page</option>
-                <option [value]="50">50 par page</option>
-              </select>
-            </div>
+  <div class="container mx-auto px-4 py-6">
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      <div>
+        <h1 class="text-2xl md:text-3xl font-bold font-serif">Réservations Packs publicitaires</h1>
+        <p class="text-custom-brown mt-1">Gérez vos réservations de packs en un seul endroit</p>
+      </div> 
+
+      <div class="flex items-center gap-3">
+        <div class="flex items-center justify-between mt-4">
+          <div *ngIf="filteredReservations.length > 0" class="flex items-end">
+            <select
+              id="itemsPerPage"
+              class="border border-gray-300 rounded-md h-10 px-3 py-2 w-32 sm:w-44 md:w-52 bg-white"
+              [(ngModel)]="itemsPerPage"
+              (change)="onItemsPerPageChange()"
+            >
+              <option [value]="10">10 par page</option>
+              <option [value]="20">20 par page</option>
+              <option [value]="50">50 par page</option>
+            </select>
           </div>
         </div>
       </div>
     </div>
   </div>
-  
+
   <div class="container mx-auto px-6 py-4">
     <div *ngIf="mesReservations.length === 0" class="empty-state">
       Vous n'avez encore aucune réservation
@@ -35,31 +34,42 @@
       Aucune réservation correspondante
     </div>
     <div *ngIf="filteredReservations.length > 0">
-      
       <div class="space-y-4 md:space-y-0 md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mt-4">
         <div *ngFor="let reservation of paginatedReservations" class="reservation-card">
           <div class="service-image-container">
-            <img [src]="reservation.Service.photoCouverture" 
-                 alt="Photo du service" 
-                 class="service-image"
-                 width="300" 
-                 height="200"
-                 loading="lazy">    
+            <img
+              [src]="reservation.Pack.coverPhotoUrl"
+              alt="Photo du pack"
+              class="service-image"
+              width="300"
+              height="200"
+              loading="lazy"
+            />
           </div>
-  
-          <div *ngIf="reservation.Service?.Prestataire?.id" class="client-info">
-            <p class="client-name cursor-pointer" [routerLink]="['/PresDetails', reservation.Service.Prestataire.id]">{{ reservation.Service.Prestataire.nom }} {{ reservation.Service.Prestataire.prenom }}</p>
-            <p class="client-contact">{{ reservation.Service.Prestataire.email }}</p>
-            <p class="client-contact">{{ reservation.Service.Prestataire.numTel }}</p>
+
+          <div *ngIf="reservation.Pack?.Prestataire?.id" class="client-info">
+            <p
+              class="client-name cursor-pointer"
+              [routerLink]="['/PresDetails', reservation.Pack.Prestataire.id]"
+            >
+              {{ reservation.Pack.Prestataire.nom }} {{ reservation.Pack.Prestataire.prenom }}
+            </p>
+            <p class="client-contact">{{ reservation.Pack.Prestataire.email }}</p>
+            <p class="client-contact">{{ reservation.Pack.Prestataire.numTel }}</p>
           </div>
-          <div *ngIf="!reservation.Service?.Prestataire">
+          <div *ngIf="!reservation.Pack?.Prestataire">
             Chargement des informations du prestataire...
           </div>
-  
+
           <div class="service-details">
             <div class="detail-row">
-              <span class="detail-label">Service :</span>
-              <span class="detail-value cursor-pointer" [routerLink]="['/reservation', reservation.Service.id]">{{ reservation?.Service?.nom }}</span>
+              <span class="detail-label">Pack :</span>
+              <span
+                class="detail-value cursor-pointer"
+                [routerLink]="['/reservation', reservation.Pack.id]"
+              >
+                {{ reservation.Pack.title }}
+              </span>
             </div>
             <div class="detail-row">
               <span class="detail-label">Date :</span>
@@ -74,48 +84,75 @@
               <span class="price-tag">{{ reservation.prix }}</span>
             </div>
           </div>
-  
-          <div class="flex justify-between items-start mb-3"> 
+
+          <div class="flex justify-between items-start mb-3">
             <div class="mb-3">
               @if(reservation.Status === 'CONFIRMED' || reservation.Status === 'PAID'){
-                <span class="status-badge absolute top-2 right-2" [ngClass]="{
+              <span
+                class="status-badge absolute top-2 right-2"
+                [ngClass]="{
                   'status-approved': reservation.Status === 'CONFIRMED',
                   'status-paid': reservation.Status === 'PAID'
-                }">
-                  {{ getStatusText(reservation.Status) }}
-                </span>
-                <button 
-                  *ngIf="reservation.Status === 'CONFIRMED'" 
-                  [disabled]="isLoading"
-                  (click)="payerReservation(reservation)"
-                  class="px-3 py-1 border border-orange-600 text-orange-600 rounded-md text-sm hover:bg-orange-600 hover:text-white transition-colors"
+                }"
+              >
+                {{ getStatusText(reservation.Status) }}
+              </span>
+              <button
+                *ngIf="reservation.Status === 'CONFIRMED'"
+                [disabled]="isLoading"
+                (click)="payerReservation(reservation)"
+                class="px-3 py-1 border border-orange-600 text-orange-600 rounded-md text-sm hover:bg-orange-600 hover:text-white transition-colors"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-4 w-4 mr-1.5 inline"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
-                  </svg>
-                  Payer
-                </button>
-              } 
-              @else{
-                <span class="status-badge absolute" [ngClass]="{
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
+                  />
+                </svg>
+                Payer
+              </button>
+              } @else{
+              <span
+                class="status-badge absolute"
+                [ngClass]="{
                   'status-pending': reservation.Status === 'PENDING',
                   'status-rejected': reservation.Status === 'CANCELED',
-                  'status-paid': reservation.Status === 'PAID' 
-                }">
-                  {{ getStatusText(reservation.Status) }}
-                </span>
+                  'status-paid': reservation.Status === 'PAID'
+                }"
+              >
+                {{ getStatusText(reservation.Status) }}
+              </span>
               }
             </div>
-          
-            <button class="delete-button" 
-              *ngIf="reservation.Status !== 'CONFIRMED' && reservation.Status !== 'PAID'"                     
+
+            <button
+              class="delete-button"
+              *ngIf="reservation.Status !== 'CONFIRMED' && reservation.Status !== 'PAID'"
               (click)="openDeleteDialog(reservation)"
-            > 
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                />
               </svg>
             </button>
-            <button 
+            <button
               *ngIf="reservation.Status === 'PAID' && reservation.payment"
               [disabled]="isLoading"
               (click)="downloadContract(reservation.payment.id)"
@@ -128,10 +165,12 @@
       </div>
 
       <!-- Nouvelle Pagination Responsive -->
-      <div class="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6 mt-4">
+      <div
+        class="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6 mt-4"
+      >
         <!-- Vue mobile : boutons Précédent et Suivant seulement -->
         <div class="flex flex-1 justify-between sm:hidden">
-          <button 
+          <button
             (click)="previousPage()"
             [disabled]="currentPage === 1"
             class="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
@@ -151,12 +190,23 @@
         <div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
           <div>
             <p class="text-sm text-gray-700">
-              Affichage de <span class="font-medium">{{ (currentPage - 1) * itemsPerPage + 1 }}</span>
-              à <span class="font-medium">{{ currentPage * itemsPerPage > filteredReservations.length ? filteredReservations.length : currentPage * itemsPerPage }}</span>              sur <span class="font-medium">{{ filteredReservations.length }}</span> résultats
+              Affichage de
+              <span class="font-medium">{{ (currentPage - 1) * itemsPerPage + 1 }}</span>
+              à
+              <span class="font-medium">{{
+                currentPage * itemsPerPage > filteredReservations.length
+                  ? filteredReservations.length
+                  : currentPage * itemsPerPage
+              }}</span>
+              sur
+              <span class="font-medium">{{ filteredReservations.length }}</span> résultats
             </p>
           </div>
           <div>
-            <nav class="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
+            <nav
+              class="isolate inline-flex -space-x-px rounded-md shadow-sm"
+              aria-label="Pagination"
+            >
               <!-- Bouton Précédent -->
               <button
                 (click)="previousPage()"
@@ -182,7 +232,10 @@
                   [class.text-white]="currentPage === page"
                   [class.text-gray-900]="currentPage !== page"
                   class="px-3 py-1 border border-gray-300 rounded-md text-sm"
-                  [ngClass]="{'bg-orange-500 text-white': page === currentPage, 'hover:bg-gray-100': page !== currentPage}"
+                  [ngClass]="{
+                    'bg-orange-500 text-white': page === currentPage,
+                    'hover:bg-gray-100': page !== currentPage
+                  }"
                 >
                   {{ page }}
                 </button>
@@ -191,7 +244,7 @@
               <!-- Bouton Suivant -->
               <button
                 (click)="nextPage()"
-                [disabled]="currentPage === totalPages" 
+                [disabled]="currentPage === totalPages"
                 class="px-3 py-1 border border-gray-300 rounded-md text-sm hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <fa-icon [icon]="faChevronRight"></fa-icon>
@@ -202,12 +255,15 @@
       </div>
     </div>
   </div>
-  <hr>
+  <hr />
   <div class="bg-custom-black/80 text-center py-4">
     <p class="text-custom-gray">© 2025 FLESK EVENT. Tous droits réservés.</p>
   </div>
   <!-- Delete Confirmation Dialog -->
-  <div *ngIf="isDeleteDialogOpen" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center p-4 z-50">
+  <div
+    *ngIf="isDeleteDialogOpen"
+    class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center p-4 z-50"
+  >
     <div class="bg-white rounded-lg shadow-xl max-w-md w-full">
       <div class="p-6">
         <h3 class="text-lg font-bold text-orange-700">Confirmer la suppression</h3>
@@ -215,10 +271,14 @@
           Êtes-vous sûr de vouloir supprimer cette réservation ? Cette action est irréversible.
         </p>
         <div *ngIf="selectedReservation" class="mt-4 p-4 bg-orange-50 border border-gray-300 rounded-md">
-          <p class="font-medium text-gray-900">{{ selectedReservation.Service.Prestataire.nom}} {{selectedReservation.Service.Prestataire.prenom}}</p>
-          <p class="text-sm text-gray-600">{{ selectedReservation.Service.nom}}</p>
+          <p class="font-medium text-gray-900">
+            {{ selectedReservation.Pack.Prestataire.nom }}
+            {{ selectedReservation.Pack.Prestataire.prenom }}
+          </p>
+          <p class="text-sm text-gray-600">{{ selectedReservation.Pack.title }}</p>
           <p class="text-sm text-gray-600">
-            {{selectedReservation.dateDebut | date: 'yyyy-MM-dd'}} à {{selectedReservation.dateDebut | date: 'HH:mm:ss'}}
+            {{ selectedReservation.dateDebut | date: 'yyyy-MM-dd' }} à
+            {{ selectedReservation.dateDebut | date: 'HH:mm:ss' }}
           </p>
         </div>
       </div>

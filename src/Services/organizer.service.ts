@@ -7,7 +7,9 @@ import { Observable } from 'rxjs';
 })
 export class OrganizerService {
 
-  private apiUrl = 'http://localhost:8000/organizer/getById/';  
+  private apiUrl = 'http://localhost:8000/organizer/getById/'; 
+  private apiUrl2 = 'http://localhost:8000/organizer//reservations/packs/';  
+  private apiUrl3 = 'http://localhost:8000/organizer/reservations/services/';   
   private apiUrl1 = 'http://localhost:8000/organizer/update/';  
   private apiUrlS = 'http://localhost:8000/organizer/deleteorganizer/';  
   private apiUrlA = 'http://localhost:8000/organizer/organizers';  
@@ -75,6 +77,13 @@ export class OrganizerService {
   changePassword(id: string, data: any) {
     return this.http.put<any>(`${this.apiUrlP}/${id}`, data);
   }
+  getPackReservationsById(id: string): Observable<any> {
+    return this.http.get(`${this.apiUrl2}${id}`);
+  }
+  getServicesReservationsById(id: string): Observable<any> {
+    return this.http.get(`${this.apiUrl3}${id}`);
+  }
+  
 }
 
 

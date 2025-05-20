@@ -27,7 +27,7 @@
       </div>
       <hr class="my-4 border-gray-200">
   
-      <button
+      <!-- <button
         class="mt-4 p-2 hover:bg-gray-100 rounded-lg md:block hidden transition-all duration-300"
         (click)="toggleSidebar()"
       >
@@ -35,7 +35,7 @@
           [icon]="isSidebarCollapsed ? faChevronRight : faChevronLeft"
           class="h-5 w-5 text-gray-700"
         ></fa-icon>
-      </button>
+      </button> -->
   
       <nav class="mt-5">
         <ul class="space-y-2">
@@ -79,12 +79,46 @@
             <fa-icon [icon]="faListAlt" class="h-5 w-5 text-gray-500"></fa-icon>
             <span routerLink="/administrateur/serviceAd"  class="text-sm font-medium" *ngIf="!isSidebarCollapsed">Services</span>
           </li>
-          <li
+          <!-- <li
             class="p-2 hover:bg-gray-100 rounded-lg flex items-center space-x-2 cursor-pointer transition-all duration-300" routerLinkActive="bg-custom-gray"
           >
             <fa-icon [icon]="faBoxOpen" class="h-5 w-5 text-gray-500"></fa-icon>
             <span routerLink="/administrateur/reservations"  class="text-sm font-medium" *ngIf="!isSidebarCollapsed">Reservations</span>
+          </li> -->
+      <li
+            class="p-2 hover:bg-custom-gray/10 rounded-lg flex items-center justify-between cursor-pointer transition-all duration-300"
+            (click)="toggleReservationSubMenu()"
+            
+          >
+            <div class="flex items-center space-x-2">
+              <fa-icon [icon]="faBoxOpen" class="h-5 w-5 text-gray-500"></fa-icon>
+              <span *ngIf="!isSidebarCollapsed">Réservations</span>
+            </div>
+            <fa-icon
+              *ngIf="!isSidebarCollapsed"
+              [icon]="showReservationSubMenu ? faChevronLeft : faChevronRight"
+              class="h-4 w-4 text-gray-400"
+            ></fa-icon>
           </li>
+
+          <!-- Sous-menu Réservations -->
+          <ul *ngIf="showReservationSubMenu && !isSidebarCollapsed" class="ml-8 space-y-1">
+            <li
+              class="p-2 hover:bg-custom-gray/10 rounded-lg cursor-pointer transition-all duration-300"
+              routerLink="/administrateur/reservations"
+              routerLinkActive="bg-custom-gray"
+            >
+              Réservation service
+            </li>
+            <li
+              class="p-2 hover:bg-custom-gray/10 rounded-lg cursor-pointer transition-all duration-300"
+              routerLink="/administrateur/reservationsP"
+              routerLinkActive="bg-custom-gray"
+            >
+              Réservation packs
+            </li>
+          </ul>
+
   
           <li
             class="p-2 hover:bg-gray-100 rounded-lg flex items-center space-x-2 cursor-pointer transition-all duration-300" routerLinkActive="bg-custom-gray"
