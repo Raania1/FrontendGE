@@ -3,12 +3,12 @@ import { Component, HostListener } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink, RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faChartBar, faTools,faClipboardList, faBars, faCalendarCheck, faCalendarAlt, faBullhorn, faUser, faCog, faSignOutAlt, faInfoCircle, faChevronRight, faChevronLeft, faBoxOpen, faChartLine, faComments, faFileInvoice, faListAlt, faUserFriends, faUsers, faBell } from '@fortawesome/free-solid-svg-icons';
+import { faChartBar, faTools, faClipboardList, faBars, faCalendarCheck, faCalendarAlt, faBullhorn, faUser, faCog, faSignOutAlt, faInfoCircle, faChevronRight, faChevronLeft, faBoxOpen, faChartLine, faComments, faFileInvoice, faListAlt, faUserFriends, faUsers, faBell } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-sidebar-ad',
   standalone: true,
-  imports:[FontAwesomeModule,FormsModule,CommonModule,RouterModule],
+  imports: [FontAwesomeModule, FormsModule, CommonModule, RouterModule],
   templateUrl: './sidebar-ad.component.html',
   styleUrl: './sidebar-ad.component.css'
 })
@@ -31,17 +31,31 @@ export class SidebarAdComponent {
   isSidebarOpen: boolean = false; 
   isSidebarCollapsed: boolean = false;
   isDesktop: boolean = window.innerWidth >= 768; 
-  constructor(private router: Router) {}
- showReservationSubMenu: boolean = false;
+  showReservationSubMenu: boolean = false;
+  showContractSubMenu: boolean = false; // New flag for Contrats & Paiement sub-menu
 
-toggleReservationSubMenu() {
-  this.showReservationSubMenu = !this.showReservationSubMenu;
-}
+  constructor(private router: Router) {}
+
+  toggleReservationSubMenu() {
+    this.showReservationSubMenu = !this.showReservationSubMenu;
+    if (this.showReservationSubMenu) {
+      this.showContractSubMenu = false; // Close the other sub-menu
+    }
+  }
+
+  toggleContractSubMenu() {
+    this.showContractSubMenu = !this.showContractSubMenu;
+    if (this.showContractSubMenu) {
+      this.showReservationSubMenu = false; // Close the other sub-menu
+    }
+  }
+
   logout() {
     localStorage.removeItem('user');
     localStorage.removeItem('token');
     this.router.navigate(['/']); 
   }
+
   toggleSidebar() {
     if (this.isDesktop) {
       this.isSidebarCollapsed = !this.isSidebarCollapsed;
@@ -67,5 +81,3 @@ toggleReservationSubMenu() {
     }
   }
 }
-
-

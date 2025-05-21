@@ -1,4 +1,4 @@
-<div class="flex h-screen ">
+<div class="flex h-screen">
     <div
       class="fixed inset-0 bg-black/50 z-40 md:hidden"
       *ngIf="isSidebarOpen"
@@ -21,21 +21,9 @@
           width="100" height="100"
           class="rounded-lg"
         />
-        <p class="text-sm font-serif" *ngIf="!isSidebarCollapsed"
-          >Espace Administrateur</p
-        >
+        <p class="text-sm font-serif" *ngIf="!isSidebarCollapsed">Espace Administrateur</p>
       </div>
       <hr class="my-4 border-gray-200">
-  
-      <!-- <button
-        class="mt-4 p-2 hover:bg-gray-100 rounded-lg md:block hidden transition-all duration-300"
-        (click)="toggleSidebar()"
-      >
-        <fa-icon
-          [icon]="isSidebarCollapsed ? faChevronRight : faChevronLeft"
-          class="h-5 w-5 text-gray-700"
-        ></fa-icon>
-      </button> -->
   
       <nav class="mt-5">
         <ul class="space-y-2">
@@ -71,28 +59,21 @@
             <span routerLink="/administrateur/ListPr" class="text-sm font-medium" *ngIf="!isSidebarCollapsed">Prestataires</span>
           </li>
   
-          
-  
           <li
             class="p-2 hover:bg-gray-100 rounded-lg flex items-center space-x-2 cursor-pointer transition-all duration-300" routerLinkActive="bg-custom-gray"
           >
             <fa-icon [icon]="faListAlt" class="h-5 w-5 text-gray-500"></fa-icon>
-            <span routerLink="/administrateur/serviceAd"  class="text-sm font-medium" *ngIf="!isSidebarCollapsed">Services</span>
+            <span routerLink="/administrateur/serviceAd" class="text-sm font-medium" *ngIf="!isSidebarCollapsed">Services</span>
           </li>
-          <!-- <li
-            class="p-2 hover:bg-gray-100 rounded-lg flex items-center space-x-2 cursor-pointer transition-all duration-300" routerLinkActive="bg-custom-gray"
-          >
-            <fa-icon [icon]="faBoxOpen" class="h-5 w-5 text-gray-500"></fa-icon>
-            <span routerLink="/administrateur/reservations"  class="text-sm font-medium" *ngIf="!isSidebarCollapsed">Reservations</span>
-          </li> -->
-      <li
+          
+          <li
             class="p-2 hover:bg-custom-gray/10 rounded-lg flex items-center justify-between cursor-pointer transition-all duration-300"
             (click)="toggleReservationSubMenu()"
-            
+            routerLinkActive="bg-custom-gray"
           >
             <div class="flex items-center space-x-2">
               <fa-icon [icon]="faBoxOpen" class="h-5 w-5 text-gray-500"></fa-icon>
-              <span *ngIf="!isSidebarCollapsed">Réservations</span>
+              <span *ngIf="!isSidebarCollapsed" class="text-sm font-medium">Réservations</span>
             </div>
             <fa-icon
               *ngIf="!isSidebarCollapsed"
@@ -101,24 +82,22 @@
             ></fa-icon>
           </li>
 
-          <!-- Sous-menu Réservations -->
           <ul *ngIf="showReservationSubMenu && !isSidebarCollapsed" class="ml-8 space-y-1">
             <li
-              class="p-2 hover:bg-custom-gray/10 rounded-lg cursor-pointer transition-all duration-300"
+              class="p-2 hover:bg-custom-gray/10 rounded-lg text-sm font-medium cursor-pointer transition-all duration-300"
               routerLink="/administrateur/reservations"
               routerLinkActive="bg-custom-gray"
             >
               Réservation service
             </li>
             <li
-              class="p-2 hover:bg-custom-gray/10 rounded-lg cursor-pointer transition-all duration-300"
+              class="p-2 hover:bg-custom-gray/10 rounded-lg text-sm font-medium cursor-pointer transition-all duration-300"
               routerLink="/administrateur/reservationsP"
               routerLinkActive="bg-custom-gray"
             >
               Réservation packs
             </li>
           </ul>
-
   
           <li
             class="p-2 hover:bg-gray-100 rounded-lg flex items-center space-x-2 cursor-pointer transition-all duration-300" routerLinkActive="bg-custom-gray"
@@ -131,13 +110,44 @@
             <h3 class="text-xs font-semibold uppercase text-gray-500">Finance</h3>
           </div>
   
-          <li
-            class="p-2 hover:bg-gray-100 rounded-lg flex items-center space-x-2 cursor-pointer transition-all duration-300" routerLinkActive="bg-custom-gray"
+                    <li
+            class="p-2 hover:bg-gray-100 rounded-lg flex items-center justify-between cursor-pointer transition-all duration-300" routerLinkActive="bg-custom-gray"
+            (click)="toggleContractSubMenu()"
           >
-            <fa-icon [icon]="faFileInvoice" class="h-5 w-5 text-gray-500"></fa-icon>
-            <span routerLink="/administrateur/contrat"  class="text-sm font-medium" *ngIf="!isSidebarCollapsed">Contrats & Paiement</span>
+            <div class="flex items-center space-x-2">
+              <fa-icon [icon]="faFileInvoice" class="h-5 w-5 text-gray-500"></fa-icon>
+              <span *ngIf="!isSidebarCollapsed" class="text-sm font-medium">Contrats & Paiement</span>
+            </div>
+            <fa-icon
+              *ngIf="!isSidebarCollapsed"
+              [icon]="showContractSubMenu ? faChevronLeft : faChevronRight"
+              class="h-4 w-4 text-gray-400"
+            ></fa-icon>
           </li>
-  
+
+          <ul *ngIf="showContractSubMenu && !isSidebarCollapsed" class="ml-8 space-y-1">
+            <li
+              class="p-2 hover:bg-custom-gray/10 rounded-lg cursor-pointer text-sm font-medium transition-all duration-300"
+              routerLink="/administrateur/contrat"
+              routerLinkActive="bg-custom-gray"
+            >
+              Contrats Services
+            </li>
+            <li
+              class="p-2 hover:bg-custom-gray/10 rounded-lg cursor-pointer text-sm font-medium transition-all duration-300"
+              routerLink="/administrateur/contratPack"
+              routerLinkActive="bg-custom-gray"
+            >
+              Contrats Packs
+            </li>
+            <li
+              class="p-2 hover:bg-custom-gray/10 rounded-lg text-sm font-medium cursor-pointer transition-all duration-300"
+              routerLink="/administrateur/contratPub"
+              routerLinkActive="bg-custom-gray"
+            >
+              Contrats Publicités
+            </li>
+          </ul>
           <li
             class="p-2 hover:bg-gray-100 rounded-lg flex items-center space-x-2 cursor-pointer transition-all duration-300" routerLinkActive="bg-custom-gray"
           >
@@ -165,11 +175,11 @@
     <div class="flex-1 p-6 bg-white md:ml-64">
         <div class="md:hidden flex items-center justify-between p-4 bg-custom-orange/5 backdrop-blur-md shadow-md border-b border-custom-gray">
           <button
-          class="p-2 text-gray-600 hover:text-gray-800"
-          (click)="toggleSidebar()"
-        >
-          <fa-icon [icon]="faBars" class="h-6 w-6"></fa-icon>
-        </button>
+            class="p-2 text-gray-600 hover:text-gray-800"
+            (click)="toggleSidebar()"
+          >
+            <fa-icon [icon]="faBars" class="h-6 w-6"></fa-icon>
+          </button>
           <p class="text-s font-serif text-custom-black">Espace Administrateur</p>
           <a routerLink="/" class="flex items-center space-x-2">
             <img
@@ -181,4 +191,4 @@
         </div><br>
         <router-outlet></router-outlet>
     </div>
-  </div>
+</div>

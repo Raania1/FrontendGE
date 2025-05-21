@@ -9,14 +9,13 @@ import { ContractService } from '../../../Services/contrat.service';
 
 type ReservationStatus = 'PENDING' | 'CONFIRMED' | 'CANCELED' | 'PAID';
 
-interface Service {
+interface Pack {
   id: string;
-  nom: string;
+  title: string;
   description: string;
   prix: number; 
   promo: number;
-  type: string;
-  photoCouverture: string;
+  coverPhotoUrl: string;
   Prestataire: {
     nom: string;
     prenom: string;
@@ -35,9 +34,10 @@ interface Organisateur {
   adress: string;
   pdProfile: string;
 }
+
 interface Reservation {
   id: string;
-  Service: Service;
+  Service: Pack;
   Organisateur: Organisateur;
   demande?: string;
   dateDebut: string; 
@@ -46,17 +46,19 @@ interface Reservation {
   prix: string;
   payment: Payment;
 }
+
 interface Payment {
   id: string;
 }
+
 @Component({
-  selector: 'app-contrat-ad',
+  selector: 'app-contrat-pack',
   standalone: true,
   imports: [FormsModule, CommonModule, FontAwesomeModule],
-  templateUrl: './contrat-ad.component.html',
-  styleUrl: './contrat-ad.component.css'
+  templateUrl: './contrat-pack.component.html',
+  styleUrl: './contrat-pack.component.css'
 })
-export class ContratAdComponent implements OnInit {
+export class ContratPackComponent implements OnInit {
   faClipboardList = faClipboardList;
   faBell = faBell;
   Math = Math;
@@ -75,7 +77,7 @@ export class ContratAdComponent implements OnInit {
 
   constructor(
     private reservation: ReservationService,   
-    private contrat:ContractService,
+    private contrat: ContractService,
     private prestataireService: PrestataireService,
   ) {}
 
@@ -97,25 +99,36 @@ export class ContratAdComponent implements OnInit {
         },
         (error) => {
           console.error('Erreur lors de la récupération des données:', error);
+          this.errorMessage = 'Impossible de récupérer les données du prestataire.';
         }
       );
     } else {
       console.error('Utilisateur non trouvé dans le localStorage');
+      this.errorMessage = 'Utilisateur non connecté.';
     }
   }
 
   fetchReservations(): void {
-    this.reservation.getAll().subscribe({
+    this.isLoading = true;
+    this.reservation.getAllP().subscribe({
       next: (response) => {
         this.reservations = response.reservations
-          .filter((reservation: Reservation) => reservation.Status === 'PAID')
+          .filter((reservation: any) => reservation.Status === 'PAID')
+          .map((reservation: any) => ({
+            ...reservation,
+            Service: reservation.Pack // Map Pack to Service
+          }))
           .sort((a: any, b: any) => 
             new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
           );
-          console.log(this.reservations)
+        console.log('Reservations:', this.reservations);
+        console.log('Sample Pack:', this.reservations[0]?.Service);
+        this.isLoading = false;
       },
       error: (err) => {
         console.error('Erreur lors du chargement des réservations :', err);
+        this.errorMessage = 'Échec du chargement des réservations.';
+        this.isLoading = false;
       }
     });
   }
@@ -129,7 +142,7 @@ export class ContratAdComponent implements OnInit {
         (org?.email?.toLowerCase().includes(this.searchTerm.toLowerCase()) ?? false) ||
         (org?.nom?.toLowerCase().includes(this.searchTerm.toLowerCase()) ?? false) ||
         (org?.prenom?.toLowerCase().includes(this.searchTerm.toLowerCase()) ?? false) ||
-        (serv?.nom?.toLowerCase().includes(this.searchTerm.toLowerCase()) ?? false);
+        (serv?.title?.toLowerCase().includes(this.searchTerm.toLowerCase()) ?? false);
   
       const matchesStatus = reservation.Status === 'PAID';
   
@@ -221,7 +234,6 @@ export class ContratAdComponent implements OnInit {
     return pages;
   }
 
-
   getStatusBadgeClass(status: ReservationStatus): string {
     switch (status) {
       case 'PENDING':
@@ -251,52 +263,49 @@ export class ContratAdComponent implements OnInit {
         return status;
     }
   }
-  // Compteur pour le nombre total de réservations payées
-get paidReservationsCount(): number {
-  return this.reservations.filter(reservation => reservation.Status === 'PAID').length;
-}
 
-// Calcul du total des paiements (somme des prix en millimes)
-get totalPayments(): number {
-  return this.reservations
-    .filter(reservation => reservation.Status === 'PAID')
-    .reduce((sum, reservation) => {
-      const prixString = reservation.prix || '0'; // Gérer les cas où prix est undefined
-      const prix = parseFloat(prixString.replace(' DT', '')) || 0; // Supprimer ' DT' et convertir en nombre
-      const amountInMillimes = Math.round(prix * 1000); // Convertir en millimes
-      return sum + amountInMillimes;
-    }, 0);
-}
+  get paidReservationsCount(): number {
+    return this.reservations.filter(reservation => reservation.Status === 'PAID').length;
+  }
 
-// Calcul de la commission (20% de chaque prix en millimes, puis somme)
-get commission(): number {
-  const commissionRate = 0.2; // 20% de commission
-  return this.reservations
-    .filter(reservation => reservation.Status === 'PAID')
-    .reduce((sum, reservation) => {
-      const prixString = reservation.prix || '0'; // Gérer les cas où prix est undefined
-      const prix = parseFloat(prixString.replace(' DT', '')) || 0; // Supprimer ' DT' et convertir en nombre
-      const amountInMillimes = Math.round(prix * 1000); // Convertir en millimes
-      return sum + (amountInMillimes * commissionRate);
-    }, 0);
-}
-downloadContract(paymentId: string): void {
+  get totalPayments(): number {
+    return this.reservations
+      .filter(reservation => reservation.Status === 'PAID')
+      .reduce((sum, reservation) => {
+        const prixString = reservation.prix || '0';
+        const prix = parseFloat(prixString.replace(' DT', '')) || 0;
+        const amountInMillimes = Math.round(prix * 1000);
+        return sum + amountInMillimes;
+      }, 0);
+  }
 
-  this.contrat.downloadContract(paymentId).subscribe({
-    next: (response) => {
-      const blob = new Blob([response], { type: 'application/pdf' });
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = `contrat-${paymentId}.pdf`;
-      link.click();
-      window.URL.revokeObjectURL(url);
-    },
-    error: (err) => {
-      console.error('Erreur lors du téléchargement du contrat:', err);
-      this.errorMessage = 'Échec du téléchargement du contrat.';
-    }
-  });
-}
+  get commission(): number {
+    const commissionRate = 0.2;
+    return this.reservations
+      .filter(reservation => reservation.Status === 'PAID')
+      .reduce((sum, reservation) => {
+        const prixString = reservation.prix || '0';
+        const prix = parseFloat(prixString.replace(' DT', '')) || 0;
+        const amountInMillimes = Math.round(prix * 1000);
+        return sum + (amountInMillimes * commissionRate);
+      }, 0);
+  }
 
+  downloadContract(paymentId: string): void {
+    this.contrat.downloadContract(paymentId).subscribe({
+      next: (response) => {
+        const blob = new Blob([response], { type: 'application/pdf' });
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `contrat-${paymentId}.pdf`;
+        link.click();
+        window.URL.revokeObjectURL(url);
+      },
+      error: (err) => {
+        console.error('Erreur lors du téléchargement du contrat:', err);
+        this.errorMessage = 'Échec du téléchargement du contrat.';
+      }
+    });
+  }
 }
