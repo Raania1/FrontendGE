@@ -6,7 +6,7 @@ import { Observable } from 'rxjs/internal/Observable';
   providedIn: 'root'
 })
 export class PubliciteService {
-baseUrl = "http://localhost:8000/pub/"
+baseUrl = "https://backendge.onrender.com/pub/"
   
 constructor(private http: HttpClient) { }
   createPubliciteForPack(packid: string) {

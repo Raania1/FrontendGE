@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class ContractService {
-  private url = "http://localhost:8000"
+  private url = "https://backendge.onrender.com"
   private apiUrl = `${this.url}/contrat/create`; 
   private apiUrlD = `${this.url}/contrat/`; 
 

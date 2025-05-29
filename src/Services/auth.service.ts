@@ -7,7 +7,7 @@ import $ from 'jquery';
   providedIn: 'root'
 })
 export class AuthService {
-  private url = "http://localhost:8000"
+  private url = "https://backendge.onrender.com"
   private apiUrlL = `${this.url}/user/auth/login`; 
   private apiUrl = `${this.url}/organizer/auth`; 
   private apiUrl1 = `${this.url}/prestataire/auth`; 

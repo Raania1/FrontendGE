@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class ReservationService {
-    private url = "http://localhost:8000"
+    private url = "https://backendge.onrender.com"
   private apiUrl = `${this.url}/reservation/demande`; 
   private apiUrl1 = `${this.url}/reservation/getAllReservationServicesOnly`; 
   private apiUrl9 = `${this.url}/reservation/getAllReservationPacksOnly`; 

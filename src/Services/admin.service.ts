@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class AdminService {
-  private url = "http://localhost:8000"
+  private url = "https://backendge.onrender.com"
   private apiUrl = `${this.url}/admin`; 
 
   constructor(private http: HttpClient) { }
