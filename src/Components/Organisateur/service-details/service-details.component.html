@@ -1,64 +1,61 @@
-<!-- Loading Spinner -->
-<div *ngIf="isLoading" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50">
-  <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500"></div>
+<div *ngIf="isLoading" class="fixed inset-0 bg-gray-900 bg-opacity-70 flex items-center justify-center z-50">
+  <div class="animate-spin rounded-full h-12 w-12 border-t-4 border-blue-400"></div>
 </div>
-
-<!-- Main Container -->
-<div class="min-h-screen ">
-  <!-- Navbar -->
+<div class="min-h-screen bg-gray-50 font-sans">
   <app-navbar-or></app-navbar-or>
 
-  <!-- Service Details Section -->
-  <div class="container mx-auto px-4 py-8">
-    <!-- Back Button -->
-    <button (click)="goBack()" class="mb-4 flex items-center text-blue-600 hover:text-blue-800 transition">
-      <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-      </svg>
-      Retour
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <button (click)="goBack()" class="group mb-6 flex items-center text-gray-500 hover:text-gray-700 transition-all duration-300">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M19 12H5M12 19l-7-7 7-7"/>
+        </svg>
     </button>
 
-    <!-- Service Content -->
-    <div *ngIf="serviceData && !isLoading" class="bg-white rounded-lg shadow-lg overflow-hidden">
-      <!-- Header with Cover Photo -->
+    <div *ngIf="serviceData && !isLoading" class="bg-white rounded-xl shadow-sm overflow-hidden">
       <div class="relative">
         <img [src]="serviceData.photoCouverture || 'https://via.placeholder.com/1200x400'" 
              alt="Service Cover" 
-             class="w-full h-64 object-cover">
-        <div class="absolute bottom-0 left-0 bg-gradient-to-t from-black to-transparent p-4 w-full">
-          <h1 class="text-3xl font-bold text-white">{{ serviceData.nom || 'Service Sans Nom' }}</h1>
+             class="w-full h-72 object-cover">
+             <span *ngIf="serviceData.promo > 0" class="absolute top-2 right-2 bg-rose-500 hover:bg-rose-600 text-white text-xs font-medium px-2.5 py-0.5 rounded z-10">
+              -{{ serviceData.promo }}%
+            </span>
+        <div class="absolute bottom-0 left-0 bg-gradient-to-t from-gray-900/80 to-transparent p-6 w-full">
+          <h1 class="text-3xl font-bold font-serif text-white tracking-tight capitalize">{{ serviceData.nom || 'Service Sans Nom' }} </h1>
+          
         </div>
       </div>
 
-      <!-- Main Content -->
-      <div class="p-6">
-        <!-- Service Description -->
-        <div class="mb-6">
-          <h2 class="text-2xl font-semibold mb-2">Description</h2>
-          <p class="text-gray-700">{{ serviceData.description || 'Aucune description disponible.' }}</p>
+      <div class="p-6 sm:p-8">
+        <div class="mb-8">
+          <h2 class="text-ll font-semibold text-gray-900 mb-3">Description</h2>
+          <p class="text-gray-600 text-sm leading-relaxed">{{ serviceData.description || 'Aucune description disponible.' }}</p>
         </div>
 
-        <!-- Pricing Section -->
-        <div class="mb-6">
-          <h2 class="text-2xl font-semibold mb-2">Tarification</h2>
-          <div class="flex items-center space-x-4">
-            <span *ngIf="serviceData.promo > 0" class="text-red-500 line-through text-lg">
-              {{ formatPrice(serviceData.prix) }}
-            </span>
-            <span class="text-2xl font-bold text-green-600">
-              {{ formatPrice(getFinalPrice()) }}
-            </span>
-            <span *ngIf="serviceData.promo > 0" class="bg-green-100 text-green-800 text-sm px-2 py-1 rounded">
-              -{{ serviceData.promo }}%
-            </span>
+               <div class="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0 sm:space-x-4">
+          <div class="flex items-center space-x-3">
+            <span class="text-sm font-medium text-gray-700">Prix :</span>
+            <div class="flex items-center space-x-2">
+              <span *ngIf="serviceData.promo > 0" class="text-xs sm:text-sm text-gray-500 line-through">
+                {{ formatPrice(serviceData.prix) }}
+              </span>
+              <span class="text-base sm:text-lg font-bold text-amber-600">
+                {{ formatPrice(getFinalPrice()) }}
+              </span>
+             
+            </div>
           </div>
+          <button [routerLink]="['/reservation', serviceData.id]" class="bg-amber-500 hover:bg-amber-600 text-white font-medium py-2 sm:py-2.5 px-4 sm:px-6 rounded-lg transition-all duration-300 flex items-center justify-center space-x-2 shadow-sm hover:shadow-md w-full sm:w-auto">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+            </svg>
+            <span>Réserver</span>
+          </button>
         </div>
 
-        <!-- Service Info Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-          <div *ngFor="let info of serviceInfos" class="bg-gray-50 p-4 rounded-lg shadow-sm">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+          <div *ngFor="let info of serviceInfos" class="bg-gray-50 p-4 rounded-lg border border-gray-100 hover:shadow-md transition-shadow">
             <div class="flex items-center">
-              <svg class="w-6 h-6 text-blue-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-5 h-5 text-blue-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path *ngIf="info.icon === 'map'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
                       d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"></path>
                 <path *ngIf="info.icon === 'tag'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
@@ -67,38 +64,37 @@
                       d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
               </svg>
               <div>
-                <h3 class="text-sm font-medium text-gray-500">{{ info.title }}</h3>
-                <p class="text-gray-800">{{ info.value }}</p>
+                <h3 class="text-sm font-medium text-gray-500 uppercase tracking-wide">{{ info.title }}</h3>
+                <p class="text-gray-800 font-medium">{{ info.value }}</p>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Prestataire Info -->
-        <div class="mb-6">
-          <h2 class="text-2xl font-semibold mb-2">Prestataire</h2>
+        <div class="mb-8">
+          <h2 class="text-l font-semibold text-gray-600 mb-3">Prestataire</h2>
           <div class="flex items-center space-x-4">
             <img [src]="serviceData.Prestataire?.pdProfile || 'https://via.placeholder.com/64'" 
+                  [routerLink]="['/PresDetails', serviceData.Prestataire.id]"
                  alt="Prestataire Profile" 
-                 class="w-16 h-16 rounded-full object-cover">
+                 class="w-14 h-14 rounded-full object-cover border-2 border-gray-100 cursor-pointer">
             <div>
-              <p class="text-lg font-medium">
+              <p class="text-l font-serif font-medium text-gray-900 capitalize" >
                 {{ serviceData.Prestataire?.nom }} {{ serviceData.Prestataire?.prenom }}
               </p>
-              <p class="text-gray-600">{{ serviceData.Prestataire?.travail || 'Non spécifié' }}</p>
-              <p class="text-gray-600">{{ serviceData.Prestataire?.averageRating || 'N/A' }}/5 (Évaluation)</p>
+              <p class="text-gray-600 text-sm">{{ serviceData.Prestataire?.travail || 'Non spécifié' }}</p>
+              <p class="text-gray-600 text-sm">{{ serviceData.Prestataire?.averageRating || '0' }}/5 (Évaluation)</p>
             </div>
           </div>
         </div>
 
-        <!-- Photos Gallery -->
-        <div *ngIf="serviceData.Photos?.length" class="mb-6">
-          <h2 class="text-2xl font-semibold mb-2">Galerie</h2>
-          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+        <div *ngIf="serviceData.Photos?.length" class="mb-8">
+          <h2 class="text-xl font-semibold text-gray-900 mb-3">Galerie</h2>
+          <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
             <img *ngFor="let photo of serviceData.Photos; let i = index" 
                  [src]="photo" 
                  alt="Service Photo" 
-                 class="w-full h-32 object-cover rounded-lg cursor-pointer hover:opacity-80 transition" 
+                 class="w-full h-40 object-cover rounded-lg cursor-pointer hover:scale-105 transition-transform duration-300" 
                  (click)="openLightbox(i)">
           </div>
         </div>
@@ -107,35 +103,46 @@
 
     <!-- Other Services Carousel -->
     <div *ngIf="otherServices?.length" class="mt-12">
-      <h2 class="text-2xl font-semibold mb-4">Services Similaires</h2>
+      <h2 class="text-l font-semibold text-gray-900 mb-4">Services Similaires</h2>
       <div class="relative">
         <!-- Previous Button -->
         <button *ngIf="startIndex > 0" (click)="handlePrev()" 
-                class="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white p-2 rounded-full shadow-md z-10">
-          <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                class="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white p-2 rounded-full shadow-md hover:shadow-lg transition z-10">
+          <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
           </svg>
         </button>
         <!-- Next Button -->
         <button *ngIf="startIndex < otherServices.length - visibleCount" (click)="handleNext()" 
-                class="absolute right-0 top-1/2 transform -translate-y-1/2 bg-white p-2 rounded-full shadow-md z-10">
-          <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                class="absolute right-0 top-1/2 transform -translate-y-1/2 bg-white p-2 rounded-full shadow-md hover:shadow-lg transition z-10">
+          <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
           </svg>
         </button>
         <!-- Services List -->
         <div class="flex space-x-4 overflow-hidden">
           <div *ngFor="let service of otherServices | slice:startIndex:startIndex + visibleCount" 
-               class="bg-white rounded-lg shadow-md p-4 w-full sm:w-1/2 md:w-1/3 lg:w-1/4 flex-shrink-0 cursor-pointer"
+               class="relative bg-white rounded-lg shadow-sm p-4 w-full sm:w-1/2 md:w-1/3 lg:w-1/4 flex-shrink-0 cursor-pointer hover:shadow-md transition-shadow"
                (click)="navigateToService(service.id)">
+            <!-- Badge Promo -->
+            <span *ngIf="service.promo > 0"
+                  class="absolute top-2 right-2 bg-rose-500 hover:bg-rose-600 text-white text-xs font-medium px-2.5 py-0.5 rounded z-10">
+              -{{ service.promo }}%
+            </span>
+            <!-- Image -->
             <img [src]="service.photoCouverture || 'https://via.placeholder.com/300'" 
                  alt="Service Cover" 
-                 class="w-full h-40 object-cover rounded-lg mb-4">
-            <h3 class="text-lg font-semibold">{{ service.nom }}</h3>
-            <p class="text-gray-600">{{ service.prestataire?.nom }} {{ service.prestataire?.prenom }}</p>
-            <p class="text-green-600 font-bold">
+                 class="w-full h-40 object-cover rounded-lg mb-3">
+            <!-- Nom du service -->
+            <h3 class="text-lg font-semibold text-gray-900 truncate">{{ service.nom }}</h3>
+            <!-- Nom du prestataire -->
+            <p class="text-gray-600 text-sm truncate">
+              {{ service.prestataire?.nom }} {{ service.prestataire?.prenom }}
+            </p>
+            <!-- Prix -->
+            <p class="text-amber-600 font-semibold">
               {{ formatPrice(calculateFinalPrice(service.prix, service.promo)) }}
-              <span *ngIf="service.promo > 0" class="text-red-500 text-sm line-through">
+              <span *ngIf="service.promo > 0" class="text-gray-500 text-sm line-through ml-2">
                 {{ formatPrice(service.prix) }}
               </span>
             </p>
@@ -145,19 +152,34 @@
     </div>
   </div>
 
-  <!-- Lightbox -->
-  <div *ngIf="isLightboxOpen" class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50">
-    <button (click)="closeLightbox()" class="absolute top-4 right-4 text-white text-2xl">&times;</button>
-    <button (click)="navigateLightbox('prev')" class="absolute left-4 text-white text-2xl">
+<div *ngIf="isLightboxOpen" class="fixed inset-0 bg-black bg-opacity-95 flex items-center justify-center z-[100]">
+    
+    <button 
+      (click)="navigateLightbox('prev')" 
+      class="absolute left-4 top-1/2 transform -translate-y-1/2 text-white hover:text-gray-300 transition">
       <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
       </svg>
     </button>
-    <img [src]="serviceData.Photos[selectedIndex]" alt="Lightbox Image" class="max-w-full max-h-[80vh] object-contain">
-    <button (click)="navigateLightbox('next')" class="absolute right-4 text-white text-2xl">
+    <img 
+      [src]="serviceData.Photos[selectedIndex]" 
+      alt="Lightbox Image" 
+      class="max-w-full max-h-[90vh] object-contain rounded-lg">
+    <button 
+      (click)="navigateLightbox('next')" 
+      class="absolute right-4 top-1/2 transform -translate-y-1/2 text-white hover:text-gray-300 transition">
       <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
       </svg>
     </button>
+    <button 
+      (click)="closeLightbox()" 
+      class="absolute top-20 right-6 bg-gray-800 text-white rounded-full w-10 h-10 flex items-center justify-center text-xl font-medium hover:bg-gray-700 transition cursor-pointer">
+      ×
+    </button>
   </div>
 </div>
+
+<footer class="bg-gray-900 text-center py-4">
+  <p class="text-gray-400 text-sm">© 2025 FLESK EVENT. Tous droits réservés.</p>
+</footer>

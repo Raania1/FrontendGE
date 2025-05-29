@@ -1,52 +1,43 @@
-<app-navbar-or></app-navbar-or>
-<div class="min-h-screen ">
-    <!-- <div class="relative h-64 bg-white bg-cover bg-no-repeat bg-center overflow-hidden" -->
-    <!-- > -->
-      <!-- <div class="absolute inset-0 bg-[url('/placeholder.svg?height=500&width=1500')] bg-cover bg-center opacity-20"></div> -->
-      <!-- <div class="absolute inset-0 bg-gradient-to-r from-custom-orange to-custom-orangeBold opacity-90"></div> -->
-      <div class="relative h-full flex flex-col justify-end pb-8 px-6 lg:px-8 max-w-7xl mx-auto">
-        <!-- <h1 class="text-gray text-4xl font-bold tracking-tight sm:text-5xl mb-2">
-          {{ organisateur.prenom }} {{ organisateur.nom }}
-        </h1>
-        <p class="text-custom-gray text-xl max-w-2xl">Espace Organisateur</p> -->
-      </div>
-    <!-- </div> --> 
+<div class="flex flex-col min-h-screen">
+  <app-navbar-or></app-navbar-or>
 
-    <div class="max-w-9xl mx-auto px-6 p-12 lg:px-8 -mt-16 pb-24">
-      <div class="bg-white  rounded-2xl shadow-xl overflow-hidden">
+  <main class="flex-1">
+    <div class="relative max-w-7xl mx-auto px-6 lg:px-8 py-12">
+      <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
         <div class="flex flex-col lg:flex-row">
           <div class="lg:w-1/3 bg-gradient-to-b from-custom-gray to-white p-8">
             <div class="flex flex-col items-center">
-                <div class="relative">
-                    <div class="h-40 w-40 rounded-full overflow-hidden border-4 border-white shadow-lg">
-                      <img
-                        [src]="organisateur.pdProfile || '/placeholder.svg'"
-                        alt="Photo de profil"
-                        class="h-full w-full object-cover"
-                      />
-                    </div>
-                    <button
-                      class="absolute bottom-0 right-0 bg-custom-orange text-white p-2 rounded-full shadow-lg hover:bg-custom-orangeBold transition-colors"
-                      (click)="triggerFileInput()"
-                    >
-                      <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
-                      </svg>
-                    </button>
-                    <input
-                      type="file"
-                      id="fileInput"
-                      class="hidden"
-                      (change)="onFileSelected($event)"
-                      accept="image/*"
-                    />
-                  </div>
-  
+              <div class="relative">
+                <div class="h-40 w-40 rounded-full overflow-hidden border-4 border-white shadow-lg">
+                  <img
+                    [src]="organisateur.pdProfile || '/placeholder.svg'"
+                    alt="Photo de profil"
+                    class="h-full w-full object-cover"
+                  />
+                </div>
+                <button
+                  class="absolute bottom-0 right-0 bg-custom-orange text-white p-2 rounded-full shadow-lg hover:bg-custom-orangeBold transition-colors"
+                  (click)="triggerFileInput()"
+                >
+                  <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
+                  </svg>
+                </button>
+                <input
+                  type="file"
+                  id="fileInput"
+                  class="hidden"
+                  (change)="onFileSelected($event)"
+                  accept="image/*"
+                />
+              </div>
+
               <h2 class="mt-4 text-2xl font-bold font-serif text-gray-900">
                 {{ organisateur.prenom }} {{ organisateur.nom }}
               </h2>
-              <p class="text-gray-700 font-medium">Membre dépuis {{ organisateur.createdAt | date:'yyyy-MM-dd' }}</p><hr>
-  
+              <p class="text-gray-700 font-medium">Membre depuis {{ organisateur.createdAt | date:'yyyy-MM-dd' }}</p>
+              <hr class="w-full my-4 border-gray-300">
+
               <div class="mt-8 w-full space-y-4">
                 <div class="flex items-center text-gray-700">
                   <svg class="h-5 w-5 text-custom-orange mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -62,12 +53,10 @@
                 </div>
                 <div class="flex items-center text-gray-700">
                   <svg class="h-5 w-5 text-custom-orange mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M17.707 16.707L13.414 20a2 2 0 0 1-2.828 0l-4.243-4.243a8 8 0 1 1 11.314 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 0 1 6 0 z" />
                   </svg>
-                  <span>
-                    {{ organisateur.ville }}, {{ organisateur.adress }}
-                  </span>
+                  <span>{{ organisateur.ville }} - {{ organisateur.adress }}</span>
                 </div>
                 <div class="flex items-center text-gray-700">
                   <svg class="h-5 w-5 text-custom-orange mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -78,43 +67,22 @@
               </div>
             </div>
           </div>
-  
-          <!-- Contenu principal avec onglets -->
-          <div class="lg:w-2/3 p-8">
+
+          <!-- Main Content with Tabs -->
+          <div class="lg:w-2/3 p-6">
             <div class="border-b border-gray-200">
-                <nav class="flex space-x-8 p-12">
+              <div class="max-w-full">
+                <nav class="flex overflow-x-auto whitespace-nowrap p-4 md:p-8 scrollbar-thin scrollbar-thumb-custom-orange scrollbar-track-gray-100">
                   <button
                     (click)="activeTab = 'infos'"
                     [ngClass]="{
                       'border-custom-orange text-custom-orange': activeTab === 'infos',
                       'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300': activeTab !== 'infos'
                     }"
-                    class="py-4 px-1 border-b-2 font-medium text-sm flex items-center space-x-2"
+                    class="py-4 px-4 md:px-1 border-b-2 font-medium text-sm flex items-center space-x-2 flex-shrink-0"
                   >
                     <fa-icon [icon]="faInfoCircle" class="w-4 h-4"></fa-icon>
                     <span>Informations</span>
-                  </button>
-                  <button
-                    (click)="activeTab = 'events'"
-                    [ngClass]="{
-                      'border-custom-orange text-custom-orange': activeTab === 'events',
-                      'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300': activeTab !== 'events'
-                    }"
-                    class="py-4 px-1 border-b-2 font-medium text-sm flex items-center space-x-2"
-                  >
-                    <fa-icon [icon]="faCalendarAlt" class="w-4 h-4"></fa-icon>
-                    <span>Événements</span>
-                  </button>
-                  <button
-                    (click)="activeTab = 'stats'"
-                    [ngClass]="{
-                      'border-custom-orange text-custom-orange': activeTab === 'stats',
-                      'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300': activeTab !== 'stats'
-                    }"
-                    class="py-4 px-1 border-b-2 font-medium text-sm flex items-center space-x-2"
-                  >
-                    <fa-icon [icon]="faChartBar" class="w-4 h-4"></fa-icon>
-                    <span>Statistiques</span>
                   </button>
                   <button
                     (click)="activeTab = 'params'"
@@ -122,63 +90,64 @@
                       'border-custom-orange text-custom-orange': activeTab === 'params',
                       'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300': activeTab !== 'params'
                     }"
-                    class="py-4 px-1 border-b-2 font-medium text-sm flex items-center space-x-2"
+                    class="py-4 px-4 md:px-1 border-b-2 font-medium text-sm flex items-center space-x-2 flex-shrink-0"
                   >
                     <fa-icon [icon]="faCog" class="w-4 h-4"></fa-icon>
                     <span>Paramètres</span>
                   </button>
                 </nav>
               </div>
-  
-            <div class="py-6">
-              <!-- Onglet Informations -->
+            </div>
+
+            <div class="py-6 space-y-12">
+              <!-- Informations Section -->
               <div *ngIf="activeTab === 'infos'">
                 <div class="space-y-6">
                   <div *ngIf="!isEditing; else editForm">
                     <form (ngSubmit)="handleSubmit($event)" class="space-y-6">
-                        <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-2">
-                          <div>
-                            <label for="nom" class="block text-sm font-medium text-gray-700">Nom</label>
-                            <input
-                              type="text"
-                              name="nom"
-                              id="nom"
-                              [(ngModel)]="formData.nom"
-                              (input)="handleChange($event, 'nom')"
-                              class="block min-w-0 grow py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6"
-                            />
-                          </div>
-                          <div>
-                            <label for="prenom" class="block text-sm font-medium text-gray-700">Prénom</label>
-                            <input
-                              type="text"
-                              name="prenom"
-                              id="prenom"
-                              [(ngModel)]="formData.prenom"
-                              (input)="handleChange($event, 'prenom')"
-                              class="block min-w-0 grow py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6"
-                            />
-                          </div>
-                          <div>
-                            <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-                            <input
-                              type="email"
-                              name="email"
-                              id="email"
-                              [(ngModel)]="formData.email"
-                              (input)="handleChange($event, 'email')"
-                              class="block min-w-0 grow py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6"
-                            />
-                          </div>
-                          <div>
-                            <label for="numTel" class="block text-sm font-medium text-gray-700">Téléphone</label>
+                      <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-2">
+                        <div>
+                          <label for="nom" class="block text-sm font-medium text-gray-700">Nom</label>
+                          <input
+                            type="text"
+                            name="nom"
+                            id="nom"
+                            [(ngModel)]="formData.nom"
+                            (input)="handleChange($event, 'nom')"
+                            class="block w-full py-1.5 px-3 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-custom-orange sm:text-sm"
+                          />
+                        </div>
+                        <div>
+                          <label for="prenom" class="block text-sm font-medium text-gray-700">Prénom</label>
+                          <input
+                            type="text"
+                            name="prenom"
+                            id="prenom"
+                            [(ngModel)]="formData.prenom"
+                            (input)="handleChange($event, 'prenom')"
+                            class="block w-full py-1.5 px-3 border border-gray-200 rounded-md focus:outline-none sm:text-sm"
+                          />
+                        </div>
+                        <div>
+                          <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                          <input
+                            type="email"
+                            name="email"
+                            id="email"
+                            [(ngModel)]="formData.email"
+                            (input)="handleChange($event, 'email')"
+                            class="block w-full py-1.5 px-3 border border-gray-200 rounded-md focus:outline-none sm:text-sm"
+                          />
+                        </div>
+                        <div>
+                          <label for="numTel" class="block text-sm font-medium text-gray-700">Téléphone</label>
                             <input
                               type="text"
                               name="numTel"
                               id="numTel"
                               [(ngModel)]="formData.numTel"
                               (input)="handleChange($event, 'numTel')"
-                              class="block min-w-0 grow py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6"
+                              class="block w-full py-1.5 px-3 border border-gray-200 rounded-md focus:outline-none sm:text-sm"
                             />
                           </div>
                           <div>
@@ -189,7 +158,7 @@
                               id="ville"
                               [(ngModel)]="formData.ville"
                               (input)="handleChange($event, 'ville')"
-                              class="block min-w-0 grow py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6"
+                              class="block w-full py-1.5 px-3 border border-gray-200 rounded-md focus:outline-none sm:text-sm"
                             />
                           </div>
                           <div>
@@ -200,435 +169,283 @@
                               id="adress"
                               [(ngModel)]="formData.adress"
                               (input)="handleChange($event, 'adress')"
-                              class="block min-w-0 grow py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6"
+                              class="block w-full py-1.5 px-3 border border-gray-200 rounded-md focus:outline-none sm:text-sm"
                             />
                           </div>
                         </div>
-                    <div class="flex justify-end">
-                      <button
-                        (click)="isEditing = true"
-                        class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-custom-orange hover:bg-custom-orangeBold focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-custom-orange"
-                      >
-                        <svg class="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
-                        </svg>
-                        Modifier le profil
-                      </button>
+                        <div class="flex justify-end">
+                          <button
+                            (click)="isEditing = true"
+                            type="button"
+                            class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-custom-orange hover:bg-custom-orangeBold focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-custom-orange"
+                          >
+                            <svg class="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.232 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
+                            </svg>
+                            Modifier le profil
+                          </button>
+                        </div>
+                      </form>
                     </div>
-                    </form>
-                  </div>
-  
-                  <ng-template #editForm>
-                    <form (ngSubmit)="handleSubmit($event)" class="space-y-6">
-                      <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-2">
-                        <div>
-                          <label for="nom" class="block text-sm/10 font-medium text-gray-900">Nom</label>
-                          <input
-                            type="text"
-                            name="nom"
-                            id="nom"
-                            [(ngModel)]="formData.nom"
-                            (input)="handleChange($event, 'nom')"
-                            class="block min-w-0 border grow py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400  sm:text-sm/6"
-                            style="width: 300px;"
-                          />
-                        </div>
-                        <div>
-                          <label for="prenom" class="block text-sm/10 font-medium text-gray-900">Prénom</label>
-                          <input
-                            type="text"
-                            name="prenom"
-                            id="prenom"
-                            [(ngModel)]="formData.prenom"
-                            (input)="handleChange($event, 'prenom')"
-                            style="width: 300px;"
-                            class="block min-w-0 border grow py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400  sm:text-sm/6"
-                          />
-                        </div>
-                        <div>
-                          <label for="email" class="block text-sm/10 font-medium text-gray-900">Email</label>
-                          <input
-                            type="email"
-                            name="email"
-                            id="email"
-                            [(ngModel)]="formData.email"
-                            (input)="handleChange($event, 'email')"
-                            style="width: 300px;"
-                            class="block min-w-0 grow border py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 sm:text-sm/6"
-                          />
-                        </div>
-                        <div>
-                          <label for="numTel" class="block text-sm/10 font-medium text-gray-900">Téléphone</label>
-                          <input
-                            type="text"
-                            name="numTel"
-                            id="numTel"
-                            [(ngModel)]="formData.numTel"
-                            (input)="handleChange($event, 'numTel')"
-                            style="width: 300px;"
-                            class="block min-w-0 grow border py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 sm:text-sm/6"
-                          />
-                        </div>
-                        <div>
-                          <label for="ville" class="block text-sm/10 font-medium text-gray-900">Ville</label>
-                          <select [(ngModel)]="formData.ville" name="ville" (input)="handleChange($event, 'ville')" class="input-field">
-                            <option value="">Sélectionnez une ville</option>
-                            <option value="Tunis">Tunis</option>
-                            <option value="Sfax">Sfax</option>
-                            <option value="Sousse">Sousse</option>
-                            <option value="Kairouan">Kairouan</option>
-                            <option value="Bizerte">Bizerte</option>
-                            <option value="Gabès">Gabès</option>
-                            <option value="Ariana">Ariana</option>
-                            <option value="Gafsa">Gafsa</option>
-                            <option value="Monastir">Monastir</option>
-                            <option value="Nabeul">Nabeul</option>
-                            <option value="Tataouine">Tataouine</option>
-                            <option value="Béja">Béja</option>
-                            <option value="Jendouba">Jendouba</option>
-                            <option value="Médenine">Médenine</option>
-                            <option value="Mahdia">Mahdia</option>
-                            <option value="Kasserine">Kasserine</option>
-                            <option value="Kebili">Kebili</option>
-                            <option value="Siliana">Siliana</option>
-                            <option value="Le Kef">Le Kef</option>
-                            <option value="Tozeur">Tozeur</option>
-                            <option value="Zaghouan">Zaghouan</option>
-                            <option value="Manouba">Manouba</option>
-                            <option value="Ben Arous">Ben Arous</option>
-                          </select>
-                        </div>
-                        <div>
-                          <label for="adress" class="block text-sm/10 font-medium text-gray-900">Adresse</label>
-                          <input
-                            type="text"
-                            name="adress"
-                            id="adress"
-                            [(ngModel)]="formData.adress"
-                            (input)="handleChange($event, 'adress')"
-                            style="width: 300px;"
-                            class="block min-w-0 grow py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 border sm:text-sm/6"
-                          />
-                        </div>
-                        <div>
-                          <label for="pdProfile" class="block text-sm/10 font-medium text-gray-900">Photo de profil</label>
-                          <input
-                            type="file"
-                            name="pdProfile"
-                            id="fileInput"
-                            (change)="onFileSelected($event)"
-                            style="width: 300px;"
-                            class="block min-w-0 border grow py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 sm:text-sm/6"
-                            accept="image/*"
-                          />
-                        </div>
-                      </div>
-                      <div class="alert-box success" id="alert-success"></div>
-                      <div class="flex justify-end space-x-3">
-                        <button
-                          type="button"
-                          (click)="handleCancel()"
-                          class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-custom-orange"
-                        >
-                          <svg class="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                          </svg>
-                          Annuler
-                        </button>
-                        <button
-                          type="submit"
-                          class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-custom-orange hover:bg-custom-orangeBold focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-custom-orange"
-                        >
-                          <svg class="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                          </svg>
-                          Enregistrer
-                        </button>
-                      </div>
-                    </form>
-                  </ng-template>
-                </div>
-              </div>
-  
-              <!-- Onglet Événements -->
-              <!-- <div *ngIf="activeTab === 'events'">
-                <div>
-                  <div class="flex justify-between items-center mb-6">
-                    <h3 class="text-lg font-medium text-gray-900">Vos événements</h3>
-                    <button class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-custom-orange hover:bg-custom-orangeBold focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-custom-orange">
-                      <svg class="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                      </svg>
-                      Nouvel événement
-                    </button>
-                  </div>
-  
-                  <div class="space-y-6">
-                    <div *ngFor="let event of events" class="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow group">
-                      <div class="flex flex-col sm:flex-row">
-                        <div class="sm:w-1/3 relative">
-                          <img
-                            [src]="event.image || '/placeholder.svg'"
-                            [alt]="event.title"
-                            class="h-48 sm:h-full w-full object-cover"
-                          />
-                          <div class="absolute top-2 right-2">
-                            <span
-                              [ngClass]="{
-                                'bg-green-100 text-green-800': event.status === 'completed',
-                                'bg-blue-100 text-blue-800': event.status === 'upcoming'
-                              }"
-                              class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+
+                    <ng-template #editForm>
+                      <form (ngSubmit)="handleSubmit($event)" class="space-y-6">
+                        <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-2">
+                          <div>
+                            <label for="nom" class="block text-sm font-medium text-gray-900">Nom</label>
+                            <input
+                              type="text"
+                              name="nom"
+                              id="nom"
+                              [(ngModel)]="formData.nom"
+                              (input)="handleChange($event, 'nom')"
+                              class="block w-full py-1.5 px-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-custom-orange sm:text-sm"
+                            />
+                          </div>
+                          <div>
+                            <label for="prenom" class="block text-sm font-medium text-gray-900">Prénom</label>
+                            <input
+                              type="text"
+                              name="prenom"
+                              id="prenom"
+                              [(ngModel)]="formData.prenom"
+                              (input)="handleChange($event, 'prenom')"
+                              class="block w-full py-1.5 px-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-custom-orange sm:text-sm"
+                            />
+                          </div>
+                          <div>
+                            <label for="email" class="block text-sm font-medium text-gray-900">Email</label>
+                            <input
+                              type="email"
+                              name="email"
+                              id="email"
+                              [(ngModel)]="formData.email"
+                              (input)="handleChange($event, 'email')"
+                              class="block w-full py-1.5 px-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-custom-orange sm:text-sm"
+                            />
+                          </div>
+                          <div>
+                            <label for="numTel" class="block text-sm font-medium text-gray-900">Téléphone</label>
+                            <input
+                              type="text"
+                              name="numTel"
+                              id="numTel"
+                              [(ngModel)]="formData.numTel"
+                              (input)="handleChange($event, 'numTel')"
+                              class="block w-full py-1.5 px-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-custom-orange sm:text-sm"
+                            />
+                          </div>
+                          <div>
+                            <label for="ville" class="block text-sm font-medium text-gray-900">Ville</label>
+                            <select
+                              [(ngModel)]="formData.ville"
+                              name="ville"
+                              (input)="handleChange($event, 'ville')"
+                              class="block w-full py-1.5 px-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-custom-orange sm:text-sm"
                             >
-                              {{ event.status === 'completed' ? 'Terminé' : 'À venir' }}
-                            </span>
+                              <option value="">Sélectionnez une ville</option>
+                              <option value="Tunis">Tunis</option>
+                              <option value="Sfax">Sfax</option>
+                              <option value="Sousse">Sousse</option>
+                              <option value="Kairouan">Kairouan</option>
+                              <option value="Bizerte">Bizerte</option>
+                              <option value="Gabès">Gabès</option>
+                              <option value="Ariana">Ariana</option>
+                              <option value="Gafsa">Gafsa</option>
+                              <option value="Monastir">Monastir</option>
+                              <option value="Nabeul">Nabeul</option>
+                              <option value="Tataouine">Tataouine</option>
+                              <option value="Béja">Béja</option>
+                              <option value="Jendouba">Jendouba</option>
+                              <option value="Médenine">Médenine</option>
+                              <option value="Mahdia">Mahdia</option>
+                              <option value="Kasserine">Kasserine</option>
+                              <option value="Kebili">Kebili</option>
+                              <option value="Siliana">Siliana</option>
+                              <option value="Le Kef">Le Kef</option>
+                              <option value="Tozeur">Tozeur</option>
+                              <option value="Zaghouan">Zaghouan</option>
+                              <option value="Manouba">Manouba</option>
+                              <option value="Ben Arous">Ben Arous</option>
+                            </select>
+                          </div>
+                          <div>
+                            <label for="adress" class="block text-sm font-medium text-gray-900">Adresse</label>
+                            <input
+                              type="text"
+                              name="adress"
+                              id="adress"
+                              [(ngModel)]="formData.adress"
+                              (input)="handleChange($event, 'adress')"
+                              class="block w-full py-1.5 px-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-custom-orange sm:text-sm"
+                            />
+                          </div>
+                          <div>
+                            <label for="pdProfile" class="block text-sm font-medium text-gray-900">Photo de profil</label>
+                            <input
+                              type="file"
+                              name="pdProfile"
+                              id="fileInput"
+                              (change)="onFileSelected($event)"
+                              class="block w-full py-1.5 px-3 border border-gray-300 rounded-md sm:text-sm"
+                              accept="image/*"
+                            />
                           </div>
                         </div>
-                        <div class="sm:w-2/3 p-5">
-                          <div class="flex justify-between items-start">
-                            <h4 class="text-xl font-semibold text-gray-900">{{ event.title }}</h4>
-                            <div class="flex items-center text-sm text-gray-500">
-                              <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                              </svg>
-                              {{ event.date | date: 'longDate' }}
-                            </div>
-                          </div>
-                          <p class="mt-2 text-gray-600">{{ event.description }}</p>
-                          <div class="mt-4 flex items-center text-sm text-gray-500">
-                            <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        <div class="alert-box success" id="alert-success"></div>
+                        <div class="flex justify-end space-x-3">
+                          <button
+                            type="button"
+                            (click)="handleCancel()"
+                            class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-custom-orange"
+                          >
+                            <svg class="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                             </svg>
-                            {{ event.location }}
-                          </div>
-                          <div class="mt-4 flex justify-between items-center">
-                            <div class="text-sm text-gray-500">
-                              <span class="font-medium">{{ event.participants }}</span> participants
-                            </div>
-                            <button class="inline-flex items-center text-sm font-medium text-custom-orange hover:text-custom-orangeBold group-hover:translate-x-0.5 transition-transform">
-                              Voir détails
-                              <svg class="ml-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                              </svg>
-                            </button>
-                          </div>
+                            Annuler
+                          </button>
+                          <button
+                            type="submit"
+                            class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-custom-orange hover:bg-custom-orangeBold focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-custom-orange"
+                          >
+                            <svg class="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            Enregistrer
+                          </button>
                         </div>
-                      </div>
-                    </div>
+                      </form>
+                    </ng-template>
                   </div>
                 </div>
-              </div> -->
-  
-              <!-- Onglet Statistiques -->
-              <!-- <div *ngIf="activeTab === 'stats'">
-                <div>
-                  <h3 class="text-lg font-medium text-gray-900 mb-6">Statistiques de vos événements</h3>
-  
-                  <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+
+                <!-- Paramètres Section -->
+                <div *ngIf="activeTab === 'params'" class="mt-12">
+                  <div class="space-y-6">
                     <div class="bg-white overflow-hidden shadow rounded-lg">
-                      <div class="px-4 py-5 sm:p-6">
-                        <div class="flex items-center">
-                          <div class="flex-shrink-0 bg-custom-orange rounded-md p-3">
-                            <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                            </svg>
+                      <div class="px-4 py-5">
+                        <h2 class="text-xl font-bold text-gray-900 mb-2">Changer le mot de passe</h2>
+                        <p class="text-sm text-gray-500 mb-6">
+                          Mettez à jour votre mot de passe pour sécuriser votre compte.
+                        </p>
+                        <form [formGroup]="passwordForm" (ngSubmit)="onSubmit()" class="space-y-6">
+                          <div>
+                            <label for="oldPassword" class="block text-sm font-medium text-gray-700">Ancien mot de passe</label>
+                            <input
+                              type="password"
+                              id="oldPassword"
+                              formControlName="oldPassword"
+                              class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-custom-orange focus:border-custom-orange"
+                            />
+                            <p *ngIf="submitted && passwordForm.controls['oldPassword'].invalid" class="text-sm text-red-500">
+                              Veuillez entrer votre ancien mot de passe.
+                            </p>
                           </div>
-                          <div class="ml-5 w-0 flex-1">
-                            <dl>
-                              <dt class="text-sm font-medium text-gray-500 truncate">Total des événements</dt>
-                              <dd class="flex items-baseline">
-                                <div class="text-2xl font-semibold text-gray-900">{{ events.length }}</div>
-                              </dd>
-                            </dl>
+                          <div>
+                            <label for="newPassword" class="block text-sm font-medium text-gray-700">Nouveau mot de passe</label>
+                            <input
+                              type="password"
+                              id="newPassword"
+                              formControlName="newPassword"
+                              class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-custom-orange focus:border-custom-orange"
+                            />
+                            <p *ngIf="submitted && passwordForm.controls['newPassword'].errors?.['minlength']" class="text-sm text-red-500">
+                              Le mot de passe doit contenir au moins 8 caractères.
+                            </p>
                           </div>
-                        </div>
-                      </div>
-                    </div>
-  
-                    <div class="bg-white overflow-hidden shadow rounded-lg">
-                      <div class="px-4 py-5 sm:p-6">
-                        <div class="flex items-center">
-                          <div class="flex-shrink-0 bg-green-500 rounded-md p-3">
-                            <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                            </svg>
+                          <div>
+                            <label for="confirmPassword" class="block text-sm font-medium text-gray-700">Confirmer le mot de passe</label>
+                            <input
+                              type="password"
+                              id="confirmPassword"
+                              formControlName="confirmPassword"
+                              class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-custom-orange focus:border-custom-orange"
+                            />
+                            <p *ngIf="submitted && passwordForm.errors?.['mismatch']" class="text-sm text-red-500">
+                              Les mots de passe ne correspondent pas.
+                            </p>
                           </div>
-                          <div class="ml-5 w-0 flex-1">
-                            <dl>
-                              <dt class="text-sm font-medium text-gray-500 truncate">Total des participants</dt>
-                              <dd class="flex items-baseline">
-                                <div class="text-2xl font-semibold text-gray-900">5
-                                </div>
-                              </dd>
-                            </dl>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-  
-                    <div class="bg-white overflow-hidden shadow rounded-lg">
-                      <div class="px-4 py-5 sm:p-6">
-                        <div class="flex items-center">
-                          <div class="flex-shrink-0 bg-blue-500 rounded-md p-3">
-                            <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                            </svg>
-                          </div>
-                          <div class="ml-5 w-0 flex-1">
-                            <dl>
-                              <dt class="text-sm font-medium text-gray-500 truncate">Événements à venir</dt>
-                              <dd class="flex items-baseline">
-                                <div class="text-2xl font-semibold text-gray-900">3
-                                </div>
-                              </dd>
-                            </dl>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-  
-                  <div class="mt-8">
-                    <h4 class="text-base font-medium text-gray-900 mb-4">Répartition des événements</h4>
-                    <div class="h-64 bg-gray-100 rounded-lg flex items-center justify-center">
-                      <p class="text-gray-500">Graphique de répartition des événements</p>
-                    </div>
-                  </div>
-                </div>
-              </div> -->
-              <!-- Onglet params -->
-                <div *ngIf="activeTab === 'params'">
-                    <div class="space-y-6">
-                    <div class="bg-white overflow-hidden shadow rounded-lg">
-                        <div class="px-4 py-5">
-                          <h2 class="text-xl font-bold text-gray-900 mb-2">Changer le mot de passe</h2>
-                          <p class="text-sm text-gray-500 mb-6">
-                            Mettez à jour votre mot de passe pour sécuriser votre compte.
-                          </p>
-                        
-                          <form [formGroup]="passwordForm" (ngSubmit)="onSubmit()" class="space-y-6">
-                            <!-- Ancien mot de passe -->
-                            <div>
-                              <label for="oldPassword" class="block text-sm font-medium text-gray-700">Ancien mot de passe</label>
-                              <input
-                                type="password"
-                                id="oldPassword"
-                                formControlName="oldPassword"
-                                class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-amber-500 focus:border-amber-500"
-                              />
-                              <p *ngIf="submitted && passwordForm.controls['oldPassword'].invalid" class="text-sm text-red-500">
-                                Veuillez entrer votre ancien mot de passe.
-                              </p>
-                            </div>
-                        
-                            <!-- Nouveau mot de passe -->
-                            <div>
-                              <label for="newPassword" class="block text-sm font-medium text-gray-700">Nouveau mot de passe</label>
-                              <input
-                                type="password"
-                                id="newPassword"
-                                formControlName="newPassword"
-                                class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-amber-500 focus:border-amber-500"
-                              />
-                              <p *ngIf="submitted && passwordForm.controls['newPassword'].errors?.['minlength']" class="text-sm text-red-500">
-                                Le mot de passe doit contenir au moins 8 caractères.
-                              </p>
-                            </div>
-                        
-                            <!-- Confirmation -->
-                            <div>
-                              <label for="confirmPassword" class="block text-sm font-medium text-gray-700">Confirmer le mot de passe</label>
-                              <input
-                                type="password"
-                                id="confirmPassword"
-                                formControlName="confirmPassword"
-                                class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-amber-500 focus:border-amber-500"
-                              />
-                              <p *ngIf="submitted && passwordForm.errors?.['mismatch']" class="text-sm text-red-500">
-                                Les mots de passe ne correspondent pas.
-                              </p>
-                            </div>
-              
                           <div *ngIf="passwordSuccessMessage" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4">
-                              {{ passwordSuccessMessage }}
+                            {{ passwordSuccessMessage }}
                           </div>
                           <div *ngIf="passwordErrorMessage" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
-                              {{ passwordErrorMessage }}
+                            {{ passwordErrorMessage }}
                           </div>
-                
-                            <!-- Bouton -->
-                            <div class="flex justify-end">
-                              <button
-                                type="submit"
-                                [disabled]="loading"
-                                class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-md shadow-sm text-white bg-custom-orange hover:bg-custom-orangeBold"
-                              >
-                                <svg class="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                                </svg>
-                                {{ loading ? 'Mise à jour...' : 'Mettre à jour le mot de passe' }}
-                              </button>
-                            </div>
-                          </form>
-                        </div>
+                          <div class="flex justify-end">
+                            <button
+                              type="submit"
+                              [disabled]="loading"
+                              class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-md shadow-sm text-white bg-custom-orange hover:bg-custom-orangeBold focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-custom-orange"
+                            >
+                              <svg class="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                              </svg>
+                              {{ loading ? 'Mise à jour...' : 'Mettre à jour le mot de passe' }}
+                            </button>
+                          </div>
+                        </form>
+                      </div>
                     </div>
-  
+
                     <div class="bg-white overflow-hidden shadow rounded-lg">
-                        <div class="px-4 py-5">
+                      <div class="px-4 py-5">
                         <h3 class="text-lg font-medium text-gray-900 mb-6">Supprimer le compte</h3>
-                        <p class="text-sm text-gray-500 mb-6">Supprimer définitivement votre compte et toutes vos données</p>
+                        <p class="text-sm text-gray-500 mb-6">Supprimer définitivement votre compte et toutes vos données.</p>
                         <p class="text-sm text-gray-500 mb-6">Cette action est irréversible. Une fois que vous avez supprimé votre compte, toutes vos données seront définitivement effacées.</p>
-                        </div>
-                        <div class="flex justify-end px-4 py-5">
+                      </div>
+                      <div class="flex justify-end px-4 py-5">
                         <button
-                            type="button"
-                            (click)="confirmDelete()"
-                            class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-700 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                          type="button"
+                          (click)="confirmDelete()"
+                          class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-700 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
                         >
-                        <fa-icon [icon]="faTrash" class="mr-2 h-4 w-4"></fa-icon>
-                            Supprimer le compte
+                          <fa-icon [icon]="faTrash" class="mr-2 h-4 w-4"></fa-icon>
+                          Supprimer le compte
                         </button>
-                        </div>
+                      </div>
                     </div>
+                  </div>
                 </div>
-            </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  </div>
+    </main>
 
-  <!-- supprimer Model -->
-<div *ngIf="isDeleteDialogOpen" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center p-4 z-50">
-  <div class="bg-white rounded-lg shadow-xl max-w-md w-full">
-    <div class="p-6">
-      <div class="flex justify-center items-center">
-        <img class="w-10 h-10" src="https://www.citypng.com/public/uploads/preview/download-triangle-exclamation-mark-icon-png-11640519866fjlwawfcae.png" />
+    <footer class="bg-gray-900 text-center py-4">
+      <p class="text-gray-400 text-sm">© 2025 FLESK EVENT. Tous droits réservés.</p>
+    </footer>
+
+    <!-- Delete Confirmation Dialog -->
+    <div *ngIf="isDeleteDialogOpen" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center p-4 z-50">
+      <div class="bg-white rounded-lg shadow-xl max-w-md w-full">
+        <div class="p-6">
+          <div class="flex justify-center items-center">
+            <img class="w-10 h-10" src="https://www.citypng.com/public/uploads/preview/download-triangle-exclamation-mark-icon-png-11640519866fjlwawfcae.png" alt="Warning icon" />
+          </div>
+          <br>
+          <h3 class="text-lg text-center font-bold text-red-600">Confirmer la Suppression</h3>
+          <p class="text-gray-600 mt-2 text-center">
+            Voulez-vous vraiment <strong>supprimer votre compte</strong> ?
+          </p>
+        </div>
+        <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse rounded-lg sm:px-6">
+          <button
+            type="button"
+            class="w-full inline-flex justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-red-700 sm:ml-3 sm:w-auto sm:text-sm"
+            (click)="deleteAccount()"
+          >
+            Supprimer
+          </button>
+          <button
+            type="button"
+            class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+            (click)="isDeleteDialogOpen = false"
+          >
+            Annuler
+          </button>
+        </div>
       </div>
-      <br>
-      <h3 class="text-lg text-center font-bold text-red-600">Confirmer la Suppression</h3>
-      <p class="text-gray-600 mt-2 text-center">
-        Voulez-vous vraiment <strong>supprimer votre compte</strong> 
-      </p>
     </div>
-
-    <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse rounded-lg sm:px-6">
-      <button
-        type="button"
-        class="w-full inline-flex justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-red-700 sm:ml-3 sm:w-auto sm:text-sm"
-        (click)="deleteAccount()"
-      >
-        <span>Supprimer</span>
-      </button>
-      <button
-        type="button"
-        class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
-        (click)="isDeleteDialogOpen = false"
-      >
-        Annuler
-      </button>
-    </div>
-  </div>
 </div>

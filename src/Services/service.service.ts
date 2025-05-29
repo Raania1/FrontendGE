@@ -6,22 +6,23 @@ import { catchError, Observable, throwError } from 'rxjs';
   providedIn: 'root'
 })
 export class ServiceService {
+    private url = "http://localhost:8000"
 
-  private apiUrl = 'http://localhost:8000/service/filter'; 
-  private apiUrl1 = 'http://localhost:8000/service/create'; 
-  private apiUrl2 = 'http://localhost:8000/service/getById/'; 
-  private apiUrl3 = 'http://localhost:8000/service/updatewithoutPhotos/'; 
-  private apiUrl4 = 'http://localhost:8000/service/deletePhoto/'; 
-  private apiUrl5 = 'http://localhost:8000/service/addPhotos/'; 
-  private apiUrl6 = 'http://localhost:8000/service/updateServicePhotos/'; 
-  private apiUrl7 = 'http://localhost:8000/service/deleteService/'; 
-  private apiUrl8 = 'http://localhost:8000/service/services'; 
-  private apiUrl9 = 'http://localhost:8000/service/approovedService/'; 
-  private apiUrl10 = 'http://localhost:8000/service/deleteService/'; 
-  private apiUrl11 = 'http://localhost:8000/service/getServices'; 
-  private apiUrl12 = 'http://localhost:8000/service/canceledService/';
-  private apiUrl13 = 'http://localhost:8000/service/disableService/'; 
-  private apiUrl14 = 'http://localhost:8000/service/activateService/'; 
+  private apiUrl = `${this.url}/service/filter`; 
+  private apiUrl1 = `${this.url}/service/create`; 
+  private apiUrl2 = `${this.url}/service/getById/`; 
+  private apiUrl3 = `${this.url}/service/updatewithoutPhotos/`; 
+  private apiUrl4 = `${this.url}/service/deletePhoto/`; 
+  private apiUrl5 = `${this.url}/service/addPhotos/`; 
+  private apiUrl6 = `${this.url}/service/updateServicePhotos/`; 
+  private apiUrl7 = `${this.url}/service/deleteService/`; 
+  private apiUrl8 = `${this.url}/service/services`; 
+  private apiUrl9 = `${this.url}/service/approovedService/`; 
+  private apiUrl10 = `${this.url}/service/deleteService/`; 
+  private apiUrl11 = `${this.url}/service/getServices`; 
+  private apiUrl12 = `${this.url}/service/canceledService/`;
+  private apiUrl13 = `${this.url}/service/disableService/`; 
+  private apiUrl14 = `${this.url}/service/activateService/`; 
 
 
   constructor(private http: HttpClient) {}

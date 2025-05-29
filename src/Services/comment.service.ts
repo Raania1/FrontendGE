@@ -6,10 +6,11 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class CommentService {
-  private apiUrl = 'http://localhost:8000/comment/getById'; 
-  private apiUrl1 = 'http://localhost:8000/comment/DeleteById/'; 
-  private apiUrl2 = 'http://localhost:8000/comment/updateById/'; 
-  private apiUrl3 = 'http://localhost:8000/comment/create'; 
+  private url = "http://localhost:8000"
+  private apiUrl = `${this.url}/comment/getById`; 
+  private apiUrl1 = `${this.url}/comment/DeleteById/`; 
+  private apiUrl2 = `${this.url}/comment/updateById/`; 
+  private apiUrl3 = `${this.url}/comment/create`; 
 
   constructor(private http: HttpClient) { }
   createComment(content: string, organisateurid: string, prestataireid: string): Observable<any> {

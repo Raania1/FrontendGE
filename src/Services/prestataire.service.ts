@@ -6,21 +6,22 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class PrestataireService {
-  private apiUrl = 'http://localhost:8000/prestataire/getById/';  
-  private apiUrl1 = 'http://localhost:8000/prestataire/update/';  
-  private apiUrlS = 'http://localhost:8000/prestataire/deleteprestataire/';  
-  private apiUrlA ='http://localhost:8000/prestataire/prestataires';
-  private apiUrlN ='http://localhost:8000/prestataire/notProovided';
-  private apiUrlP ='http://localhost:8000/prestataire/approovedPrestataire/';
-  private apiUrlPS ='http://localhost:8000/prestataire/';
-  private apiUrlC ='http://localhost:8000/prestataire/refusePrestataire/';
-  private apiUrlD ='http://localhost:8000/prestataire/disablePrestataire/';
-  private apiUrlc ='http://localhost:8000/prestataire/ActivPrestataire/';
-  private apiUrl3 ='http://localhost:8000/pack/create';
-  private apiUrl4 ='http://localhost:8000/pack/getById';
-    private apiUrl5 ='http://localhost:8000/pack/update';
+      private url = "http://localhost:8000"
+  private apiUrl = `${this.url}/prestataire/getById/`;  
+  private apiUrl1 = `${this.url}/prestataire/update/`;  
+  private apiUrlS = `${this.url}/prestataire/deleteprestataire/`;  
+  private apiUrlA =`${this.url}/prestataire/prestataires`;
+  private apiUrlN =`${this.url}/prestataire/notProovided`;
+  private apiUrlP =`${this.url}/prestataire/approovedPrestataire/`;
+  private apiUrlPS =`${this.url}/prestataire/`;
+  private apiUrlC =`${this.url}/prestataire/refusePrestataire/`;
+  private apiUrlD =`${this.url}/prestataire/disablePrestataire/`;
+  private apiUrlc =`${this.url}/prestataire/ActivPrestataire/`;
+  private apiUrl3 =`${this.url}/pack/create`;
+  private apiUrl4 =`${this.url}/pack/getById`;
+    private apiUrl5 =`${this.url}/pack/update`;
 
-  private apiUrl2 ='http://localhost:8000/prestataire/changePass';
+  private apiUrl2 =`${this.url}/prestataire/changePass`;
 
 
   constructor(private http: HttpClient) { }

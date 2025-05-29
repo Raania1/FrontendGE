@@ -6,9 +6,9 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class RatingService {
-
-  private apiUrl = 'http://localhost:8000/rating/ratingPrestataire'; 
-  private apiUrlR = 'http://localhost:8000/rating/create'; 
+  private url = "http://localhost:8000"
+  private apiUrl = `${this.url}/rating/ratingPrestataire`; 
+  private apiUrlR = `${this.url}/rating/create`; 
 
   constructor(private http: HttpClient) { }
 

@@ -6,14 +6,14 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class OrganizerService {
-
-  private apiUrl = 'http://localhost:8000/organizer/getById/'; 
-  private apiUrl2 = 'http://localhost:8000/organizer//reservations/packs/';  
-  private apiUrl3 = 'http://localhost:8000/organizer/reservations/services/';   
-  private apiUrl1 = 'http://localhost:8000/organizer/update/';  
-  private apiUrlS = 'http://localhost:8000/organizer/deleteorganizer/';  
-  private apiUrlA = 'http://localhost:8000/organizer/organizers';  
-  private apiUrlP = 'http://localhost:8000/organizer/changePass';  
+    private url = "http://localhost:8000"
+  private apiUrl = `${this.url}/organizer/getById/`; 
+  private apiUrl2 = `${this.url}/organizer/reservations/packs/`;  
+  private apiUrl3 = `${this.url}/organizer/reservations/services/`;   
+  private apiUrl1 = `${this.url}/organizer/update/`;  
+  private apiUrlS = `${this.url}/organizer/deleteorganizer/`;  
+  private apiUrlA = `${this.url}/organizer/organizers`;  
+  private apiUrlP = `${this.url}/organizer/changePass`;  
 
   constructor(private http: HttpClient) { }
 

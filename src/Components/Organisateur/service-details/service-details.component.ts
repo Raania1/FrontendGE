@@ -129,10 +129,10 @@ formatPrice(price: number): string {
     document.body.classList.add('overflow-hidden');
   }
 
-  closeLightbox(): void {
-    this.isLightboxOpen = false;
-    document.body.classList.remove('overflow-hidden');
-  }
+ closeLightbox(): void {
+  this.isLightboxOpen = false;
+  document.body.classList.remove('overflow-hidden');
+}
 
   @HostListener('window:keydown.escape')
   onEscapeKey(): void {

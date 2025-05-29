@@ -5,13 +5,13 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class MessageService {
-
-  private apiUrl = 'http://localhost:8000/message/create';
-  private apiUrl1 = 'http://localhost:8000/message/getAllPublic';
-  private apiUrl2 = 'http://localhost:8000/message/getAll';
-  private apiUrl3 = 'http://localhost:8000/message/delete';
-  private apiUrl4 = 'http://localhost:8000/message/update';
-  private apiUrl5 = 'http://localhost:8000/message/reply';
+    private url = "http://localhost:8000"
+  private apiUrl = `${this.url}/message/create`;
+  private apiUrl1 = `${this.url}/message/getAllPublic`;
+  private apiUrl2 = `${this.url}/message/getAll`;
+  private apiUrl3 = `${this.url}/message/delete`;
+  private apiUrl4 = `${this.url}/message/update`;
+  private apiUrl5 = `${this.url}/message/reply`;
 
   
   constructor(private http: HttpClient) { }

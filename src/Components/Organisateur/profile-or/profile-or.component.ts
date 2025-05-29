@@ -31,6 +31,7 @@ export class ProfileOrComponent {
   formData = { ...this.organisateur };
   isEditing = false;
   activeTab = "infos";
+  
   constructor(private authService: OrganizerService,
     authServiceA: AuthService,     
      private fb: FormBuilder,

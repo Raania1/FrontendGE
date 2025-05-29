@@ -7,11 +7,12 @@ import $ from 'jquery';
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrlL = 'http://localhost:8000/user/auth/login'; 
-  private apiUrl = 'http://localhost:8000/organizer/auth'; 
-  private apiUrl1 = 'http://localhost:8000/prestataire/auth'; 
-  private apiUrlF = 'http://localhost:8000/user/fogetpassword'; 
-  private apiUrlR = 'http://localhost:8000/user/resetPassword'; 
+  private url = "http://localhost:8000"
+  private apiUrlL = `${this.url}/user/auth/login`; 
+  private apiUrl = `${this.url}/organizer/auth`; 
+  private apiUrl1 = `${this.url}/prestataire/auth`; 
+  private apiUrlF = `${this.url}/user/fogetpassword`; 
+  private apiUrlR = `${this.url}/user/resetPasswor`; 
 
 
   constructor(private http: HttpClient) {}

@@ -6,8 +6,9 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class ContractService {
-  private apiUrl = 'http://localhost:8000/contrat/create'; 
-  private apiUrlD = 'http://localhost:8000/contrat/'; 
+  private url = "http://localhost:8000"
+  private apiUrl = `${this.url}/contrat/create`; 
+  private apiUrlD = `${this.url}/contrat/`; 
 
   constructor(private http: HttpClient) {}
 

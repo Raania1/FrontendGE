@@ -14,14 +14,19 @@
         'w-16': isSidebarCollapsed
       }"
     >
+<div class="flex justify-center items-center">
+  <p class="text-center font-serif font-semibold text-lg">Espace Prestataire</p>
+</div>
       <div class="flex items-center space-x-2">
+
         <img
           src="/assets/FE11.png" 
           alt="Logo"
           width="100" height="100"
           class="center"
         />
-        <p class="text-sm font-serif" *ngIf="!isSidebarCollapsed"
+       
+        <p class="text-sm font-serif capitalize" *ngIf="!isSidebarCollapsed"
           >{{prestataire.nom}} {{prestataire.prenom}}</p
         >
       </div><hr class="text-gray-900">

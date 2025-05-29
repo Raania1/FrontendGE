@@ -6,16 +6,17 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class ReservationService {
-  private apiUrl = 'http://localhost:8000/reservation/demande'; 
-  private apiUrl1 = 'http://localhost:8000/reservation/getAllReservationServicesOnly'; 
-  private apiUrl9 = 'http://localhost:8000/reservation/getAllReservationPacksOnly'; 
-  private apiUrl2 = 'http://localhost:8000/reservation/deleteById/'; 
-  private apiUrl3 = 'http://localhost:8000/reservation/confirm/'; 
-  private apiUrl4 = 'http://localhost:8000/reservation/cancel/'; 
-  private apiUrl5 = 'http://localhost:8000/reservation/countReservation/'; 
-  private apiUrl6 = 'http://localhost:8000/reservation/countReservationS/'; 
-  private apiUrl7 = 'http://localhost:8000/reservation/countReservations'; 
-  private apiUrl8 = 'http://localhost:8000/reservation/countPaidReservations'; 
+    private url = "http://localhost:8000"
+  private apiUrl = `${this.url}/reservation/demande`; 
+  private apiUrl1 = `${this.url}/reservation/getAllReservationServicesOnly`; 
+  private apiUrl9 = `${this.url}/reservation/getAllReservationPacksOnly`; 
+  private apiUrl2 = `${this.url}/reservation/deleteById/`; 
+  private apiUrl3 = `${this.url}/reservation/confirm/`; 
+  private apiUrl4 = `${this.url}/reservation/cancel/`; 
+  private apiUrl5 = `${this.url}/reservation/countReservation/`; 
+  private apiUrl6 = `${this.url}/reservation/countReservationS/`; 
+  private apiUrl7 = `${this.url}/reservation/countReservations`; 
+  private apiUrl8 = `${this.url}/reservation/countPaidReservations`; 
 
   constructor(private http: HttpClient) {}
 
