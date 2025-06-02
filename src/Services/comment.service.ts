@@ -6,7 +6,9 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class CommentService {
-  private url = "https://backendge.onrender.com"
+  // private url = "https://backendge.onrender.com"
+              private url = "http://localhost:8000"
+
   private apiUrl = `${this.url}/comment/getById`; 
   private apiUrl1 = `${this.url}/comment/DeleteById/`; 
   private apiUrl2 = `${this.url}/comment/updateById/`; 

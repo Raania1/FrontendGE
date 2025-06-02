@@ -6,7 +6,9 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class PrestataireService {
-      private url = "https://backendge.onrender.com"
+      // private url = "https://backendge.onrender.com"
+              private url = "http://localhost:8000"
+
   private apiUrl = `${this.url}/prestataire/getById/`;  
   private apiUrl1 = `${this.url}/prestataire/update/`;  
   private apiUrlS = `${this.url}/prestataire/deleteprestataire/`;  

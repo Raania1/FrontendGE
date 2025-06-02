@@ -6,7 +6,8 @@ import { catchError, Observable, throwError } from 'rxjs';
   providedIn: 'root'
 })
 export class ServiceService {
-    private url = "https://backendge.onrender.com"
+    // private url = "https://backendge.onrender.com"
+              private url = "http://localhost:8000"
 
   private apiUrl = `${this.url}/service/filter`; 
   private apiUrl1 = `${this.url}/service/create`; 

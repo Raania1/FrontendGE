@@ -5,7 +5,9 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class MessageService {
-    private url = "https://backendge.onrender.com"
+    // private url = "https://backendge.onrender.com"
+              private url = "http://localhost:8000"
+
   private apiUrl = `${this.url}/message/create`;
   private apiUrl1 = `${this.url}/message/getAllPublic`;
   private apiUrl2 = `${this.url}/message/getAll`;

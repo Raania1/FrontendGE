@@ -1,157 +1,155 @@
-<div class="flex h-screen ">
-    <div
-      class="fixed inset-0 bg-black/50 z-40 md:hidden"
-      *ngIf="isSidebarOpen"
-      (click)="closeSidebar()"
-    ></div>
-  
-    <aside
-      class="bg-custom-orange/5 backdrop-blur-md shadow-md p-4 text-custom-black fixed inset-y-0 left-0 z-50 transform transition-transform duration-300 ease-in-out border-r border-custom-gray"
-      [ngClass]="{
-        'translate-x-0': isSidebarOpen || isDesktop,
-        '-translate-x-full': !isSidebarOpen && !isDesktop,
-        'w-64': !isSidebarCollapsed,
-        'w-16': isSidebarCollapsed
-      }"
-    >
-<div class="flex justify-center items-center">
-  <p class="text-center font-serif font-semibold text-lg">Espace Prestataire</p>
-</div>
-      <div class="flex items-center space-x-2">
+<div class="flex h-screen">
+  <div
+    class="fixed inset-0 bg-black/50 z-40 md:hidden"
+    *ngIf="isSidebarOpen"
+    (click)="closeSidebar()"
+  ></div>
 
-        <img
-          src="/assets/FE11.png" 
-          alt="Logo"
-          width="100" height="100"
-          class="center"
-        />
-       
-        <p class="text-sm font-serif capitalize" *ngIf="!isSidebarCollapsed"
+  <aside
+    class="bg-custom-orange/5 backdrop-blur-md shadow-lg p-4 text-gray-800 fixed inset-y-0 left-0 z-50 transform transition-transform duration-300 ease-in-out border-r border-gray-200"
+    [ngClass]="{
+      'translate-x-0': isSidebarOpen || isDesktop,
+      '-translate-x-full': !isSidebarOpen && !isDesktop,
+      'w-64': !isSidebarCollapsed,
+      'w-16': isSidebarCollapsed
+    }"
+  >
+  <div class="flex justify-center items-center">
+  <p class="text-center font-serif font-semibold text-lg">Espace Prestataire</p></div>
+    <div class="flex items-center space-x-2">
+      <img
+        src="/assets/FE11.png"
+        alt="Logo"
+        width="100"
+        height="100"
+        class="rounded-lg"
+      />
+<p class="text-sm font-serif capitalize" *ngIf="!isSidebarCollapsed"
           >{{prestataire.nom}} {{prestataire.prenom}}</p
+        >    </div>
+    <hr class="my-4 border-gray-200">
+
+    <nav class="mt-5">
+      <ul class="space-y-2">
+        <li
+          class="p-2 hover:bg-gray-100 rounded-lg flex items-center space-x-2 cursor-pointer transition-all duration-300"
+          routerLinkActive="bg-custom-gray"
         >
-      </div><hr class="text-gray-900">
-        <!-- <button
-        class="mt-4 p-2 hover:bg-custom-gray/10 rounded-lg md:block hidden transition-all duration-300"
-        (click)="toggleSidebar()"
-      >
-        <fa-icon
-          [icon]="isSidebarCollapsed ? faChevronRight : faChevronLeft"
-          class="h-5 w-5 text-custom-black"
-        ></fa-icon>
-      </button> -->
-  
-      <nav class="mt-5">
-        <ul>
-          <li
-            class="p-2 hover:bg-custom-gray rounded-lg flex items-center space-x-2 cursor-pointer transition-all duration-300" routerLinkActive="bg-custom-gray"
-          >
-            <fa-icon [icon]="faChartBar" class="h-5 w-5 text-gray-500"></fa-icon>
-            <span *ngIf="!isSidebarCollapsed">Tableau de bord</span>
-          </li>
-          <li
-            class="p-2 hover:bg-custom-gray/10 rounded-lg flex items-center space-x-2 cursor-pointer transition-all duration-300" routerLinkActive="bg-custom-gray"
-          >
-            <fa-icon [icon]="faTools" class="h-5 w-5 text-gray-500"></fa-icon>
-            <span routerLink="/prestataire/servicePR" *ngIf="!isSidebarCollapsed">Mes services</span>
-          </li>
-           <li
-            class="p-2 hover:bg-custom-gray/10 rounded-lg flex items-center space-x-2 cursor-pointer transition-all duration-300" routerLinkActive="bg-custom-gray"
-          >
-            <fa-icon [icon]="faBoxOpen" class="h-5 w-5 text-gray-500"></fa-icon>
-            <span routerLink="/prestataire/packPr" *ngIf="!isSidebarCollapsed">Mes Packs</span>
-          </li>
-          <!-- <li
-            class="p-2 hover:bg-custom-gray/10 rounded-lg flex items-center space-x-2 cursor-pointer transition-all duration-300" routerLinkActive="bg-custom-gray"
-          >
+          <fa-icon [icon]="faChartBar" class="h-5 w-5 text-gray-500"></fa-icon>
+          <span class="text-sm font-medium" *ngIf="!isSidebarCollapsed">Tableau de bord</span>
+        </li>
+
+        <li
+          class="p-2 hover:bg-gray-100 rounded-lg flex items-center space-x-2 cursor-pointer transition-all duration-300"
+          routerLink="/prestataire/servicePR"
+          routerLinkActive="bg-custom-gray"
+        >
+          <fa-icon [icon]="faTools" class="h-5 w-5 text-gray-500"></fa-icon>
+          <span class="text-sm font-medium" *ngIf="!isSidebarCollapsed">Mes services</span>
+        </li>
+
+        <li
+          class="p-2 hover:bg-gray-100 rounded-lg flex items-center space-x-2 cursor-pointer transition-all duration-300"
+          routerLink="/prestataire/packPr"
+          routerLinkActive="bg-custom-gray"
+        >
+          <fa-icon [icon]="faBoxOpen" class="h-5 w-5 text-gray-500"></fa-icon>
+          <span class="text-sm font-medium" *ngIf="!isSidebarCollapsed">Mes Packs</span>
+        </li>
+
+        <div class="flex items-center mt-6 mb-2">
+          <h3 class="text-xs font-semibold uppercase text-gray-500" *ngIf="!isSidebarCollapsed">Réservations</h3>
+        </div>
+
+        <li
+          class="p-2 hover:bg-gray-100 rounded-lg flex items-center justify-between cursor-pointer transition-all duration-300"
+          (click)="toggleReservationSubMenu()"
+          routerLinkActive="bg-custom-gray"
+        >
+          <div class="flex items-center space-x-2">
             <fa-icon [icon]="faCalendarCheck" class="h-5 w-5 text-gray-500"></fa-icon>
-            <span routerLink="/prestataire/reservations" *ngIf="!isSidebarCollapsed">Réservations</span>
-          </li> -->
-          <!-- Menu principal Réservations -->
-          <li
-            class="p-2 hover:bg-custom-gray/10 rounded-lg flex items-center justify-between cursor-pointer transition-all duration-300"
-            (click)="toggleReservationSubMenu()"
-            
-          >
-            <div class="flex items-center space-x-2">
-              <fa-icon [icon]="faCalendarCheck" class="h-5 w-5 text-gray-500"></fa-icon>
-              <span *ngIf="!isSidebarCollapsed">Réservations</span>
-            </div>
-            <fa-icon
-              *ngIf="!isSidebarCollapsed"
-              [icon]="showReservationSubMenu ? faChevronLeft : faChevronRight"
-              class="h-4 w-4 text-gray-400"
-            ></fa-icon>
-          </li>
+            <span class="text-sm font-medium" *ngIf="!isSidebarCollapsed">Réservations</span>
+          </div>
+          <fa-icon
+            *ngIf="!isSidebarCollapsed"
+            [icon]="showReservationSubMenu ? faChevronLeft : faChevronRight"
+            class="h-4 w-4 text-gray-400"
+          ></fa-icon>
+        </li>
 
-          <!-- Sous-menu Réservations -->
-          <ul *ngIf="showReservationSubMenu && !isSidebarCollapsed" class="ml-8 space-y-1">
-            <li
-              class="p-2 hover:bg-custom-gray/10 rounded-lg cursor-pointer transition-all duration-300"
-              routerLink="/prestataire/reservations"
-              routerLinkActive="bg-custom-gray"
-            >
-              Réservation service
-            </li>
-            <li
-              class="p-2 hover:bg-custom-gray/10 rounded-lg cursor-pointer transition-all duration-300"
-              routerLink="/prestataire/reservationsP"
-              routerLinkActive="bg-custom-gray"
-            >
-              Réservation packs
-            </li>
-          </ul>
-
+        <ul *ngIf="showReservationSubMenu && !isSidebarCollapsed" class="ml-8 space-y-1">
           <li
-            class="p-2 hover:bg-custom-gray/10 rounded-lg flex items-center space-x-2 cursor-pointer transition-all duration-300" routerLinkActive="bg-custom-gray"
+            class="p-2 hover:bg-gray-100 rounded-lg text-sm font-medium cursor-pointer transition-all duration-300"
+            routerLink="/prestataire/reservations"
+            routerLinkActive="bg-custom-gray"
           >
-            <fa-icon [icon]="faCalendarAlt" class="h-5 w-5 text-gray-500"></fa-icon>
-            <span *ngIf="!isSidebarCollapsed">Calendrier</span>
+            Réservation service
           </li>
           <li
-            class="p-2 hover:bg-custom-gray/10 rounded-lg flex items-center space-x-2 cursor-pointer transition-all duration-300" routerLinkActive="bg-custom-gray"
+            class="p-2 hover:bg-gray-100 rounded-lg text-sm font-medium cursor-pointer transition-all duration-300"
+            routerLink="/prestataire/reservationsP"
+            routerLinkActive="bg-custom-gray"
           >
-            <fa-icon [icon]="faBullhorn" class="h-5 w-5 text-gray-500"></fa-icon>
-            <span routerLink="/prestataire/publicitePr" *ngIf="!isSidebarCollapsed">Publicités</span>
-          </li>
-          <li
-            class="p-2 hover:bg-custom-gray/10 rounded-lg flex items-center space-x-2 cursor-pointer transition-all duration-300" routerLinkActive="bg-custom-gray"
-          >
-            <fa-icon [icon]="faUser" class="h-5 w-5 text-gray-500"></fa-icon>
-            <a  routerLink="/prestataire/profile" *ngIf="!isSidebarCollapsed">Mon profil</a>
-          </li>
-          <li
-            class="p-2 hover:bg-custom-gray/10 rounded-lg flex items-center space-x-2 cursor-pointer transition-all duration-300" routerLinkActive="bg-custom-gray"
-          >
-            <fa-icon [icon]="faCog" class="h-5 w-5 text-gray-500"></fa-icon>
-            <span routerLink="/prestataire/parametre" *ngIf="!isSidebarCollapsed" >Paramètres</span>
-          </li>
-          <li
-            class="p-2 hover:bg-custom-gray/10 rounded-lg flex items-center space-x-2 cursor-pointer transition-all duration-300" routerLinkActive="bg-custom-gray"
-          >
-            <fa-icon [icon]="faSignOutAlt" class="h-5 w-5 text-gray-500"></fa-icon>
-            <span (click)="logout()" *ngIf="!isSidebarCollapsed">Déconnexion</span>
+            Réservation packs
           </li>
         </ul>
-      </nav>
-    </aside>
-  
-    <div class="flex-1 p-6 bg-white md:ml-64">
-        <div class="md:hidden flex items-center justify-between p-4 bg-custom-orange/5 backdrop-blur-md shadow-md border-b border-custom-gray">
-          <button
-          class="p-2 text-gray-600 hover:text-gray-800"
-          (click)="toggleSidebar()"
+
+        <li
+          class="p-2 hover:bg-gray-100 rounded-lg flex items-center space-x-2 cursor-pointer transition-all duration-300"
+          routerLink="/prestataire/publicitePr"
+          routerLinkActive="bg-custom-gray"
         >
-          <fa-icon [icon]="faBars" class="h-6 w-6"></fa-icon>
-        </button>
-          <p class="text-s font-serif text-custom-black">Espace Prestataire</p>
-          <a routerLink="/" class="flex items-center space-x-2">
-            <img
-              src="/assets/FE11.png"
-              alt="Logo"
-              width="60" 
-            />
-          </a>          
-        </div>  
-        <router-outlet></router-outlet>
+          <fa-icon [icon]="faBullhorn" class="h-5 w-5 text-gray-500"></fa-icon>
+          <span class="text-sm font-medium" *ngIf="!isSidebarCollapsed">Publicités</span>
+        </li>
+
+        <li
+          class="p-2 hover:bg-gray-100 rounded-lg flex items-center space-x-2 cursor-pointer transition-all duration-300"
+          routerLink="/prestataire/profile"
+          routerLinkActive="bg-custom-gray"
+        >
+          <fa-icon [icon]="faUser" class="h-5 w-5 text-gray-500"></fa-icon>
+          <span class="text-sm font-medium" *ngIf="!isSidebarCollapsed">Mon profil</span>
+        </li>
+
+        <li
+          class="p-2 hover:bg-gray-100 rounded-lg flex items-center space-x-2 cursor-pointer transition-all duration-300"
+          routerLink="/prestataire/parametre"
+          routerLinkActive="bg-custom-gray"
+        >
+          <fa-icon [icon]="faCog" class="h-5 w-5 text-gray-500"></fa-icon>
+          <span class="text-sm font-medium" *ngIf="!isSidebarCollapsed">Paramètres</span>
+        </li>
+
+        <li
+          class="p-2 hover:bg-gray-100 rounded-lg flex items-center space-x-2 cursor-pointer transition-all duration-300"
+          routerLinkActive="bg-custom-gray"
+        >
+          <fa-icon [icon]="faSignOutAlt" class="h-5 w-5 text-gray-500"></fa-icon>
+          <span (click)="logout()" class="text-sm font-medium" *ngIf="!isSidebarCollapsed">Déconnexion</span>
+        </li>
+      </ul>
+    </nav>
+  </aside>
+
+  <div class="flex-1 p-6 bg-white md:ml-64">
+    <div class="md:hidden flex items-center justify-between p-4 bg-custom-orange/5 backdrop-blur-md shadow-md border-b border-gray-200">
+      <button
+        class="p-2 text-gray-600 hover:text-gray-800"
+        (click)="toggleSidebar()"
+      >
+        <fa-icon [icon]="faBars" class="h-6 w-6"></fa-icon>
+      </button>
+      <p class="text-sm font-serif text-gray-800">Espace Prestataire</p>
+      <a routerLink="/" class="flex items-center space-x-2">
+        <img
+          src="/assets/FE11.png"
+          alt="Logo"
+          width="60"
+        />
+      </a>
     </div>
+    <br>
+    <router-outlet></router-outlet>
   </div>
+</div>

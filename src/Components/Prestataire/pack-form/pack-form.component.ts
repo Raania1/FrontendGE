@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
+import { Router, RouterLink, RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { PrestataireService } from '../../../Services/prestataire.service';
 
@@ -14,7 +14,7 @@ interface Service {
 @Component({
   selector: 'app-pack-form',
   standalone: true,
-    imports: [FontAwesomeModule,FormsModule,CommonModule,ReactiveFormsModule,RouterModule],
+    imports: [FontAwesomeModule,FormsModule,CommonModule,ReactiveFormsModule,RouterLink],
   templateUrl: './pack-form.component.html',
   styleUrls: ['./pack-form.component.css']
 })
