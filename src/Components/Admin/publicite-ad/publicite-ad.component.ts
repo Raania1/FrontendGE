@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faBell, faChevronLeft, faChevronRight, faClipboardList } from '@fortawesome/free-solid-svg-icons';
 import { PubliciteService } from '../../../Services/publicite.service';
+import { AdminService } from '../../../Services/admin.service';
 
 type AdvertisementStatus = 'En attente' | 'Acceptée' | 'Terminée' | 'CANCELED';
 
@@ -72,11 +73,17 @@ export class PubliciteAdComponent implements OnInit {
 
   currentPage: number = 1;
   itemsPerPage: number = 10;
-
-  constructor(private pubService: PubliciteService, private cdr: ChangeDetectorRef) {}
+adminInfo: any = {};
+formData = {
+      nom: '',
+      prenom: '',
+      email: ''
+    };
+  constructor(private pubService: PubliciteService, private cdr: ChangeDetectorRef,private adminService: AdminService) {}
 
   ngOnInit(): void {
     this.fetchAdvertisements();
+            this.fetchAdminInfo();
   }
 
   fetchAdvertisements(): void {
@@ -95,7 +102,23 @@ export class PubliciteAdComponent implements OnInit {
       }
     });
   }
+  fetchAdminInfo() {
+  const user = JSON.parse(localStorage.getItem('user') || '{}');  
+    const adminId = user.Id; 
+  if (adminId) {
+    this.adminService.getAdminById(adminId).subscribe(
+      (response) => {
+        this.adminInfo = response.admin;
+                  this.formData = { ...this.adminInfo };  
 
+        console.log('Admin récupéré:', this.adminInfo);
+      },
+      (error) => {
+        console.error('Erreur lors de la récupération de l’admin:', error);
+      }
+    );
+  }
+}
   mapStatus(backendStatus: string): AdvertisementStatus {
     switch (backendStatus) {
       case 'PENDING':
@@ -342,5 +365,17 @@ export class PubliciteAdComponent implements OnInit {
     this.successMessage = '';
     this.errorMessage = '';
     this.cdr.markForCheck();
+  }
+  formatPrice(price: number): string {
+    if (isNaN(price)) return '0 DT';
+    
+    const isWholeNumber = price % 1 === 0;
+    
+    return new Intl.NumberFormat('fr-FR', {
+      style: isWholeNumber ? 'decimal' : 'currency',
+      currency: 'TND',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: isWholeNumber ? 0 : 3
+    }).format(price) + (isWholeNumber ? ' DT' : '');
   }
 }
