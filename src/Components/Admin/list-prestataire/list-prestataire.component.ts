@@ -6,7 +6,7 @@ import { PrestataireService } from '../../../Services/prestataire.service';
 import { FormsModule } from '@angular/forms';
 import { ReservationService } from '../../../Services/reservation.service';
 import { AdminService } from '../../../Services/admin.service';
-
+ 
 @Component({
   selector: 'app-list-prestataire',
   standalone: true,

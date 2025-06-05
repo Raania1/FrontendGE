@@ -5,6 +5,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCheck, faTimes, faInfoCircle, faSpinner, faFilter, faSearch, faCheckCircle, faClock, faLayerGroup, faEye, faTrash, faBan, faEllipsisV, faChevronRight, faChevronLeft } from '@fortawesome/free-solid-svg-icons';
 import { ServiceService } from '../../../Services/service.service';
 import { PrestataireService } from '../../../Services/prestataire.service';
+import { AdminService } from '../../../Services/admin.service';
 
 @Component({
   selector: 'app-services-ad',
@@ -31,7 +32,12 @@ export class ServicesAdComponent {
   showModal = false;
   searchTerm = '';
   selectedImageIndex = 0;
-
+adminInfo: any = {};
+formData = {
+      nom: '',
+      prenom: '',
+      email: ''
+    };
   // Pagination 
   currentPage = 1;
   itemsPerPage = 10;
@@ -46,15 +52,32 @@ export class ServicesAdComponent {
   ];
   
   activeTab = 'all';
-  constructor(private service: ServiceService, private prestataireService: PrestataireService) {}
+  constructor(private service: ServiceService, private prestataireService: PrestataireService,private adminService: AdminService) {}
   services: any = [];
   filteredServices: any = [];
   paginatedServices: any = [];
 
   ngOnInit(): void {
     this.fetchservices();
+    this.fetchAdminInfo();
   }
+  fetchAdminInfo() {
+  const user = JSON.parse(localStorage.getItem('user') || '{}');  
+    const adminId = user.Id; 
+  if (adminId) {
+    this.adminService.getAdminById(adminId).subscribe(
+      (response) => {
+        this.adminInfo = response.admin;
+                  this.formData = { ...this.adminInfo };  
 
+        console.log('Admin récupéré:', this.adminInfo);
+      },
+      (error) => {
+        console.error('Erreur lors de la récupération de l’admin:', error);
+      }
+    );
+  }
+}
   async fetchservices() {
     try {
       const response = await this.service.getAllPres().toPromise();
