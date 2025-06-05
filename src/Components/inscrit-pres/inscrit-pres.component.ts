@@ -75,7 +75,7 @@ export class InscritPresComponent {
     this.apiError = null;
 
     try {
-      const response: any = await this.http.post('http://localhost:8000/ia/generate', { 
+      const response: any = await this.http.post('https://backendge.onrender.com/ia/generate', { 
         keywords: this.keywords 
       }).toPromise();
 

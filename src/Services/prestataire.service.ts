@@ -117,7 +117,7 @@ export class PrestataireService {
     if (prenom) query += `&prenom=${encodeURIComponent(prenom)}`;
     if (ville) query += `&ville=${encodeURIComponent(ville)}`;
   
-    return this.http.get<any>(`http://localhost:8000/prestataire/presP${query}`);
+    return this.http.get<any>(`${this.url}/prestataire/presP${query}`);
   }
 
   changePassword(id: string, data: any) {
@@ -145,10 +145,10 @@ updatePack(packId: string, packData: any, coverPhoto?: File): Observable<any> {
   return this.http.put(`${this.apiUrl5}/${packId}`, formData);
 }
 deleteServiceFromPack(serviceId: string): Observable<any> {
-  return this.http.delete(`http://localhost:8000/pack/services/${serviceId}`);
+  return this.http.delete(`${this.url}/pack/services/${serviceId}`);
 }
 addServiceToPack(packId: string, serviceData: { name: string, description: string }): Observable<any> {
-  return this.http.post(`http://localhost:8000/pack/servicesAdd/${packId}`, serviceData);
+  return this.http.post(`${this.url}/pack/servicesAdd/${packId}`, serviceData);
 }
 
 }
