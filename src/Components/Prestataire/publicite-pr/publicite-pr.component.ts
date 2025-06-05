@@ -299,8 +299,17 @@ export class PublicitePrComponent implements OnInit {
       }
     });
   }
-  formatPrice(price: number): string {
-  return new Intl.NumberFormat('fr-TN').format(price) + ' DT';
-}
+   formatPrice(price: number): string {
+    if (isNaN(price)) return '0 DT';
+    
+    const isWholeNumber = price % 1 === 0;
+    
+    return new Intl.NumberFormat('fr-FR', {
+      style: isWholeNumber ? 'decimal' : 'currency',
+      currency: 'TND',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: isWholeNumber ? 0 : 3
+    }).format(price) + (isWholeNumber ? ' DT' : '');
+  }
 
 }
