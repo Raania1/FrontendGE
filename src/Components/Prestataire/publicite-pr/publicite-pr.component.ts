@@ -299,4 +299,8 @@ export class PublicitePrComponent implements OnInit {
       }
     });
   }
+  formatPrice(price: number): string {
+  return new Intl.NumberFormat('fr-TN').format(price) + ' DT';
+}
+
 }
