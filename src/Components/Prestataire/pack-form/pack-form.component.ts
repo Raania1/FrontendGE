@@ -106,8 +106,19 @@ export class PackFormComponent {
   const user = JSON.parse(localStorage.getItem('user') || '{}');  
   const id = user.Id; 
 
-  if (!this.title || !this.description || !this.price || !this.coverPhoto || this.services.length < 2) {
-    this.errorMessage = "Veuillez remplir tous les champs obligatoires et ajouter au moins 2 services";
+  const numericPrice = Number(this.price);
+
+  if (
+    !this.title ||
+    !this.description ||
+    !this.price ||
+    isNaN(numericPrice) ||
+    numericPrice <= 0 ||
+    numericPrice > 9999 ||
+    !this.coverPhoto ||
+    this.services.length < 2
+  ) {
+    this.errorMessage = "Veuillez remplir tous les champs obligatoires. Le prix doit être un nombre entre 1 et 9999 et au moins 2 services doivent être ajoutés.";
     return;
   }
 

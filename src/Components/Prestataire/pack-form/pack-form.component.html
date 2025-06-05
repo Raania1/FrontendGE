@@ -57,7 +57,7 @@
       
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label for="price" class="block text-sm font-medium text-gray-700">Prix (DT)</label>
+            <label for="price" class="block text-sm font-medium text-gray-700">Prix (ne depasse pas 9 999DT)</label>
             <input type="number" id="price" [(ngModel)]="price" name="price" step="0.01" min="0" required
                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border">
             <div *ngIf="formSubmitted && !price" class="text-red-500 text-xs mt-1">
