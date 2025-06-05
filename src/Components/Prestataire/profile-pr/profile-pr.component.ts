@@ -124,7 +124,8 @@ export class ProfilePrComponent {
           )
           console.log('Prestataire:', this.prestataire);
           console.log('Avis:', this.avis);
-          
+                    console.log('Avis:', this.prestataire.averageRating);
+
           this.fetchOrganisateursForComments();
         },
         (error) => {

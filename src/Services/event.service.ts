@@ -6,8 +6,8 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class EventService {
-    // private url = "https://backendge.onrender.com"
-              private url = "http://localhost:8000"
+    private url = "https://backendge.onrender.com"
+              // private url = "http://localhost:8000"
 
   private apiUrl = `${this.url}/event`; 
   private apiUrlS = `${this.url}/service/servicesP`; 

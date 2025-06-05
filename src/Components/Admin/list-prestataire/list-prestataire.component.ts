@@ -5,6 +5,7 @@ import { faBell, faUser, faTrash, faSearch, faCheck, faTimes, faFilePdf, faUsers
 import { PrestataireService } from '../../../Services/prestataire.service';
 import { FormsModule } from '@angular/forms';
 import { ReservationService } from '../../../Services/reservation.service';
+import { AdminService } from '../../../Services/admin.service';
 
 @Component({
   selector: 'app-list-prestataire',
@@ -14,7 +15,6 @@ import { ReservationService } from '../../../Services/reservation.service';
   styleUrls: ['./list-prestataire.component.css']
 })
 export class ListPrestataireComponent {
-  // Icônes
   faBell = faBell;
   faUser = faUser;
   faTrash = faTrash;
@@ -29,26 +29,46 @@ export class ListPrestataireComponent {
   faChevronLeft = faChevronLeft;
   faChevronRight = faChevronRight;
 
-  // Données
   pres: any[] = [];
   presA: any[] = [];
   currentFilter: 'TOUS' | 'PENDING' | 'CONFIRMED' | 'DISABLED' = 'TOUS';
   searchTerm: string = '';
   showAll: boolean = true;
 
-  // Pagination properties
   currentPage: number = 1;
-  itemsPerPage: number = 10; // Default value
+  itemsPerPage: number = 10; 
   totalPages: number = 1;
-
-  constructor(private presService: PrestataireService, private reservation: ReservationService) {}
+adminInfo: any = {};
+formData = {
+      nom: '',
+      prenom: '',
+      email: ''
+    };
+  constructor(private presService: PrestataireService, private reservation: ReservationService,private adminService: AdminService) {}
 
   ngOnInit(): void {
     this.fetchPres();
+        this.fetchAdminInfo();
     this.fetchPresN();
   }
+  fetchAdminInfo() {
+  const user = JSON.parse(localStorage.getItem('user') || '{}');  
+    const adminId = user.Id; 
+  if (adminId) {
+    this.adminService.getAdminById(adminId).subscribe(
+      (response) => {
+        this.adminInfo = response.admin;
+                  this.formData = { ...this.adminInfo };  
 
-  // Récupération des données
+        console.log('Admin récupéré:', this.adminInfo);
+      },
+      (error) => {
+        console.error('Erreur lors de la récupération de l’admin:', error);
+      }
+    );
+  }
+}
+
   fetchPres() {
     this.presService.getAllPres().subscribe(
       (response) => {

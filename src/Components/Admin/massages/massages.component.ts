@@ -2,13 +2,14 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MessageService } from '../../../Services/message.service';
+import { AdminService } from '../../../Services/admin.service';
 
 interface Message {
   id: string;
   NomComplet: string;
   email: string;
   Sujet: string;
-  Message: string;
+  Message: string; 
   Status: 'PRIVATE' | 'PUBLIC';
   createdAt: Date;
 }
@@ -29,10 +30,17 @@ export class MassagesComponent {
   replyContent = '';
   currentFilter: 'TOUS' | 'PUBLIC' | 'PRIVATE' = 'TOUS';
   searchQuery = '';
-
-  constructor(private messagesService: MessageService) {}
+adminInfo: any = {};
+formData = {
+      nom: '',
+      prenom: '',
+      email: ''
+    };
+  constructor(private messagesService: MessageService,private adminService: AdminService) {}
 
   ngOnInit(): void {
+            this.fetchAdminInfo();
+
     this.messagesService.getAll().subscribe({
       next: (data) => {
         this.messages = data;
@@ -42,6 +50,23 @@ export class MassagesComponent {
       }
     });
   }
+    fetchAdminInfo() {
+  const user = JSON.parse(localStorage.getItem('user') || '{}');  
+    const adminId = user.Id; 
+  if (adminId) {
+    this.adminService.getAdminById(adminId).subscribe(
+      (response) => {
+        this.adminInfo = response.admin;
+                  this.formData = { ...this.adminInfo };  
+
+        console.log('Admin récupéré:', this.adminInfo);
+      },
+      (error) => {
+        console.error('Erreur lors de la récupération de l’admin:', error);
+      }
+    );
+  }
+}
   get filteredMessages(): Message[] {
     let filtered = this.messages;
     

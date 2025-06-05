@@ -7,7 +7,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { EventService } from '../../../Services/event.service';
 import { ReservationService } from '../../../Services/reservation.service';
- 
+import { AdminService } from '../../../Services/admin.service';
+  
 @Component({
   selector: 'app-list-organisateur',
   standalone: true,
@@ -24,23 +25,45 @@ export class ListOrganisateurComponent {
   faUsersSlash = faUsersSlash;
   faChevronLeft = faChevronLeft;
   faChevronRight = faChevronRight;
-  faFilePdf = faFilePdf; // Optional, if organizers have documents
+  faFilePdf = faFilePdf; 
 
-  // Data
   users: any[] = [];
   searchTerm: string = '';
-  selectedOrganizer: any = null; // Track selected organizer
-  isProfileModalOpen: boolean = false; // Track modal state
+  selectedOrganizer: any = null; 
+  isProfileModalOpen: boolean = false; 
 
   currentPage: number = 1;
   itemsPerPage: number = 10;
   totalPages: number = 1;
-
-  constructor(private organizerService: OrganizerService , private eventService: EventService, private reservation:ReservationService) {}
+adminInfo: any = {};
+formData = {
+      nom: '',
+      prenom: '',
+      email: ''
+    };
+  constructor(private organizerService: OrganizerService , private eventService: EventService, private reservation:ReservationService,private adminService: AdminService) {}
 
   ngOnInit(): void {
     this.fetchOrganizers();
+    this.fetchAdminInfo();
   }
+fetchAdminInfo() {
+  const user = JSON.parse(localStorage.getItem('user') || '{}');  
+    const adminId = user.Id; 
+  if (adminId) {
+    this.adminService.getAdminById(adminId).subscribe(
+      (response) => {
+        this.adminInfo = response.admin;
+                  this.formData = { ...this.adminInfo };  
+
+        console.log('Admin récupéré:', this.adminInfo);
+      },
+      (error) => {
+        console.error('Erreur lors de la récupération de l’admin:', error);
+      }
+    );
+  }
+}
 
   fetchOrganizers() {
     this.organizerService.getAllOrganizers().subscribe(

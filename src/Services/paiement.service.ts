@@ -6,7 +6,7 @@ import { Observable } from 'rxjs/internal/Observable';
 })
 export class PaiementService {
 
-  private baseUrl = 'http://localhost:8000/payment';
+  private baseUrl = 'https://backendge.onrender.com/payment';
 
   constructor(private http: HttpClient) {}
 
