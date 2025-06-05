@@ -28,7 +28,7 @@ export class CreateSComponent {
     this.serviceForm = this.fb.group({
       nom: ['', Validators.required],
       description: ['', Validators.required],
-      prix: [0, [Validators.required, Validators.min(0)]],
+    prix: [0, [Validators.required, Validators.min(0), Validators.max(6500)]],
       promo: [0, [Validators.min(0), Validators.max(100)]],
       type: ['default_type']
     });
