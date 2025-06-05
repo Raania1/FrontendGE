@@ -42,30 +42,14 @@ registerOrganizer(formData: FormData): Observable<any> {
   return this.http.post(`${this.apiUrl}/register`, formData, {
     headers: { 
                'Accept': 'application/json' } 
-  }).pipe(
-    timeout(30000), // Timeout de 5 minutes
-    catchError(error => {
-      if (error.name === 'TimeoutError') {
-        console.error('L\'enregistrement Organizer a expiré (5 minutes dépassées)');
-      }
-      return throwError(error);
-    })
-  );
-}
+    })}
 
 registerPrestataire(formData: FormData): Observable<any> {
   return this.http.post(`${this.apiUrl1}/register`, formData, {
     headers: { 
       'Accept': 'application/json' } 
-  }).pipe(
-    timeout(30000), // Timeout de 5 minutes
-    catchError(error => {
-      if (error.name === 'TimeoutError') {
-        console.error('L\'enregistrement Prestataire a expiré (5 minutes dépassées)');
-      }
-      return throwError(error);
-    })
-  );
+  
+});
 }
 
   forgetPassword(email: string): Observable<any> {
