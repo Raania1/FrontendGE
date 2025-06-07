@@ -6,7 +6,6 @@ import { Observable } from 'rxjs';
 import { faBell, faChevronLeft, faChevronRight, faClipboardList } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { PrestataireService } from '../../../Services/prestataire.service';
-import { AdminService } from '../../../Services/admin.service';
 
 type ReservationStatus = 'PENDING' | 'CONFIRMED' | 'CANCELED' | 'PAID';
 
@@ -77,22 +76,15 @@ export class ReservationPackAdComponent implements OnInit {
   itemsPerPage: number = 10;
 
   prestataire: any = {};
-adminInfo: any = {};
-formData = {
-      nom: '',
-      prenom: '',
-      email: ''
-    };
+
   constructor(
     private reservation: ReservationService,
-    private prestataireService: PrestataireService,private adminService: AdminService
+    private prestataireService: PrestataireService
   ) {}
 
   ngOnInit(): void {
     this.fetchReservations();
     this.fetchPresData();
-    this.fetchAdminInfo();
-
   }
 
   fetchPresData() {
@@ -125,23 +117,7 @@ formData = {
       }
     });
   }
-  fetchAdminInfo() {
-  const user = JSON.parse(localStorage.getItem('user') || '{}');  
-    const adminId = user.Id; 
-  if (adminId) {
-    this.adminService.getAdminById(adminId).subscribe(
-      (response) => {
-        this.adminInfo = response.admin;
-                  this.formData = { ...this.adminInfo };  
 
-        console.log('Admin récupéré:', this.adminInfo);
-      },
-      (error) => {
-        console.error('Erreur lors de la récupération de l’admin:', error);
-      }
-    );
-  }
-}
   get filteredReservations(): Reservation[] {
     return this.reservations.filter((reservation) => {
       const org = reservation.Organisateur;
