@@ -20,6 +20,9 @@ export class EventService {
   getAllEventsWithServices(): Observable<any> {
     return this.http.get(`${this.apiUrl}/getAllEventsWithServices`);
   }
+    getEventsByOrganizerId(organisateurid: string): Observable<any> {
+    return this.http.get(`${this.url}/getEventsByOrganizerId/${organisateurid}`);
+}
   getAllservices(): Observable<any> {
     return this.http.get<any>(`${this.apiUrlS}`);
     }

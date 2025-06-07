@@ -169,8 +169,10 @@ export class CreatEventComponent {
   }
 
   loadEventsWithServices() {
+     const user = JSON.parse(localStorage.getItem('user') || '{}');  
+    const id= user.Id;
     this.isLoading = true;
-    this.eventService.getAllEventsWithServices().subscribe({
+    this.eventService.getEventsByOrganizerId(id).subscribe({
       next: (response) => {
         this.processEventsResponse(response);
       },
