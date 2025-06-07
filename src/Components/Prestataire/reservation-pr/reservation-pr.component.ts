@@ -95,7 +95,8 @@ export class ReservationPrComponent implements OnInit {
     if (id) {
       this.prestataireService.getPrestataireById(id).subscribe(
         (response) => {
-          this.prestataire = response.pres;  
+          this.prestataire = response.pres;
+          this.fetchReservations();  
         },
         (error) => {
           console.error('Erreur lors de la récupération des données:', error);
@@ -107,30 +108,28 @@ export class ReservationPrComponent implements OnInit {
   }
 
   fetchReservations(): void {
-    this.reservation.getAll().subscribe({
-      next: (response) => {
-        this.reservations = response.reservations.sort((a: any, b: any) => 
-          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-        );
-        
-        this.reservations.forEach(reservation => {
-          if (reservation.Status === 'PAID') {
-            this.paiementService.getPaymentByReservationId(reservation.id).subscribe(
-              (paymentResponse: any) => {
-                reservation.payment = paymentResponse.payment;
-              },
-              (paymentError: any) => {
-                console.error('Erreur lors de la récupération du paiement:', paymentError);
-              }
-            );
+  if (this.prestataire && this.prestataire.reservations) {
+    this.reservations = this.prestataire.reservations.sort((a: any, b: any) =>
+      new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    );
+
+    this.reservations.forEach(reservation => {
+      if (reservation.Status === 'PAID') {
+        this.paiementService.getPaymentByReservationId(reservation.id).subscribe(
+          (paymentResponse: any) => {
+            reservation.payment = paymentResponse.payment;
+          },
+          (paymentError: any) => {
+            console.error('Erreur lors de la récupération du paiement:', paymentError);
           }
-        });
-      },
-      error: (err) => {
-        console.error('Erreur lors du chargement des réservations :', err);
+        );
       }
     });
+  } else {
+    console.warn('Pas de réservations trouvées pour ce prestataire');
   }
+}
+
 
   get filteredReservations(): Reservation[] {
     return this.reservations.filter((reservation) => {
