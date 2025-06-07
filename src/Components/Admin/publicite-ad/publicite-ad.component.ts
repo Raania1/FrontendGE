@@ -83,7 +83,7 @@ formData = {
 
   ngOnInit(): void {
     this.fetchAdvertisements();
-            this.fetchAdminInfo();
+    this.fetchAdminInfo();
   }
 
   fetchAdvertisements(): void {
@@ -370,7 +370,7 @@ formData = {
     if (isNaN(price)) return '0 DT';
     
     const isWholeNumber = price % 1 === 0;
-    
+     
     return new Intl.NumberFormat('fr-FR', {
       style: isWholeNumber ? 'decimal' : 'currency',
       currency: 'TND',
