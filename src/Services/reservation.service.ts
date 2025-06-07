@@ -60,4 +60,7 @@ getcountPaidReservations(organizerId: string): Observable<any> {
  getServiceReservationsByPrestataireId(prestataireId: string): Observable<any> {
     return this.http.get(`${this.url}/reservation/getServiceReservationsByPrestataireId/${prestataireId}`);
   }
+  getPackReservationsByPrestataireId(prestataireId: string): Observable<any> {
+    return this.http.get(`${this.url}/reservation/getPackReservationsByPrestataireId/${prestataireId}`);
+  }
 }
