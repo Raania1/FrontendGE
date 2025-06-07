@@ -82,7 +82,6 @@ export class ReservationPrComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.fetchReservations();
     this.fetchPresData();
   }
 
