@@ -43,6 +43,7 @@ interface Reservation {
   Status: ReservationStatus;
   createdAt: string; 
   prix: string;
+  serviceid:String;
   payment: Payment;
 }
 
@@ -110,7 +111,7 @@ fetchReservations(): void {
   if (this.prestataire && this.prestataire.reservations) {
     // On garde uniquement les réservations dont packid est null (réservations non pack)
     this.reservations = this.prestataire.reservations
-      .filter((reservation: any) => reservation.packid === null || reservation.packid === undefined)
+      .filter((reservation: any) => reservation.serviceid !== null )
       .sort((a: any, b: any) =>
         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
       );
