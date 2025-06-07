@@ -106,11 +106,14 @@ export class ReservationPrComponent implements OnInit {
     }
   }
 
-  fetchReservations(): void {
+fetchReservations(): void {
   if (this.prestataire && this.prestataire.reservations) {
-    this.reservations = this.prestataire.reservations.sort((a: any, b: any) =>
-      new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-    );
+    // On garde uniquement les réservations dont packid est null (réservations non pack)
+    this.reservations = this.prestataire.reservations
+      .filter((reservation: any) => reservation.packid === null || reservation.packid === undefined)
+      .sort((a: any, b: any) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      );
 
     this.reservations.forEach(reservation => {
       if (reservation.Status === 'PAID') {
@@ -128,6 +131,7 @@ export class ReservationPrComponent implements OnInit {
     console.warn('Pas de réservations trouvées pour ce prestataire');
   }
 }
+
 
 
   get filteredReservations(): Reservation[] {
