@@ -82,13 +82,21 @@
                       />
                     </div>
                     <p *ngIf="dateField.invalid && dateField.touched" class="text-red-600 text-sm mt-1">
-                      La date est requise.
-                    </p>
-                    <p *ngIf="dateConflictError" class="text-red-600 text-sm mt-1">
-                      Ce prestataire est déjà réservé à cette date. Veuillez choisir une autre date.
-                    </p>
-                    <p *ngIf="dateError" class="text-red-600 text-sm mt-1">
-                      La date de réservation ne peut pas être dans le passé                    </p>
+  La date est requise.
+</p>
+
+<p *ngIf="dateConflictError" class="text-red-600 text-sm mt-1">
+  Ce prestataire est déjà réservé à cette date. Veuillez choisir une autre date.
+</p>
+
+<p *ngIf="datePastError" class="text-red-600 text-sm mt-1">
+  La date de réservation ne peut pas être dans le passé.
+</p>
+
+<p *ngIf="dateTodayError" class="text-red-600 text-sm mt-1">
+  La date de réservation ne peut pas être aujourd'hui.
+</p>
+
                   </div>
                 </div>
    

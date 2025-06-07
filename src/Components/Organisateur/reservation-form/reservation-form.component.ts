@@ -74,13 +74,12 @@ export class ReservationFormComponent {
       }
     }
     formatPrice(price: number): string {
-      if (isNaN(price)) return '0 DT'; // Gère les nombres invalides
+      if (isNaN(price)) return '0 DT'; 
       
-      // Pour les nombres entiers, ne pas afficher de décimales
       const isWholeNumber = price % 1 === 0;
       
       return new Intl.NumberFormat('fr-FR', {
-        style: isWholeNumber ? 'decimal' : 'currency', // Utilise le format décimal pour les nombres entiers
+        style: isWholeNumber ? 'decimal' : 'currency', 
         currency: 'TND',
         minimumFractionDigits: 0,
         maximumFractionDigits: isWholeNumber ? 0 : 3
@@ -93,9 +92,12 @@ export class ReservationFormComponent {
       }
       return 0;
     }
-    dateConflictError: boolean = false;
-    dateError: boolean = false;
-    isSubmitting: boolean = false;
+   dateConflictError: boolean = false;
+datePastError: boolean = false;
+dateTodayError: boolean = false;
+  dateError: boolean = false; // fallback
+isSubmitting: boolean = false;
+
 
     handleSubmit(event: Event) {
       event.preventDefault();
@@ -126,24 +128,37 @@ export class ReservationFormComponent {
           this.isSubmitting = false; 
         },
         error: (error) => {
-          this.isSubmitting = false; 
-          if (error?.status === 409) {
-            this.dateConflictError = true;
-            setTimeout(() => {
-              this.dateConflictError = false;
-            }, 1500);
-          }
-          else if (error?.status === 400) {
-            this.dateError = true;
-            setTimeout(() => {
-              this.dateError = false;
-            }, 1500);
-          }
-           else {
-            console.error(error?.error?.error || 'Erreur lors de la demande');
-          }
-          console.error('Erreur lors de la réservation:', error);
-        }
+  this.isSubmitting = false; 
+
+  if (error?.status === 409) {
+    this.dateConflictError = true;
+    setTimeout(() => {
+      this.dateConflictError = false;
+    }, 1500);
+  }
+  else if (error?.status === 400) {
+    const errorMsg = error?.error?.error;
+
+    if (errorMsg?.includes("aujourd'hui")) {
+      this.dateTodayError = true;
+      setTimeout(() => {
+        this.dateTodayError = false;
+      }, 1500);
+    } else if (errorMsg?.includes("passé")) {
+      this.datePastError = true;
+      setTimeout(() => {
+        this.datePastError = false;
+      }, 1500);
+    } else {
+      this.dateError = true; // fallback
+    }
+  } else {
+    console.error(error?.error?.error || 'Erreur lors de la demande');
+  }
+
+  console.error('Erreur lors de la réservation:', error);
+}
+
       });
     }
     
