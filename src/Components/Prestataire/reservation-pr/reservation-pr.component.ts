@@ -96,7 +96,6 @@ export class ReservationPrComponent implements OnInit {
       this.prestataireService.getPrestataireById(id).subscribe(
         (response) => {
           this.prestataire = response.pres;
-          this.fetchReservations();  
         },
         (error) => {
           console.error('Erreur lors de la récupération des données:', error);
@@ -108,30 +107,47 @@ export class ReservationPrComponent implements OnInit {
   }
 
 fetchReservations(): void {
-  if (this.prestataire && this.prestataire.reservations) {
-    // On garde uniquement les réservations dont packid est null (réservations non pack)
-    this.reservations = this.prestataire.reservations
-      .filter((reservation: any) => reservation.serviceid !== null )
-      .sort((a: any, b: any) =>
+  const user = JSON.parse(localStorage.getItem('user') || '{}');  
+    const prestataireId = user.Id;
+
+  if (!prestataireId) {
+    console.warn('ID prestataire introuvable');
+    return;
+  }
+
+  this.isLoading = true;
+  this.reservation.getServiceReservationsByPrestataireId(prestataireId).subscribe({
+    next: (response) => {
+      this.isLoading = false;
+      this.reservations = response.reservations || [];
+
+      // Optionnel : trier par date de création décroissante
+      this.reservations.sort((a: any, b: any) =>
         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
       );
 
-    this.reservations.forEach(reservation => {
-      if (reservation.Status === 'PAID') {
-        this.paiementService.getPaymentByReservationId(reservation.id).subscribe(
-          (paymentResponse: any) => {
-            reservation.payment = paymentResponse.payment;
-          },
-          (paymentError: any) => {
-            console.error('Erreur lors de la récupération du paiement:', paymentError);
-          }
-        );
-      }
-    });
-  } else {
-    console.warn('Pas de réservations trouvées pour ce prestataire');
-  }
+      // Charger les paiements pour les réservations payées si nécessaire
+      this.reservations.forEach(reservation => {
+        if (reservation.Status === 'PAID' && !reservation.payment) {
+          this.paiementService.getPaymentByReservationId(reservation.id).subscribe(
+            (paymentResponse: any) => {
+              reservation.payment = paymentResponse.payment;
+            },
+            (paymentError: any) => {
+              console.error('Erreur récupération paiement:', paymentError);
+            }
+          );
+        }
+      });
+    },
+    error: (error) => {
+      this.isLoading = false;
+      console.error('Erreur récupération réservations:', error);
+      this.errorMessage = 'Erreur lors du chargement des réservations.';
+    }
+  });
 }
+
 
 
 

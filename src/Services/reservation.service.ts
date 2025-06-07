@@ -10,6 +10,7 @@ export class ReservationService {
               // private url = "http://localhost:8000"
 
   private apiUrl = `${this.url}/reservation/demande`; 
+  
   private apiUrl1 = `${this.url}/reservation/getAllReservationServicesOnly`; 
   private apiUrl9 = `${this.url}/reservation/getAllReservationPacksOnly`; 
   private apiUrl2 = `${this.url}/reservation/deleteById/`; 
@@ -56,4 +57,7 @@ getOrganizerReservations(organizerId: string): Observable<any> {
 getcountPaidReservations(organizerId: string): Observable<any> {
   return this.http.get(`${this.apiUrl8}/${organizerId}`);
 }
+ getServiceReservationsByPrestataireId(prestataireId: string): Observable<any> {
+    return this.http.get(`${this.url}/reservation/getServiceReservationsByPrestataireId/${prestataireId}`);
+  }
 }
