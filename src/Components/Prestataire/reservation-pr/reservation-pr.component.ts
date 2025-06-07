@@ -84,6 +84,7 @@ export class ReservationPrComponent implements OnInit {
 
   ngOnInit(): void {
     this.fetchPresData();
+    this.fetchReservations();
   }
 
   prestataire: any = {};
