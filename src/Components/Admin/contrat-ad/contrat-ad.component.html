@@ -7,13 +7,13 @@
       
         <div class="bg-white rounded-lg shadow p-4 border border-gray-200">
           <h3 class="text-lg font-semibold text-gray-700 mb-2">Total Paiement</h3>
-          <p class="text-3xl font-bold text-green-600">{{ totalPayments }}</p>
+          <p class="text-3xl font-bold text-green-600">{{ totalPayments | number }}</p>
           <p class="text-sm text-gray-500 mt-1">Somme des réservations payées (en millimes)</p>
         </div>
       
         <div class="bg-white rounded-lg shadow p-4 border border-gray-200">
           <h3 class="text-lg font-semibold text-gray-700 mb-2">Commission</h3>
-          <p class="text-3xl font-bold text-yellow-600">{{ commission }}</p>
+          <p class="text-3xl font-bold text-yellow-600">{{ commission | number }}</p>
           <p class="text-sm text-gray-500 mt-1">20% par réservation payée (en millimes)</p>
         </div> 
       </div>
