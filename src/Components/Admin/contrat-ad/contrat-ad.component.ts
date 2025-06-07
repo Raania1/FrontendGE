@@ -251,35 +251,40 @@ export class ContratAdComponent implements OnInit {
         return status;
     }
   }
-  // Compteur pour le nombre total de réservations payées
 get paidReservationsCount(): number {
   return this.reservations.filter(reservation => reservation.Status === 'PAID').length;
 }
 
-// Calcul du total des paiements (somme des prix en millimes)
+
 get totalPayments(): number {
+  const paymentRate = 0.3; 
   return this.reservations
     .filter(reservation => reservation.Status === 'PAID')
     .reduce((sum, reservation) => {
-      const prixString = reservation.prix || '0'; // Gérer les cas où prix est undefined
-      const prix = parseFloat(prixString.replace(' DT', '')) || 0; // Supprimer ' DT' et convertir en nombre
-      const amountInMillimes = Math.round(prix * 1000); // Convertir en millimes
-      return sum + amountInMillimes;
+      const prixString = reservation.prix || '0'; 
+      const prix = parseFloat(prixString.replace(' DT', '')) || 0; 
+      const amountInMillimes = Math.round(prix * 1000); 
+      const afterRate = amountInMillimes * paymentRate;
+      return sum + afterRate;
     }, 0);
 }
 
-// Calcul de la commission (20% de chaque prix en millimes, puis somme)
 get commission(): number {
-  const commissionRate = 0.2; // 20% de commission
+  const paymentRate = 0.3; 
+  const commissionRate = 0.2;
   return this.reservations
     .filter(reservation => reservation.Status === 'PAID')
     .reduce((sum, reservation) => {
-      const prixString = reservation.prix || '0'; // Gérer les cas où prix est undefined
-      const prix = parseFloat(prixString.replace(' DT', '')) || 0; // Supprimer ' DT' et convertir en nombre
-      const amountInMillimes = Math.round(prix * 1000); // Convertir en millimes
-      return sum + (amountInMillimes * commissionRate);
+      const prixString = reservation.prix || '0'; 
+      const prix = parseFloat(prixString.replace(' DT', '')) || 0; 
+      const amountInMillimes = Math.round(prix * 1000); 
+      const afterRate = amountInMillimes * paymentRate; 
+      const commission = afterRate * commissionRate; 
+      return sum + commission;
     }, 0);
 }
+
+
 downloadContract(paymentId: string): void {
 
   this.contrat.downloadContract(paymentId).subscribe({
