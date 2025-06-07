@@ -293,7 +293,7 @@ formData = {
   }
 
   get totalPayments(): number {
-      const paymentRate = 0.3; 
+      const paymentRate = 0.2; 
     return this.reservations
       .filter(reservation => reservation.Status === 'PAID')
       .reduce((sum, reservation) => {
