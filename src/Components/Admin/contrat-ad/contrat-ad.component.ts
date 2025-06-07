@@ -285,12 +285,7 @@ get totalPayments(): number {
   return this.reservations
     .filter(reservation => reservation.Status === 'PAID')
     .reduce((sum, reservation) => {
-
-let prix = parseFloat(reservation.prix.replace(/[^0-9.]/g, '')) || 0;
-        
-        console.log('parsed prix:', prix);
-
-
+      let prix = parseFloat(reservation.prix.replace(/[^0-9.]/g, '')) || 0;
       const amountInMillimes = Math.round(prix * 1000); 
       const afterRate = amountInMillimes * paymentRate;
       return sum + afterRate;
@@ -303,11 +298,7 @@ get commission(): number {
   return this.reservations
     .filter(reservation => reservation.Status === 'PAID')
     .reduce((sum, reservation) => {
-
-
       let prix = parseFloat(reservation.prix.replace(/[^0-9.]/g, '')) || 0;
-        
-        console.log('parsed prix:', prix);
       const amountInMillimes = Math.round(prix * 1000); 
       const afterRate = amountInMillimes * paymentRate; 
       const commission = afterRate * commissionRate; 

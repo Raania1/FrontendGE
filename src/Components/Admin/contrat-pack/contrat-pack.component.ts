@@ -6,6 +6,7 @@ import { faClipboardList, faBell, faChevronRight, faChevronLeft } from '@fortawe
 import { PrestataireService } from '../../../Services/prestataire.service';
 import { ReservationService } from '../../../Services/reservation.service';
 import { ContractService } from '../../../Services/contrat.service';
+import { AdminService } from '../../../Services/admin.service';
 
 type ReservationStatus = 'PENDING' | 'CONFIRMED' | 'CANCELED' | 'PAID';
 
@@ -74,16 +75,23 @@ export class ContratPackComponent implements OnInit {
   
   currentPage: number = 1;
   itemsPerPage: number = 10; 
-
+adminInfo: any = {};
+formData = {
+      nom: '',
+      prenom: '',
+      email: ''
+    };
   constructor(
     private reservation: ReservationService,   
     private contrat: ContractService,
     private prestataireService: PrestataireService,
+    private adminService: AdminService  
   ) {}
 
   ngOnInit(): void {
     this.fetchReservations();
     this.fetchPresData();
+    this.fetchAdminInfo();
   }
 
   prestataire: any = {};
@@ -132,7 +140,23 @@ export class ContratPackComponent implements OnInit {
       }
     });
   }
+  fetchAdminInfo() {
+  const user = JSON.parse(localStorage.getItem('user') || '{}');  
+    const adminId = user.Id; 
+  if (adminId) {
+    this.adminService.getAdminById(adminId).subscribe(
+      (response) => {
+        this.adminInfo = response.admin;
+                  this.formData = { ...this.adminInfo };  
 
+        console.log('Admin récupéré:', this.adminInfo);
+      },
+      (error) => {
+        console.error('Erreur lors de la récupération de l’admin:', error);
+      }
+    );
+  }
+}
   get filteredReservations(): Reservation[] {
     return this.reservations.filter((reservation) => {
       const org = reservation.Organisateur;
@@ -269,25 +293,28 @@ export class ContratPackComponent implements OnInit {
   }
 
   get totalPayments(): number {
+      const paymentRate = 0.3; 
     return this.reservations
       .filter(reservation => reservation.Status === 'PAID')
       .reduce((sum, reservation) => {
-        const prixString = reservation.prix || '0';
-        const prix = parseFloat(prixString.replace(' DT', '')) || 0;
+      let prix = parseFloat(reservation.prix.replace(/[^0-9.]/g, '')) || 0;
         const amountInMillimes = Math.round(prix * 1000);
-        return sum + amountInMillimes;
+        const afterRate = amountInMillimes * paymentRate;
+      return sum + afterRate;
       }, 0);
   }
 
   get commission(): number {
+    const paymentRate = 0.3; 
     const commissionRate = 0.2;
     return this.reservations
       .filter(reservation => reservation.Status === 'PAID')
       .reduce((sum, reservation) => {
-        const prixString = reservation.prix || '0';
-        const prix = parseFloat(prixString.replace(' DT', '')) || 0;
+        let prix = parseFloat(reservation.prix.replace(/[^0-9.]/g, '')) || 0;
         const amountInMillimes = Math.round(prix * 1000);
-        return sum + (amountInMillimes * commissionRate);
+        const afterRate = amountInMillimes * paymentRate; 
+        const commission = afterRate * commissionRate; 
+        return sum + commission;
       }, 0);
   }
 
