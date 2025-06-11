@@ -47,6 +47,8 @@ import { ReservationPackAdComponent } from '../Components/Admin/reservation-pack
 import { ReservationPKORComponent } from '../Components/Organisateur/reservation-pkor/reservation-pkor.component';
 import { PaiementPubAComponent } from '../Components/Admin/paiement-pub-a/paiement-pub-a.component';
 import { ContratPackComponent } from '../Components/Admin/contrat-pack/contrat-pack.component';
+import { DashbordAComponent } from '../Components/Admin/dashbord-a/dashbord-a.component';
+import { DashboardPComponent } from '../Components/Prestataire/dashboard-p/dashboard-p.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -96,6 +98,7 @@ export const routes: Routes = [
           { path: 'publicitePr', component: PublicitePrComponent },
           { path: 'successPr', component: SuccessPrComponent },
           { path: 'failPr', component: FailPrComponent },
+          { path: 'dashboardP', component: DashboardPComponent },
         ],
       },
       {
@@ -113,6 +116,7 @@ export const routes: Routes = [
           { path: 'contratPack', component: ContratPackComponent },
           { path: 'contratPub', component: PaiementPubAComponent },
           { path: 'publiciteAd', component: PubliciteAdComponent },
+          { path: 'dashboard', component: DashbordAComponent },
         ],
       }
 
