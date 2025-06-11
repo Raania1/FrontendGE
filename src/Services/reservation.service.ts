@@ -20,7 +20,7 @@ export class ReservationService {
   private apiUrl6 = `${this.url}/reservation/countReservationS/`; 
   private apiUrl7 = `${this.url}/reservation/countReservations`; 
   private apiUrl8 = `${this.url}/reservation/countPaidReservations`; 
-
+  private apiUrlA = `${this.url}/reservation/getAll`;
   constructor(private http: HttpClient) {}
 
   createReservation(data: any): Observable<any> {
@@ -62,5 +62,11 @@ getcountPaidReservations(organizerId: string): Observable<any> {
   }
   getPackReservationsByPrestataireId(prestataireId: string): Observable<any> {
     return this.http.get(`${this.url}/reservation/getPackReservationsByPrestataireId/${prestataireId}`);
+  }
+   getpendingRes(): Observable<any> {
+    const token = localStorage.getItem('token');  
+    const headers = { Authorization: `Bearer ${token}` };
+
+    return this.http.get<any>(`${this.apiUrlA}`, { headers });
   }
 }

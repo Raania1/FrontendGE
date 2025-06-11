@@ -7,8 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class PrestataireService {
       private url = "https://backendge.onrender.com"
-              // private url = "http://localhost:8000"
-
+      // private url = "http://localhost:8000"
   private apiUrl = `${this.url}/prestataire/getById/`;  
   private apiUrl1 = `${this.url}/prestataire/update/`;  
   private apiUrlS = `${this.url}/prestataire/deleteprestataire/`;  
@@ -21,10 +20,8 @@ export class PrestataireService {
   private apiUrlc =`${this.url}/prestataire/ActivPrestataire/`;
   private apiUrl3 =`${this.url}/pack/create`;
   private apiUrl4 =`${this.url}/pack/getById`;
-    private apiUrl5 =`${this.url}/pack/update`;
-
+  private apiUrl5 =`${this.url}/pack/update`;
   private apiUrl2 =`${this.url}/prestataire/changePass`;
-
 
   constructor(private http: HttpClient) { }
   getPrestataireById(id: string): Observable<any> {
@@ -63,7 +60,6 @@ export class PrestataireService {
   getAllPres(): Observable<any> {
     const token = localStorage.getItem('token');  
     const headers = { Authorization: `Bearer ${token}` };
-
     return this.http.get<any>(`${this.apiUrlA}`, { headers });
   }
   getAllPresN(): Observable<any> {
