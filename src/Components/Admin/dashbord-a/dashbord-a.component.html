@@ -65,7 +65,7 @@
     </div>
     <div>
       <p class="text-sm font-medium text-gray-700">Réservations</p>
-      <p class="text-2xl font-bold text-gray-700">15 000 €</p>
+      <p class="text-2xl font-bold text-gray-700">{{formatPrice(totalPaidCommission)}}</p>
     </div>
   </div>
   
@@ -75,7 +75,7 @@
     </div>
     <div>
       <p class="text-sm font-medium text-gray-700">Publicité</p>
-      <p class="text-2xl font-bold text-gray-700">5 000 €</p>
+      <p class="text-2xl font-bold text-gray-700">{{formatPrice(totalPaidPubAmount)}}</p>
     </div>
   </div>
   
@@ -93,7 +93,7 @@
     </div>
     <div>
       <h3 class="text-lg font-semibold text-gray-700 mb-1">Services Actifs</h3>
-      <p class="text-3xl font-bold text-gray-700">20</p>
+      <p class="text-3xl font-bold text-gray-700">{{totalConfirmedServices}}</p>
       <p class="text-sm text-gray-500 mt-1">Nombre total de services proposés</p>
     </div>
   </div>
@@ -105,7 +105,7 @@
     </div>
     <div>
       <h3 class="text-lg font-semibold text-gray-700 mb-1">Services en Attente</h3>
-      <p class="text-3xl font-bold text-gray-700">5</p>
+      <p class="text-3xl font-bold text-gray-700">{{totalPendingServices}}</p>
       <p class="text-sm text-gray-500 mt-1">Nombre de services en attente d'approbation</p>
     </div>
   </div>
@@ -123,7 +123,7 @@
     </div>
     <div>
       <h3 class="text-lg font-semibold text-gray-700 mb-1">Packs Publicitaires Actifs</h3>
-      <p class="text-3xl font-bold text-gray-700">20</p>
+      <p class="text-3xl font-bold text-gray-700">{{totalConfirmedPaidPubs}}</p>
       <p class="text-sm text-gray-500 mt-1">Campagnes publicitaires en cours de diffusion</p>
     </div>
   </div>
@@ -135,7 +135,7 @@
     </div>
     <div>
       <h3 class="text-lg font-semibold text-gray-700 mb-1">Packs Publicitaires en Attente</h3>
-      <p class="text-3xl font-bold text-gray-700">5</p>
+      <p class="text-3xl font-bold text-gray-700">{{totalPendingPubs}}</p>
       <p class="text-sm text-gray-500 mt-1">Campagnes en attente de validation</p>
     </div>
   </div>
@@ -155,7 +155,7 @@
   <!-- Taux de confirmation centré -->
   <div class="px-6 py-4 flex justify-center items-center">
     <div class="text-center text-green-600 font-bold">
-  <p class="text-4xl">58.82%</p>
+  <p class="text-4xl">{{ calculatePercentage(totalconfRes, totalRes) }}</p>
       <p class="text-sm text-gray-400 font-normal">Taux de confirmation</p>
     </div>
   </div>
@@ -175,8 +175,8 @@
           <span>En attente</span>
         </td>
         <td class="px-6 py-4 text-right text-gray-700 font-bold">
-          25
-          <p class="text-sm text-gray-400 font-normal">29.41%</p>
+          {{totalpendRes}}
+          <p class="text-sm text-gray-400 font-normal">{{ calculatePercentage(totalpendRes, totalRes) }}</p>
         </td>
       </tr>
 
@@ -187,8 +187,8 @@
           <span>Confirmées</span>
         </td>
         <td class="px-6 py-4 text-right text-gray-600 font-bold">
-          50
-          <p class="text-sm text-gray-400 font-normal">58.82%</p>
+          {{totalconfRes}}
+          <p class="text-sm text-gray-400 font-normal">{{ calculatePercentage(totalconfRes, totalRes) }}</p>
         </td>
       </tr>
 
@@ -199,8 +199,18 @@
           <span>Annulées</span>
         </td>
         <td class="px-6 py-4 text-right text-gray-600 font-bold">
-          10
-          <p class="text-sm text-gray-400 font-normal">11.76%</p>
+          {{totalrefRes}}
+          <p class="text-sm text-gray-400 font-normal">{{ calculatePercentage(totalrefRes, totalRes) }}</p>
+        </td>
+      </tr>
+      <tr>
+        <td class="px-6 py-4 flex items-center space-x-2">
+          <fa-icon [icon]="faMoneyCheckAlt" class="h-5 w-5 text-red-500"></fa-icon>
+          <span>Payées</span>
+        </td>
+        <td class="px-6 py-4 text-right text-gray-600 font-bold">
+          {{totalpaidRes}}
+          <p class="text-sm text-gray-400 font-normal">{{ calculatePercentage(totalpaidRes, totalRes) }}</p>
         </td>
       </tr>
       <tr>
@@ -208,7 +218,7 @@
           <span>Total Réservations</span>
         </td>
         <td class="px-6 py-4 text-right text-gray-600 font-bold">
-          85
+          {{totalRes}}
         </td>
       </tr>
 
@@ -221,100 +231,39 @@
   <!-- Top Prestataires -->
 <div class="bg-white rounded-lg shadow p-6 border border-gray-200 h-full flex flex-col">
   <h2 class="text-xl font-semibold text-gray-700 mb-4">Top Prestataires</h2>
-  
+
   <div class="overflow-y-auto" style="max-height: 400px;">
     <ul class="divide-y divide-gray-200">
 
-     <li class="py-4 flex items-center justify-between">
-  <div class="flex items-center space-x-4">
-    <img class="w-12 h-12 rounded-full object-cover" src="https://randomuser.me/api/portraits/men/1.jpg" alt="DJ NightSound">
-    <div>
-      <span class="text-gray-700 font-medium">DJ NightSound</span>
-      <!-- Étoiles -->
-      <div class="flex items-center text-yellow-400 text-sm">
-        <fa-icon [icon]="faStar" class="h-4 w-4"></fa-icon>
-        <fa-icon [icon]="faStar" class="h-4 w-4"></fa-icon>
-        <fa-icon [icon]="faStar" class="h-4 w-4"></fa-icon>
-        <fa-icon [icon]="faStar" class="h-4 w-4"></fa-icon>
-        <fa-icon [icon]="faStarHalfAlt" class="h-4 w-4"></fa-icon>
-      </div>
-      <p class="text-sm text-gray-500">dj.nightsoundemail.com</p>
-    </div>
-  </div>
-  <span class="text-green-600 font-bold">35 réservations</span>
-</li>
-
-
-      <li class="py-4 flex items-center justify-between">
+      <li *ngFor="let prestataire of topPrestataires" class="py-4 flex items-center justify-between">
         <div class="flex items-center space-x-4">
-          <img class="w-12 h-12 rounded-full object-cover" src="https://randomuser.me/api/portraits/women/2.jpg" alt="Prestige Traiteur">
+          <img class="w-12 h-12 rounded-full object-cover"
+               [src]="prestataire.pdProfile || 'https://randomuser.me/api/portraits/lego/1.jpg'"
+               [alt]="prestataire.nom" />
+
           <div>
-            <span class="text-gray-700 font-medium">Prestige Traiteur</span>
-            <p class="text-sm text-gray-500">prestige.traiteuremail.com</p>
+            <span class="text-gray-700 font-medium">{{ prestataire.nom }}</span>
+
+            <!-- Étoiles -->
+            <div class="flex items-center text-yellow-400 text-sm">
+              <ng-container *ngFor="let star of getFullStars(prestataire.averageRating)">
+                <fa-icon [icon]="faStar" class="h-4 w-4"></fa-icon>
+              </ng-container>
+              <ng-container *ngIf="hasHalfStar(prestataire.averageRating)">
+                <fa-icon [icon]="faStarHalfAlt" class="h-4 w-4"></fa-icon>
+              </ng-container>
+            </div>
+
+            <p class="text-sm text-gray-500">{{ prestataire.email }}</p>
           </div>
         </div>
-        <span class="text-green-600 font-bold">28 réservations</span>
-      </li>
-
-      <li class="py-4 flex items-center justify-between">
-        <div class="flex items-center space-x-4">
-          <img class="w-12 h-12 rounded-full object-cover" src="https://randomuser.me/api/portraits/men/3.jpg" alt="Location VIP Events">
-          <div>
-            <span class="text-gray-700 font-medium">Location VIP Events</span>
-            <p class="text-sm text-gray-500">vip.eventsemail.com</p>
-          </div>
-        </div>
-        <span class="text-green-600 font-bold">20 réservations</span>
-      </li>
-
-      <li class="py-4 flex items-center justify-between">
-        <div class="flex items-center space-x-4">
-          <img class="w-12 h-12 rounded-full object-cover" src="https://randomuser.me/api/portraits/women/4.jpg" alt="PhotoBooth Paris">
-          <div>
-            <span class="text-gray-700 font-medium">PhotoBooth Paris</span>
-            <p class="text-sm text-gray-500">photobooth.parisemail.com</p>
-          </div>
-        </div>
-        <span class="text-green-600 font-bold">15 réservations</span>
-      </li>
-
-      <li class="py-4 flex items-center justify-between">
-        <div class="flex items-center space-x-4">
-          <img class="w-12 h-12 rounded-full object-cover" src="https://randomuser.me/api/portraits/men/5.jpg" alt="Château Bellevue">
-          <div>
-            <span class="text-gray-700 font-medium">Château Bellevue</span>
-            <p class="text-sm text-gray-500">hamagmail.com</p>
-          </div>
-        </div>
-        <span class="text-green-600 font-bold">12 réservations</span>
-      </li>
-
-      <!-- Exemple supplémentaire -->
-      <li class="py-4 flex items-center justify-between">
-        <div class="flex items-center space-x-4">
-          <img class="w-12 h-12 rounded-full object-cover" src="https://randomuser.me/api/portraits/men/6.jpg" alt="Elite Events">
-          <div>
-            <span class="text-gray-700 font-medium">Elite Events</span>
-            <p class="text-sm text-gray-500">elite.eventsemail.com</p>
-          </div>
-        </div>
-        <span class="text-green-600 font-bold">10 réservations</span>
-      </li>
-
-      <li class="py-4 flex items-center justify-between">
-        <div class="flex items-center space-x-4">
-          <img class="w-12 h-12 rounded-full object-cover" src="https://randomuser.me/api/portraits/women/7.jpg" alt="Magic Lights">
-          <div>
-            <span class="text-gray-700 font-medium">Magic Lights</span>
-            <p class="text-sm text-gray-500">magic.lightsemail.com</p>
-          </div>
-        </div>
-        <span class="text-green-600 font-bold">8 réservations</span>
+        <!-- <span class="text-green-600 font-bold">{{ prestataire.reservationCount || 0 }} réservations</span> -->
       </li>
 
     </ul>
   </div>
 </div>
+
 
 
 

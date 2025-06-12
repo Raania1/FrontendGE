@@ -26,4 +26,9 @@ getPaymentByReservationId(reservationId: string): Observable<any> {
  verifyPayementPub(payment_id: string) {
     return this.http.post(`${this.baseUrl}/verifyPub/${payment_id}`, {});
   }
+getAllPaymentPub(): Observable<any> {
+  return this.http.get<any>(`${this.baseUrl}/all`);
+}
+
+ 
 }

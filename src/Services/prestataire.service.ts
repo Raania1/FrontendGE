@@ -22,6 +22,7 @@ export class PrestataireService {
   private apiUrl4 =`${this.url}/pack/getById`;
   private apiUrl5 =`${this.url}/pack/update`;
   private apiUrl2 =`${this.url}/prestataire/changePass`;
+  private apiUrl12 =`${this.url}/prestataire/getTopPrestataires`;
 
   constructor(private http: HttpClient) { }
   getPrestataireById(id: string): Observable<any> {
@@ -146,5 +147,9 @@ deleteServiceFromPack(serviceId: string): Observable<any> {
 addServiceToPack(packId: string, serviceData: { name: string, description: string }): Observable<any> {
   return this.http.post(`${this.url}/pack/servicesAdd/${packId}`, serviceData);
 }
+
+ getTopPrestataires() {
+    return this.http.get<any>(`${this.apiUrl12}`);
+  }
 
 }

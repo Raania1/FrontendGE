@@ -100,10 +100,8 @@ deleteserviceById(id: string): Observable<any> {
 getServices(params: any): Observable<any> {
   let httpParams = new HttpParams();
   
-  // Convert params to match backend expectations
   Object.keys(params).forEach(key => {
     if (params[key] !== null && params[key] !== undefined) {
-      // Convert boolean to string if needed
       const value = typeof params[key] === 'boolean' ? params[key].toString() : params[key];
       httpParams = httpParams.append(key, value);
     }
