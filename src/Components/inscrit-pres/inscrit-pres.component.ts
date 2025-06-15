@@ -17,6 +17,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 export class InscritPresComponent {
   selectedFiles: File[] = [];
   selectedProfilePicture: File | null = null;
+  profilePicturePreview: string | null = 'https://th.bing.com/th/id/OIP.lvzPu-WOW4Iv7QyjP-IkrgHaHa?rs=1&pid=ImgDetMain'; // URL par défaut
   submitted = false;
   errorMessage: string | null = null;
   keywords: string[] = [];
@@ -98,6 +99,13 @@ export class InscritPresComponent {
     const file = event.target.files[0];
     if (file) {
       this.selectedProfilePicture = file;
+      this.pressData.patchValue({ pdProfile: file }); // Mettre à jour le contrôle du formulaire
+      // Générer un aperçu de l'image
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.profilePicturePreview = e.target.result; // Mettre à jour l'URL de l'aperçu
+      };
+      reader.readAsDataURL(file);
     }
   }
 

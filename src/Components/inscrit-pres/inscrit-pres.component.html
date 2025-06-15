@@ -357,24 +357,26 @@
                         </div>
 
                         <div class="sm:col-span-6">
-                            <label class="block text-sm font-medium text-gray-700">Photo de profil</label>
-                            <div class="mt-2 flex items-center gap-x-3">
-                                <img id="pdProfilePreview" src="https://th.bing.com/th/id/OIP.lvzPu-WOW4Iv7QyjP-IkrgHaHa?rs=1&pid=ImgDetMain"
-                                    alt="Photo de profil par défaut" class="h-12 w-12 rounded-full object-cover border border-gray-200" />
-                                <input type="file" 
-                                class="text-sm text-gray-700" 
-                                formControlName="pdProfile"
-                                (change)="onFileChange($event)"
-                                />
-                                <div class="validation">
-                                    @if((pdProfile?.touched && pdProfile?.dirty ) || submitted){
-                                    @if(pdProfile?.getError('required')){
-                                        <p class="text-red">Le Photo de profil est obligatoire</p>
-                                    }
-                                    }
-                                </div>
-                            </div>
-                        </div>
+  <label class="block text-sm font-medium text-gray-700">Photo de profil</label>
+  <div class="mt-2 flex items-center gap-x-3">
+    <img id="pdProfilePreview"
+         [src]="profilePicturePreview || 'https://th.bing.com/th/id/OIP.lvzPu-WOW4Iv7QyjP-IkrgHaHa?rs=1&pid=ImgDetMain'"
+         alt="Photo de profil"
+         class="h-12 w-12 rounded-full object-cover border border-gray-200" />
+    <input type="file"
+           accept="image/*"
+           class="text-sm text-gray-700"
+           formControlName="pdProfile"
+           (change)="onFileChange($event)" />
+    <div class="validation">
+      @if ((pdProfile?.touched && pdProfile?.dirty) || submitted) {
+        @if (pdProfile?.getError('required')) {
+          <p class="text-red">La photo de profil est obligatoire</p>
+        }
+      }
+    </div>
+  </div>
+</div>
 
                         <div class="sm:col-span-6">
                             <label class="block text-sm font-medium text-gray-700">Documents de confirmation (Max 5 fichiers - Formats acceptés : PDF, JPG, PNG")</label>
