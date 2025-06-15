@@ -115,15 +115,18 @@ export class InscritPresComponent {
 isLoading: boolean = false;
 
 
-  onSubmit() {
+ onSubmit() {
     this.submitted = true;
     this.errorMessage = null;
-    
+    this.successMessage = null;
+    this.isLoading = true;
+
     if (this.pressData.invalid) {
       this.pressData.markAllAsTouched();
+      this.isLoading = false;
       return;
     }
-  
+
     const formData = new FormData();
     Object.keys(this.pressData.controls).forEach((key) => {
       const controlValue = this.pressData.get(key)?.value;
@@ -131,22 +134,22 @@ isLoading: boolean = false;
         formData.append(key, controlValue);
       }
     });
-  
+
     if (this.selectedProfilePicture) {
       formData.append('pdProfile', this.selectedProfilePicture, this.selectedProfilePicture.name);
     }
-  
+
     if (this.selectedFiles.length > 0) {
       this.selectedFiles.forEach((file) => {
         formData.append('fichierConfirmation', file, file.name);
       });
     }
-  
+
     this.authService.registerPrestataire(formData).subscribe(
       (response) => {
         console.log('Inscription réussie', response);
-        alert('Inscription réussie ! Nous reviendrons vers vous bientôt. Ne ratez pas votre email, nous vous répondrons sur celui-ci.');
-        this.router.navigate(['/']);
+        this.successMessage = 'Inscription réussie ! Nous reviendrons vers vous bientôt. Ne ratez pas votre email, nous vous répondrons sur celui-ci.';
+        this.isLoading = false;
       },
       (error) => {
         console.error('Erreur lors de l\'inscription', error);
@@ -159,9 +162,11 @@ isLoading: boolean = false;
         } else {
           this.errorMessage = 'Une erreur s\'est produite. Veuillez réessayer.';
         }
+        this.isLoading = false;
       }
     );
-  }
+}
+
 
   get nom() { return this.pressData.get('nom'); }
   get prenom() { return this.pressData.get('prenom'); }
