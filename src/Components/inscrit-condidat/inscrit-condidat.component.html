@@ -319,8 +319,8 @@
               </a>
             </p>
             
-            <button type="submit" class="btn-primary">
-              S'inscrire
+            <button [disabled]="isLoading" type="submit" class="btn-primary">
+                {{ isLoading ? 'Chargement...' : `S'inscrire` }}
             </button>
           </div>
       </form>

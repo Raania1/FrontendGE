@@ -64,12 +64,16 @@ onFileChange(event: any) {
   submitted = false;
   errorMessage: string | null = null;
   successMessage: string | null = null; 
+  isLoading: boolean = false;
+
   onSubmit() {
   this.submitted = true;
   this.errorMessage = null; 
-  
+      this.isLoading = true;
+
   if (this.organizeData.invalid) {
     this.organizeData.markAllAsTouched();
+          this.isLoading = false;
     return;
   }
 
@@ -91,6 +95,7 @@ onFileChange(event: any) {
     (response) => {
       console.log('Inscription réussie', response);
       this.successMessage = 'Inscription réussie ! Redirection en cours...';
+      this.isLoading = false;
 
       // Après 3 secondes on vide le message et on redirige
       setTimeout(() => {
@@ -106,6 +111,8 @@ onFileChange(event: any) {
       } else {
         this.errorMessage = 'Une erreur s\'est produite. Veuillez réessayer.';
       }
+              this.isLoading = false;
+
 
       // Efface le message d'erreur après 3 secondes
       setTimeout(() => {
