@@ -7,7 +7,7 @@ import { Router, RouterLink } from '@angular/router';
 
 interface Event {
   id: string;
-  nom: string;
+  nom: string; 
   dateDebut: Date;
   dateFin: Date;
   lieu: string;

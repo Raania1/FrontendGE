@@ -14,7 +14,7 @@ interface Service {
   id: string;
   nom: string;
   description: string;
-  prix: number;
+  prix: number; 
   promo: number;
   type: string;
   photoCouverture: string;
@@ -400,8 +400,26 @@ closeModal() {
 }
 
 loadUserEvents() {
-  this.userEvents = this.organisateur.Evennements
-}
+  // this.userEvents = this.organisateur.Evennements
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    const id = user.Id;
+    this.eventService.getEventsByOrganizerId(id).subscribe({
+      next: (response) => {
+        this.userEvents = response.events.map((event: any) => ({
+          id: event.id,
+          nom: event.nom,
+          dateDebut: new Date(event.dateDebut),
+          dateFin: new Date(event.dateFin),
+          lieu: event.lieu,
+          budgetTotale: event.budgetTotale || 0,
+          services: event.services || []
+        }));
+      },
+      error: (error) => {
+        console.error('Error loading events', error);
+      }
+    });
+  }
 
 
 
