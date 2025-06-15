@@ -1,6 +1,14 @@
 <app-navbar></app-navbar>
 <div class="flex justify-center items-center min-h-screen  py-12 px-4 sm:px-6 lg:px-8" style="background-image: url('https://media.istockphoto.com/id/804893032/fr/photo/flou-des-affaires-conf%C3%A9rence-et-pr%C3%A9sentation-dans-la-salle-de-conf%C3%A9rence.jpg?s=612x612&w=0&k=20&c=t5bT38VU4_N_wq8YWTxmTX7SnxZQRfRqbqXwGV9OziQ='); background-size: cover; background-repeat: no-repeat; background-position: center;">
     <div class="max-w-3xl w-full bg-white rounded-lg shadow-md p-8">
+      <div *ngIf="successMessage" class="alert alert-success">
+  {{ successMessage }}
+</div>
+
+<div *ngIf="errorMessage" class="alert alert-danger">
+  {{ errorMessage }}
+</div>
+
       <form [formGroup]="organizeData" (ngSubmit)="onSubmit()">
         <div class="space-y-8">
           <div class="border-b border-gray-200 pb-8">
@@ -265,12 +273,13 @@
 <div class="sm:col-span-6">
   <label class="block text-sm font-medium text-gray-700" for="pdProfile">Photo de profil</label>
   <div class="mt-2 flex items-center gap-x-3">
-    <img
-      *ngIf="selectedProfilePicture; else defaultImage"
-      [src]="selectedProfilePicture ? (selectedProfilePicture ) : ''"
-      alt="Aperçu de la photo"
-      class="h-12 w-12 rounded-full object-cover border border-gray-200"
-    />
+  <img
+  *ngIf="profilePreviewUrl; else defaultImage"
+  [src]="profilePreviewUrl"
+  alt="Aperçu de la photo"
+  class="h-12 w-12 rounded-full object-cover border border-gray-200"
+/>
+
     <ng-template #defaultImage>
       <img
         src="https://th.bing.com/th/id/OIP.lvzPu-WOW4Iv7QyjP-IkrgHaHa?rs=1&pid=ImgDetMain"

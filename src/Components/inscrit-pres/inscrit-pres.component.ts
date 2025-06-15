@@ -150,6 +150,13 @@ isLoading: boolean = false;
         console.log('Inscription réussie', response);
         this.successMessage = 'Inscription réussie ! Nous reviendrons vers vous bientôt. Ne ratez pas votre email, nous vous répondrons sur celui-ci.';
         this.isLoading = false;
+
+        setTimeout(() => {
+        this.successMessage = null;
+        this.pressData.reset();
+        this.selectedProfilePicture = null;
+        this.selectedFiles = [];
+      }, 3000);
       },
       (error) => {
         console.error('Erreur lors de l\'inscription', error);
@@ -163,6 +170,10 @@ isLoading: boolean = false;
           this.errorMessage = 'Une erreur s\'est produite. Veuillez réessayer.';
         }
         this.isLoading = false;
+
+          setTimeout(() => {
+        this.errorMessage = null;
+      }, 3000);
       }
     );
 }

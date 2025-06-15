@@ -43,58 +43,78 @@ export class InscritCondidatComponent {
     } else return null;
   }
 
-  selectedProfilePicture: File | null = null;
-  onFileChange(event: any) {
-    const file = event.target.files[0];
-    if (file) {
-      this.selectedProfilePicture = file;  
-      this.organizeData.get('pdProfile')?.setValue(file); 
-      this.organizeData.get('pdProfile')?.markAsTouched();
-    }
+selectedProfilePicture: File | null = null;
+profilePreviewUrl: string | null = null;
+
+onFileChange(event: any) {
+  const file = event.target.files[0];
+  if (file) {
+    this.selectedProfilePicture = file;  
+    this.organizeData.get('pdProfile')?.setValue(file); 
+    this.organizeData.get('pdProfile')?.markAsTouched();
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.profilePreviewUrl = reader.result as string;
+    };
+    reader.readAsDataURL(file);
   }
+}
 
   submitted = false;
-  errorMessage: string | null = null; 
+  errorMessage: string | null = null;
+  successMessage: string | null = null; 
   onSubmit() {
-    this.submitted = true;
-    this.errorMessage = null; 
+  this.submitted = true;
+  this.errorMessage = null; 
   
-    if (this.organizeData.invalid) {
-      this.organizeData.markAllAsTouched();
-      return;
-    }
-  
-    const formData = new FormData();
-    Object.keys(this.organizeData.controls).forEach((key) => {
-      const controlValue = this.organizeData.get(key)?.value;
-      if (key === 'pdProfile' && this.selectedProfilePicture) {
-        formData.append('pdProfile', this.selectedProfilePicture, this.selectedProfilePicture.name); 
-      } else {
-        formData.append(key, controlValue);
-      }
-    });
-  
-    formData.forEach((value, key) => {
-      console.log(`${key}: ${value}`); 
-    });
-  
-    this.authService.registerOrganizer(formData).subscribe(
-      (response) => {
-        console.log('Inscription réussie', response);
-        alert('Inscription réussie !');
-        this.router.navigate(['/connexion']);
-      },
-      (error) => {
-        console.error('Erreur lors de l\'inscription', error);
-        console.log('Erreur détaillée :', error.error?.errors); 
-        if (error.error?.errors?.email === "Email already taken. please use another one.") {
-          this.errorMessage = 'Cet email est déjà utilisé. Veuillez en choisir un autre.';
-        } else {
-          this.errorMessage = 'Une erreur s\'est produite. Veuillez réessayer.';
-        }
-      }
-    );
+  if (this.organizeData.invalid) {
+    this.organizeData.markAllAsTouched();
+    return;
   }
+
+  const formData = new FormData();
+  Object.keys(this.organizeData.controls).forEach((key) => {
+    const controlValue = this.organizeData.get(key)?.value;
+    if (key === 'pdProfile' && this.selectedProfilePicture) {
+      formData.append('pdProfile', this.selectedProfilePicture, this.selectedProfilePicture.name); 
+    } else {
+      formData.append(key, controlValue);
+    }
+  });
+
+  formData.forEach((value, key) => {
+    console.log(`${key}: ${value}`); 
+  });
+
+  this.authService.registerOrganizer(formData).subscribe(
+    (response) => {
+      console.log('Inscription réussie', response);
+      this.successMessage = 'Inscription réussie ! Redirection en cours...';
+
+      // Après 3 secondes on vide le message et on redirige
+      setTimeout(() => {
+        this.successMessage = null;
+        this.router.navigate(['/connexion']);
+      }, 3000);
+    },
+    (error) => {
+      console.error('Erreur lors de l\'inscription', error);
+      console.log('Erreur détaillée :', error.error?.errors); 
+      if (error.error?.errors?.email === "Email already taken. please use another one.") {
+        this.errorMessage = 'Cet email est déjà utilisé. Veuillez en choisir un autre.';
+      } else {
+        this.errorMessage = 'Une erreur s\'est produite. Veuillez réessayer.';
+      }
+
+      // Efface le message d'erreur après 3 secondes
+      setTimeout(() => {
+        this.errorMessage = null;
+      }, 3000);
+    }
+  );
+}
+
   
   get nom() { return this.organizeData.get('nom'); }
   get prenom() { return this.organizeData.get('prenom'); }
