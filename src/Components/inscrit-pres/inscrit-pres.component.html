@@ -1,6 +1,15 @@
 <app-navbar></app-navbar>
+
 <div class="flex justify-center items-center min-h-screen  py-12 px-4 sm:px-6 lg:px-8" style="background-image: url('https://media.istockphoto.com/id/804893032/fr/photo/flou-des-affaires-conf%C3%A9rence-et-pr%C3%A9sentation-dans-la-salle-de-conf%C3%A9rence.jpg?s=612x612&w=0&k=20&c=t5bT38VU4_N_wq8YWTxmTX7SnxZQRfRqbqXwGV9OziQ='); background-size: cover; background-repeat: no-repeat; background-position: center;">
   <div class="max-w-3xl w-full bg-white rounded-lg shadow-md p-8">
+    <div *ngIf="successMessage" class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg" role="alert">
+  {{ successMessage }}
+</div>
+
+<div *ngIf="errorMessage" class="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg" role="alert">
+  {{ errorMessage }}
+</div>
+
         <form [formGroup]="pressData" (ngSubmit)="onSubmit()">
             <div class="space-y-8">
                 <div class="border-b border-gray-200 pb-8">
@@ -395,8 +404,8 @@
                     </button>
                 </p>
 
-                <button  type="submit" class="btn-primary">
-                    Envoyer 
+                <button   [disabled]="isLoading" type="submit" class="btn-primary">
+  {{ isLoading ? 'Chargement...' : 'Envoyer' }}
                 </button>
             </div>
         </form>
