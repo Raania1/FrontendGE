@@ -19,6 +19,10 @@ export class PaiementService {
 getPaymentByReservationId(reservationId: string): Observable<any> {
   return this.http.get(`${this.baseUrl}/getByIdreservation/${reservationId}`);
 }
+  getReservationPaymentsByPrestataireId(prestataireId: string): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/reservations/${prestataireId}`);
+  }
+
  // paiement pub
   payerPub(pubId: string) {
     return this.http.post(`${this.baseUrl}/addPB`, { pubId });
@@ -29,6 +33,10 @@ getPaymentByReservationId(reservationId: string): Observable<any> {
 getAllPaymentPub(): Observable<any> {
   return this.http.get<any>(`${this.baseUrl}/all`);
 }
+
+getpublicitesPaymentsByPrestataireId(prestataireId: string): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/publicites/${prestataireId}`);
+  }
 
  
 }

@@ -7,7 +7,7 @@
     <div class="flex items-center space-x-2">
       <span class="text-sm font-medium text-custom-black" style="text-transform: capitalize;">
         Admin Admin
-      </span>
+      </span> 
       <div class="relative">
         <div class="relative h-8 w-8 rounded-full border-2 border-white overflow-hidden shadow-md bg-gray-300 flex items-center justify-center text-white font-semibold text-sm uppercase">
           RB
@@ -28,7 +28,7 @@
     </div>
     <div>
       <p class="text-sm font-medium text-gray-700">Services</p>
-      <p class="text-2xl font-bold text-gray-700">15 000 €</p>
+      <p class="text-2xl font-bold text-gray-700">{{formatMontant(totalReservationPayments)}} DT</p>
     </div>
   </div>
   
@@ -38,7 +38,7 @@
     </div>
     <div>
       <p class="text-sm font-medium text-gray-700">Packs Publicitaires</p>
-      <p class="text-2xl font-bold text-gray-700">5 000 €</p>
+      <p class="text-2xl font-bold text-gray-700">{{formatMontant (totalPubPayments)}} DT</p>
     </div>
   </div>
   
@@ -56,7 +56,7 @@
     </div>
     <div>
       <h3 class="text-lg font-semibold text-gray-700 mb-1">Services Actifs</h3>
-      <p class="text-3xl font-bold text-gray-700">15</p>
+      <p class="text-3xl font-bold text-gray-700">{{countConfirmed}}</p>
       <p class="text-sm text-gray-500 mt-1">Nombre de services actuellement actifs</p>
     </div>
   </div>
@@ -68,7 +68,7 @@
     </div>
     <div>
       <h3 class="text-lg font-semibold text-gray-700 mb-1">Services en Attente</h3>
-      <p class="text-3xl font-bold text-gray-700">5</p>
+      <p class="text-3xl font-bold text-gray-700">{{countPending}}</p>
       <p class="text-sm text-gray-500 mt-1">Nombre de services en attente d'approbation</p>
     </div>
   </div>
@@ -86,7 +86,7 @@
     </div>
     <div>
       <h3 class="text-lg font-semibold text-gray-700 mb-1">Packs Publicitaires Actifs</h3>
-      <p class="text-3xl font-bold text-gray-700">20</p>
+      <p class="text-3xl font-bold text-gray-700">{{countPubConfirmed}}</p>
       <p class="text-sm text-gray-500 mt-1">Campagnes publicitaires en cours de diffusion</p>
     </div>
   </div>
@@ -98,7 +98,7 @@
     </div>
     <div>
       <h3 class="text-lg font-semibold text-gray-700 mb-1">Packs Publicitaires en Attente</h3>
-      <p class="text-3xl font-bold text-gray-700">5</p>
+      <p class="text-3xl font-bold text-gray-700">{{countPubPending}}</p>
       <p class="text-sm text-gray-500 mt-1">Campagnes en attente de validation</p>
     </div>
   </div>
@@ -109,16 +109,14 @@
   </div>
 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
   
-  <!-- Statut des Réservations -->
   <div class="bg-white rounded-lg shadow p-6 border border-gray-200">
     <h2 class="text-xl font-semibold text-gray-700 mb-4">Statut des Réservations</h2>
     
     <div class="overflow-x-auto">
 
-  <!-- Taux de confirmation centré -->
   <div class="px-6 py-4 flex justify-center items-center">
     <div class="text-center text-green-600 font-bold">
-  <p class="text-4xl">58.82%</p>
+  <p class="text-4xl">{{ calculatePercentage(totalReservationsConfirmed, totalReservations) }}</p>
       <p class="text-sm text-gray-400 font-normal">Taux de confirmation</p>
     </div>
   </div>
@@ -138,8 +136,8 @@
           <span>En attente</span>
         </td>
         <td class="px-6 py-4 text-right text-gray-700 font-bold">
-          25
-          <p class="text-sm text-gray-400 font-normal">29.41%</p>
+          {{totalReservationsPending}}
+          <p class="text-sm text-gray-400 font-normal">{{ calculatePercentage(totalReservationsPending, totalReservations) }}</p>
         </td>
       </tr>
 
@@ -150,8 +148,8 @@
           <span>Confirmées</span>
         </td>
         <td class="px-6 py-4 text-right text-gray-600 font-bold">
-          50
-          <p class="text-sm text-gray-400 font-normal">58.82%</p>
+          {{totalReservationsConfirmed}}
+          <p class="text-sm text-gray-400 font-normal">{{ calculatePercentage(totalReservationsConfirmed, totalReservations) }}</p>
         </td>
       </tr>
 
@@ -162,8 +160,18 @@
           <span>Annulées</span>
         </td>
         <td class="px-6 py-4 text-right text-gray-600 font-bold">
-          10
-          <p class="text-sm text-gray-400 font-normal">11.76%</p>
+          {{totalReservationsCanceled}}
+          <p class="text-sm text-gray-400 font-normal">{{ calculatePercentage(totalReservationsCanceled, totalReservations) }}</p>
+        </td>
+      </tr>
+      <tr>
+        <td class="px-6 py-4 flex items-center space-x-2">
+          <fa-icon [icon]="faMoneyCheckAlt" class="h-5 w-5 text-red-500"></fa-icon>
+          <span>Payées</span>
+        </td>
+        <td class="px-6 py-4 text-right text-gray-600 font-bold">
+          {{totalReservationsPaid}}
+          <p class="text-sm text-gray-400 font-normal">{{ calculatePercentage(totalReservationsPaid, totalReservations) }}</p>
         </td>
       </tr>
       <tr>
@@ -171,7 +179,7 @@
           <span>Total Réservations</span>
         </td>
         <td class="px-6 py-4 text-right text-gray-600 font-bold">
-          85
+          {{totalReservations}}
         </td>
       </tr>
 
@@ -185,86 +193,23 @@
   <h2 class="text-xl font-semibold text-gray-700 mb-4">Transactions Récentes</h2>
   <div class="overflow-y-auto" style="max-height: 400px;">
     <ul class="divide-y divide-gray-200">
-      <li class="py-4 flex items-center justify-between">
-        <div class="flex items-center space-x-4">
-          <img class="w-12 h-12 rounded-full object-cover" src="https://randomuser.me/api/portraits/men/1.jpg" alt="DJ NightSound">
-          <div>
-            <span class="text-gray-700 font-medium">DJ NightSound</span>
-            <p class="text-sm text-gray-500">Paiement reçu le 08/06/2025</p>
-          </div>
-        </div>
-        <span class="text-green-600 font-bold">€350</span>
-      </li>
 
-      <li class="py-4 flex items-center justify-between">
+      <li class="py-4 flex items-center justify-between" *ngFor="let payment of paidReservationsDetails">
         <div class="flex items-center space-x-4">
-          <img class="w-12 h-12 rounded-full object-cover" src="https://randomuser.me/api/portraits/women/2.jpg" alt="Prestige Traiteur">
+<img class="w-12 h-12 rounded-full object-cover" [src]="payment.phOrganisateur" alt="Organisateur">
           <div>
-            <span class="text-gray-700 font-medium">Prestige Traiteur</span>
-            <p class="text-sm text-gray-500">Paiement reçu le 07/06/2025</p>
+            <span class="text-gray-700 font-medium">{{ payment.nomOrganisateur }} {{ payment.prenomOrganisateur }}</span>
+            <p class="text-sm text-gray-500">Paiement reçu le {{ payment.paymentDate | date:'dd/MM/yyyy' }}</p>
+            <p class="text-sm text-gray-400">{{ payment.emailOrganisateur }}</p>
           </div>
         </div>
-        <span class="text-green-600 font-bold">€280</span>
-      </li>
-
-      <li class="py-4 flex items-center justify-between">
-        <div class="flex items-center space-x-4">
-          <img class="w-12 h-12 rounded-full object-cover" src="https://randomuser.me/api/portraits/men/3.jpg" alt="Location VIP Events">
-          <div>
-            <span class="text-gray-700 font-medium">Location VIP Events</span>
-            <p class="text-sm text-gray-500">Paiement reçu le 06/06/2025</p>
-          </div>
-        </div>
-        <span class="text-green-600 font-bold">€200</span>
-      </li>
-
-      <li class="py-4 flex items-center justify-between">
-        <div class="flex items-center space-x-4">
-          <img class="w-12 h-12 rounded-full object-cover" src="https://randomuser.me/api/portraits/women/4.jpg" alt="PhotoBooth Paris">
-          <div>
-            <span class="text-gray-700 font-medium">PhotoBooth Paris</span>
-            <p class="text-sm text-gray-500">Paiement reçu le 05/06/2025</p>
-          </div>
-        </div>
-        <span class="text-green-600 font-bold">€150</span>
-      </li>
-
-      <li class="py-4 flex items-center justify-between">
-        <div class="flex items-center space-x-4">
-          <img class="w-12 h-12 rounded-full object-cover" src="https://randomuser.me/api/portraits/men/5.jpg" alt="Château Bellevue">
-          <div>
-            <span class="text-gray-700 font-medium">Château Bellevue</span>
-            <p class="text-sm text-gray-500">Paiement reçu le 04/06/2025</p>
-          </div>
-        </div>
-        <span class="text-green-600 font-bold">€120</span>
-      </li>
-
-      <li class="py-4 flex items-center justify-between">
-        <div class="flex items-center space-x-4">
-          <img class="w-12 h-12 rounded-full object-cover" src="https://randomuser.me/api/portraits/men/6.jpg" alt="Elite Events">
-          <div>
-            <span class="text-gray-700 font-medium">Elite Events</span>
-            <p class="text-sm text-gray-500">Paiement reçu le 03/06/2025</p>
-          </div>
-        </div>
-        <span class="text-green-600 font-bold">€100</span>
-      </li>
-
-      <li class="py-4 flex items-center justify-between">
-        <div class="flex items-center space-x-4">
-          <img class="w-12 h-12 rounded-full object-cover" src="https://randomuser.me/api/portraits/women/7.jpg" alt="Magic Lights">
-          <div>
-            <span class="text-gray-700 font-medium">Magic Lights</span>
-            <p class="text-sm text-gray-500">Paiement reçu le 02/06/2025</p>
-          </div>
-        </div>
-        <span class="text-green-600 font-bold">€80</span>
+        <span class="text-green-600 font-bold">{{ formatMontant(payment.montant) }} TND</span>
       </li>
 
     </ul>
   </div>
 </div>
+
 
 
 

@@ -23,7 +23,6 @@ import { CommonModule } from '@angular/common';
 })
 export class DashbordAComponent implements OnInit {
 
-  // FontAwesome icons
   faBullhorn = faBullhorn;
   faListAlt = faListAlt;
   faFileInvoice = faFileInvoice;
