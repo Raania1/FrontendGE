@@ -48,9 +48,9 @@ export class ConnexionComponent {
         if (userRole === 'organizer') {
           this.router.navigate(['/homeOr']); 
         } else if (userRole === 'prestataire') {
-          this.router.navigate(['/prestataire/parametre']); 
+          this.router.navigate(['/prestataire/dashboardP']); 
         } else if (userRole === 'admin') {
-          this.router.navigate(['/administrateur/profile']); 
+          this.router.navigate(['/administrateur/dashboard']); 
         } else {
           console.error('Rôle non reconnu');
         }

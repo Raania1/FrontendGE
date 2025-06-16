@@ -1,21 +1,21 @@
 <div class="min-h-screen p-6 bg-gray-50 rounded-3xl">
-    <div class="flex justify-between items-center mb-6">
+<div class="flex justify-between items-center mb-6">
   <div class="relative w-1/3">
+    <h3 class="text-l font-serif font-bold text-custom-black">Mes Packs</h3>
   </div>
   <div class="flex items-center space-x-4">
-    <!-- <fa-icon [icon]="faBell" class="h-6 w-6 cursor-pointer text-custom-gray"></fa-icon> -->
     <div class="flex items-center space-x-2">
       <span class="text-sm font-medium text-custom-black" style="text-transform: capitalize;">
-        Admin Admin
-      </span> 
+        {{ prestataire.nom }} {{ prestataire.prenom }}
+      </span>
       <div class="relative">
-        <div class="relative h-8 w-8 rounded-full border-2 border-white overflow-hidden shadow-md bg-gray-300 flex items-center justify-center text-white font-semibold text-sm uppercase">
-          RB
+        <div class="relative h-8 w-8 rounded-full border-2 border-white overflow-hidden shadow-md">
+          <img [src]="prestataire.pdProfile" [alt]="prestataire.nom" class="w-full h-full object-cover" />
         </div>
         <div class="absolute bottom-0 right-0 w-2 h-2 bg-green-400 rounded-full border border-white"></div>
-      </div> 
+      </div>
     </div>
-  </div>
+  </div> 
 </div>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
     <!-- Revenue -->

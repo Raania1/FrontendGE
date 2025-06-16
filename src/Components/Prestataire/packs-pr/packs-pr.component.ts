@@ -13,7 +13,7 @@ import { PubliciteService } from '../../../Services/publicite.service';
   standalone: true,
   imports: [FontAwesomeModule,FormsModule, RouterLink,CommonModule],
   templateUrl: './packs-pr.component.html',
-  styleUrl: './packs-pr.component.css'
+  styleUrl: './packs-pr.component.css' 
 })
 export class PacksPrComponent {
   faBell = faBell;

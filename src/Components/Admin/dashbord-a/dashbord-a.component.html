@@ -6,11 +6,11 @@
     <!-- <fa-icon [icon]="faBell" class="h-6 w-6 cursor-pointer text-custom-gray"></fa-icon> -->
     <div class="flex items-center space-x-2">
       <span class="text-sm font-medium text-custom-black" style="text-transform: capitalize;">
-        Admin Admin
+        {{formData.nom}} {{formData.prenom}}
       </span>
       <div class="relative">
         <div class="relative h-8 w-8 rounded-full border-2 border-white overflow-hidden shadow-md bg-gray-300 flex items-center justify-center text-white font-semibold text-sm uppercase">
-          RB
+          {{ formData.nom[0] }}{{ formData.prenom[0] }}
         </div>
         <div class="absolute bottom-0 right-0 w-2 h-2 bg-green-400 rounded-full border border-white"></div>
       </div> 

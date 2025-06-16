@@ -13,7 +13,8 @@ import { PaiementService } from '../../../Services/paiement.service';
 import { ServiceService } from '../../../Services/service.service';
 import { PubliciteService } from '../../../Services/publicite.service';
 import { CommonModule } from '@angular/common';
-
+import { AdminService } from '../../../Services/admin.service';
+ 
 @Component({
   selector: 'app-dashbord-a',
   standalone: true,
@@ -52,14 +53,21 @@ export class DashbordAComponent implements OnInit {
   totalPendingPubs = 0;
   totalConfirmedPaidPubs = 0;
 topPrestataires: any[] = [];
-
+adminInfo: any = {};
+formData = {
+      nom: '',
+      prenom: '',
+      email: ''
+    };
   constructor(
     private pres: PrestataireService,
     private orga: OrganizerService,
     private res: ReservationService,
     private paiementService: PaiementService,
     private serviceService: ServiceService,
-    private pubService: PubliciteService
+    private pubService: PubliciteService,
+    private adminService: AdminService  
+    
   ) {}
 
   ngOnInit(): void {
@@ -70,8 +78,26 @@ topPrestataires: any[] = [];
     this.loadServices();
     this.loadPublicites();
     this.loadTopPrestataires();
-  }
+        this.fetchAdminInfo();
 
+  }
+  fetchAdminInfo() {
+  const user = JSON.parse(localStorage.getItem('user') || '{}');  
+    const adminId = user.Id; 
+  if (adminId) {
+    this.adminService.getAdminById(adminId).subscribe(
+      (response) => {
+        this.adminInfo = response.admin;
+                  this.formData = { ...this.adminInfo };  
+
+        console.log('Admin récupéré:', this.adminInfo);
+      },
+      (error) => {
+        console.error('Erreur lors de la récupération de l’admin:', error);
+      }
+    );
+  }
+}
   loadConfirmedPrestataires(): void {
     this.pres.getAllPres().subscribe({
       next: response => {
